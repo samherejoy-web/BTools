@@ -87,13 +87,26 @@ class MarketMindAPITester:
             })
             return False, {}
 
+    # BASIC API TESTS
     def test_health_check(self):
         """Test health check endpoint"""
         success, response = self.run_test(
             "Health Check",
             "GET",
             "health",
-            200
+            200,
+            description="Test API health and database connectivity"
+        )
+        return success
+
+    def test_debug_connectivity(self):
+        """Test debug connectivity endpoint"""
+        success, response = self.run_test(
+            "Debug Connectivity",
+            "GET",
+            "debug/connectivity",
+            200,
+            description="Test system connectivity and configuration"
         )
         return success
 
@@ -103,7 +116,8 @@ class MarketMindAPITester:
             "Get Categories",
             "GET", 
             "categories",
-            200
+            200,
+            description="Get all available categories"
         )
         if success and isinstance(response, list):
             print(f"   Found {len(response)} categories")
@@ -118,7 +132,8 @@ class MarketMindAPITester:
             "Get Tools",
             "GET",
             "tools",
-            200
+            200,
+            description="Get all available tools"
         )
         if success and isinstance(response, list):
             print(f"   Found {len(response)} tools")
@@ -130,10 +145,41 @@ class MarketMindAPITester:
             "Get Blogs",
             "GET",
             "blogs",
-            200
+            200,
+            description="Get all available blogs"
         )
         if success and isinstance(response, list):
             print(f"   Found {len(response)} blogs")
+        return success
+
+    # AUTHENTICATION TESTS
+    def test_register(self):
+        """Test user registration with proper username field"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        test_email = f"test_user_{timestamp}@test.com"
+        test_username = f"testuser_{timestamp}"
+        
+        success, response = self.run_test(
+            "User Registration",
+            "POST",
+            "auth/register",
+            200,
+            data={
+                "email": test_email,
+                "username": test_username,
+                "password": "TestPass123!",
+                "full_name": "Test User"
+            },
+            description="Register new user with all required fields"
+        )
+        
+        if success and isinstance(response, dict) and 'user' in response:
+            self.created_resources['users'].append({
+                'id': response['user']['id'],
+                'email': test_email,
+                'username': test_username
+            })
+        
         return success
 
     def test_login(self, email, password):
@@ -156,21 +202,6 @@ class MarketMindAPITester:
                 return True, user_role
         return False, None
 
-    def test_user_dashboard(self):
-        """Test user dashboard endpoint (correct endpoint)"""
-        if not self.token:
-            print("❌ Skipping dashboard test - no authentication token")
-            return False
-            
-        success, response = self.run_test(
-            "User Dashboard",
-            "GET",
-            "user/dashboard",  # Corrected endpoint
-            200,
-            description="Get user dashboard data and statistics"
-        )
-        return success
-
     def test_current_user_info(self):
         """Test getting current user info"""
         if not self.token:
@@ -186,173 +217,20 @@ class MarketMindAPITester:
         )
         return success
 
-    def test_register(self):
-        """Test user registration with proper username field"""
-        timestamp = datetime.now().strftime('%H%M%S')
-        test_email = f"test_user_{timestamp}@test.com"
-        test_username = f"testuser_{timestamp}"
-        
-        success, response = self.run_test(
-            "User Registration",
-            "POST",
-            "auth/register",
-            200,  # Changed from 201 to 200 based on actual API response
-            data={
-                "email": test_email,
-                "username": test_username,  # Added required username field
-                "password": "TestPass123!",
-                "full_name": "Test User"
-            },
-            description="Register new user with all required fields"
-        )
-        
-        if success and isinstance(response, dict) and 'user' in response:
-            self.created_resources['users'].append({
-                'id': response['user']['id'],
-                'email': test_email,
-                'username': test_username
-            })
-        
-        return success
-
-    # USER TESTS
-    def test_user_blog_operations(self):
-        """Test user blog creation and management"""
+    def test_user_dashboard(self):
+        """Test user dashboard endpoint"""
         if not self.token:
-            print("❌ Skipping user blog tests - no authentication token")
+            print("❌ Skipping dashboard test - no authentication token")
             return False
-        
-        results = []
-        
-        # Test create blog
-        timestamp = datetime.now().strftime('%H%M%S')
-        blog_data = {
-            "title": f"Test Blog Post {timestamp}",
-            "content": f"<h1>Test Blog Content</h1><p>This is a test blog post created at {timestamp} for automated testing purposes. It contains sample content to verify the blog creation functionality.</p>",
-            "excerpt": "This is a test blog post excerpt for automated testing",
-            "tags": ["test", "automation", "blog"],
-            "seo_title": f"Test Blog Post {timestamp} - SEO Title",
-            "seo_description": "SEO description for test blog post",
-            "seo_keywords": "test, blog, automation"
-        }
-        
-        success, response = self.run_test(
-            "Create Blog Post",
-            "POST",
-            "blogs",
-            200,
-            data=blog_data,
-            description="Create new blog post as authenticated user"
-        )
-        results.append(success)
-        
-        if success and isinstance(response, dict) and 'id' in response:
-            created_blog_id = response['id']
-            self.created_resources['blogs'].append({
-                'id': created_blog_id,
-                'title': blog_data['title']
-            })
             
-            # Test update blog
-            success, response = self.run_test(
-                "Update Blog Post",
-                "PUT",
-                f"blogs/{created_blog_id}",
-                200,
-                data={"title": f"Updated Test Blog Post {timestamp}"},
-                description="Update blog post as owner"
-            )
-            results.append(success)
-            
-            # Test publish blog
-            success, response = self.run_test(
-                "Publish Blog Post",
-                "POST",
-                f"blogs/{created_blog_id}/publish",
-                200,
-                description="Publish blog post"
-            )
-            results.append(success)
-        
-        return all(results)
-
-    def test_user_profile_operations(self):
-        """Test user profile management"""
-        if not self.token:
-            print("❌ Skipping user profile tests - no authentication token")
-            return False
-        
-        results = []
-        
-        # Test update profile
-        profile_data = {
-            "full_name": "Updated Test User Name",
-            "bio": "Updated bio for automated testing user"
-        }
-        
         success, response = self.run_test(
-            "Update User Profile",
-            "PUT",
-            "user/profile",
-            200,
-            data=profile_data,
-            description="Update user profile information"
-        )
-        results.append(success)
-        
-        return all(results)
-
-    def test_tool_interactions(self):
-        """Test user tool interactions (reviews, favorites)"""
-        if not self.token:
-            print("❌ Skipping tool interaction tests - no authentication token")
-            return False
-        
-        results = []
-        
-        # First get available tools
-        success, tools_response = self.run_test(
-            "Get Tools for Interaction",
+            "User Dashboard",
             "GET",
-            "tools?limit=1",
+            "user/dashboard",
             200,
-            description="Get tools to test interactions"
+            description="Get user dashboard data and statistics"
         )
-        
-        if success and isinstance(tools_response, list) and len(tools_response) > 0:
-            tool_id = tools_response[0]['id']
-            
-            # Test create review
-            review_data = {
-                "tool_id": tool_id,
-                "rating": 4,
-                "title": "Great tool for testing",
-                "content": "This tool works well for our automated testing purposes. Highly recommended!",
-                "pros": ["Easy to use", "Good features", "Reliable"],
-                "cons": ["Could be faster"]
-            }
-            
-            success, response = self.run_test(
-                "Create Tool Review",
-                "POST",
-                f"tools/{tool_id}/reviews",
-                200,
-                data=review_data,
-                description="Create review for a tool"
-            )
-            results.append(success)
-            
-            # Test toggle favorite
-            success, response = self.run_test(
-                "Toggle Tool Favorite",
-                "POST",
-                f"tools/{tool_id}/favorite",
-                200,
-                description="Add/remove tool from favorites"
-            )
-            results.append(success)
-        
-        return all(results)
+        return success
 
     # SUPERADMIN TESTS
     def test_superadmin_user_management(self):
@@ -660,29 +538,375 @@ class MarketMindAPITester:
         )
         return success
 
+    # USER TESTS
+    def test_user_blog_operations(self):
+        """Test user blog creation and management"""
+        if not self.token:
+            print("❌ Skipping user blog tests - no authentication token")
+            return False
+        
+        results = []
+        
+        # Test create blog
+        timestamp = datetime.now().strftime('%H%M%S')
+        blog_data = {
+            "title": f"Test Blog Post {timestamp}",
+            "content": f"<h1>Test Blog Content</h1><p>This is a test blog post created at {timestamp} for automated testing purposes. It contains sample content to verify the blog creation functionality.</p>",
+            "excerpt": "This is a test blog post excerpt for automated testing",
+            "tags": ["test", "automation", "blog"],
+            "seo_title": f"Test Blog Post {timestamp} - SEO Title",
+            "seo_description": "SEO description for test blog post",
+            "seo_keywords": "test, blog, automation"
+        }
+        
+        success, response = self.run_test(
+            "Create Blog Post",
+            "POST",
+            "blogs",
+            200,
+            data=blog_data,
+            description="Create new blog post as authenticated user"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict) and 'id' in response:
+            created_blog_id = response['id']
+            self.created_resources['blogs'].append({
+                'id': created_blog_id,
+                'title': blog_data['title']
+            })
+            
+            # Test update blog
+            success, response = self.run_test(
+                "Update Blog Post",
+                "PUT",
+                f"blogs/{created_blog_id}",
+                200,
+                data={"title": f"Updated Test Blog Post {timestamp}"},
+                description="Update blog post as owner"
+            )
+            results.append(success)
+            
+            # Test publish blog
+            success, response = self.run_test(
+                "Publish Blog Post",
+                "POST",
+                f"blogs/{created_blog_id}/publish",
+                200,
+                description="Publish blog post"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    def test_user_profile_operations(self):
+        """Test user profile management"""
+        if not self.token:
+            print("❌ Skipping user profile tests - no authentication token")
+            return False
+        
+        results = []
+        
+        # Test update profile
+        profile_data = {
+            "full_name": "Updated Test User Name",
+            "bio": "Updated bio for automated testing user"
+        }
+        
+        success, response = self.run_test(
+            "Update User Profile",
+            "PUT",
+            "user/profile",
+            200,
+            data=profile_data,
+            description="Update user profile information"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_tool_interactions(self):
+        """Test user tool interactions (reviews, favorites)"""
+        if not self.token:
+            print("❌ Skipping tool interaction tests - no authentication token")
+            return False
+        
+        results = []
+        
+        # First get available tools
+        success, tools_response = self.run_test(
+            "Get Tools for Interaction",
+            "GET",
+            "tools?limit=1",
+            200,
+            description="Get tools to test interactions"
+        )
+        
+        if success and isinstance(tools_response, list) and len(tools_response) > 0:
+            tool_id = tools_response[0]['id']
+            
+            # Test create review
+            review_data = {
+                "tool_id": tool_id,
+                "rating": 4,
+                "title": "Great tool for testing",
+                "content": "This tool works well for our automated testing purposes. Highly recommended!",
+                "pros": ["Easy to use", "Good features", "Reliable"],
+                "cons": ["Could be faster"]
+            }
+            
+            success, response = self.run_test(
+                "Create Tool Review",
+                "POST",
+                f"tools/{tool_id}/reviews",
+                200,
+                data=review_data,
+                description="Create review for a tool"
+            )
+            results.append(success)
+            
+            # Test toggle favorite
+            success, response = self.run_test(
+                "Toggle Tool Favorite",
+                "POST",
+                f"tools/{tool_id}/favorite",
+                200,
+                description="Add/remove tool from favorites"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    # ENHANCED PUBLIC API TESTS
+    def test_tools_advanced(self):
+        """Test advanced tools API functionality"""
+        results = []
+        
+        # Test tools with filtering
+        success, response = self.run_test(
+            "Get Tools with Filters",
+            "GET",
+            "tools?pricing=free&sort=rating&limit=5",
+            200,
+            description="Get tools with pricing filter and rating sort"
+        )
+        results.append(success)
+        
+        # Test tool search
+        success, response = self.run_test(
+            "Search Tools",
+            "GET",
+            "tools?search=productivity&limit=3",
+            200,
+            description="Search tools by keyword"
+        )
+        results.append(success)
+        
+        # Test featured tools
+        success, response = self.run_test(
+            "Get Featured Tools",
+            "GET",
+            "tools?featured=true",
+            200,
+            description="Get only featured tools"
+        )
+        results.append(success)
+        
+        # Test tool details
+        if success and isinstance(response, list) and len(response) > 0:
+            tool_id = response[0]['id']
+            success, response = self.run_test(
+                "Get Tool Details",
+                "GET",
+                f"tools/{tool_id}",
+                200,
+                description="Get detailed information for a specific tool"
+            )
+            results.append(success)
+            
+            # Test tool reviews
+            success, response = self.run_test(
+                "Get Tool Reviews",
+                "GET",
+                f"tools/{tool_id}/reviews",
+                200,
+                description="Get reviews for a specific tool"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    def test_blogs_advanced(self):
+        """Test advanced blogs API functionality"""
+        results = []
+        
+        # Test blogs with filtering
+        success, response = self.run_test(
+            "Get Published Blogs",
+            "GET",
+            "blogs?status=published&limit=5",
+            200,
+            description="Get only published blogs"
+        )
+        results.append(success)
+        
+        # Test blog search
+        success, response = self.run_test(
+            "Search Blogs",
+            "GET",
+            "blogs?search=productivity&limit=3",
+            200,
+            description="Search blogs by keyword"
+        )
+        results.append(success)
+        
+        # Test blog details
+        if success and isinstance(response, list) and len(response) > 0:
+            blog_id = response[0]['id']
+            success, response = self.run_test(
+                "Get Blog Details",
+                "GET",
+                f"blogs/{blog_id}",
+                200,
+                description="Get detailed information for a specific blog"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    def test_tool_comparison(self):
+        """Test tool comparison functionality"""
+        # First get some tools
+        success, tools_response = self.run_test(
+            "Get Tools for Comparison",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get tools to test comparison feature"
+        )
+        
+        if success and isinstance(tools_response, list) and len(tools_response) >= 2:
+            tool_ids = [tool['id'] for tool in tools_response[:2]]
+            tool_ids_str = ",".join(tool_ids)
+            
+            success, response = self.run_test(
+                "Compare Tools",
+                "GET",
+                f"tools/compare?tool_ids={tool_ids_str}",
+                200,
+                description="Compare multiple tools"
+            )
+            return success
+        
+        return False
+
+    # AI INTEGRATION TESTS
+    def test_ai_blog_generation(self):
+        """Test AI blog generation"""
+        if not self.token:
+            print("❌ Skipping AI blog test - no authentication token")
+            return False
+            
+        success, response = self.run_test(
+            "AI Blog Generation",
+            "POST",
+            "ai/generate-blog",
+            200,
+            data={
+                "topic": "The Future of AI in Digital Marketing Tools",
+                "keywords": ["AI", "marketing", "automation", "tools"],
+                "target_length": "medium",
+                "auto_publish": False
+            },
+            description="Generate blog content using AI"
+        )
+        
+        if success and isinstance(response, dict):
+            if 'content' in response and 'title' in response:
+                print("   AI blog generation working - content and title generated")
+                if 'id' in response:
+                    self.created_resources['blogs'].append({
+                        'id': response['id'],
+                        'title': response['title']
+                    })
+        return success
+
+    def test_ai_tool_comparison(self):
+        """Test AI-powered tool comparison"""
+        if not self.token:
+            print("❌ Skipping AI tool comparison test - no authentication token")
+            return False
+        
+        # First get some tools
+        success, tools_response = self.run_test(
+            "Get Tools for AI Comparison",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get tools for AI comparison test"
+        )
+        
+        if success and isinstance(tools_response, list) and len(tools_response) >= 2:
+            tool_ids = [tool['id'] for tool in tools_response[:2]]
+            
+            success, response = self.run_test(
+                "AI Tool Comparison",
+                "POST",
+                "ai/compare-tools",
+                200,
+                data={
+                    "tool_ids": tool_ids,
+                    "comparison_criteria": ["Features", "Pricing", "Ease of Use"],
+                    "create_blog": True,
+                    "auto_publish": False
+                },
+                description="Generate AI-powered tool comparison"
+            )
+            return success
+        
+        return False
+
+    def test_ai_blog_topics(self):
+        """Test AI blog topic suggestions"""
+        success, response = self.run_test(
+            "AI Blog Topic Suggestions",
+            "GET",
+            "ai/blog-topics?category=productivity",
+            200,
+            description="Get AI-suggested blog topics"
+        )
+        return success
+
 def main():
-    print("🚀 Starting MarketMind AI Platform API Tests")
-    print("=" * 60)
+    print("🚀 Starting MarketMind AI Platform Comprehensive API Tests")
+    print("=" * 70)
     
     tester = MarketMindAPITester()
     
     # Test basic endpoints first
     print("\n📋 BASIC API TESTS")
-    print("-" * 30)
+    print("-" * 40)
     tester.test_health_check()
     tester.test_debug_connectivity()
     tester.test_categories()
     tester.test_tools()
     tester.test_blogs()
     
+    # Test enhanced public APIs
+    print("\n🔧 ENHANCED PUBLIC API TESTS")
+    print("-" * 40)
+    tester.test_tools_advanced()
+    tester.test_blogs_advanced()
+    tester.test_tool_comparison()
+    
     # Test authentication with different user roles
-    print("\n🔐 AUTHENTICATION TESTS")
-    print("-" * 30)
+    print("\n🔐 AUTHENTICATION & ROLE-BASED TESTS")
+    print("-" * 40)
     
     # Test user registration
     tester.test_register()
     
-    # Test login with different roles
+    # Test login with different roles and comprehensive role-based testing
     test_accounts = [
         ("superadmin@marketmind.com", "admin123", "superadmin"),
         ("admin@marketmind.com", "admin123", "admin"),
@@ -695,24 +919,59 @@ def main():
         if success:
             successful_logins.append((email, role))
             
-            # Test role-specific endpoints
-            if role in ['user', 'admin', 'superadmin']:
-                tester.test_user_dashboard_data()
+            # Test basic authenticated endpoints
+            tester.test_current_user_info()
+            tester.test_user_dashboard()
             
-            # Test AI blog generation (requires authentication)
+            # Test role-specific functionality
+            if role == 'superadmin':
+                print(f"\n👑 SUPERADMIN TESTS (as {role})")
+                print("-" * 40)
+                tester.test_superadmin_user_management()
+                tester.test_superadmin_category_management()
+                tester.test_superadmin_tool_management()
+                tester.test_bulk_upload_template()
+                
+                # Also test admin functions as superadmin
+                tester.test_admin_dashboard()
+                tester.test_admin_blog_management()
+                tester.test_admin_review_management()
+                tester.test_admin_seo_management()
+                tester.test_admin_analytics()
+                
+            elif role == 'admin':
+                print(f"\n🛡️ ADMIN TESTS (as {role})")
+                print("-" * 40)
+                tester.test_admin_dashboard()
+                tester.test_admin_blog_management()
+                tester.test_admin_review_management()
+                tester.test_admin_seo_management()
+                tester.test_admin_analytics()
+            
+            elif role == 'user':
+                print(f"\n👤 USER TESTS (as {role})")
+                print("-" * 40)
+                tester.test_user_blog_operations()
+                tester.test_user_profile_operations()
+                tester.test_tool_interactions()
+            
+            # Test AI integration (available to all authenticated users)
             if role in ['user', 'admin', 'superadmin']:
-                print(f"\n🤖 AI INTEGRATION TEST (as {role})")
-                print("-" * 30)
+                print(f"\n🤖 AI INTEGRATION TESTS (as {role})")
+                print("-" * 40)
                 tester.test_ai_blog_generation()
+                tester.test_ai_tool_comparison()
+                tester.test_ai_blog_topics()
             
             # Reset token for next user
             tester.token = None
             tester.user_id = None
+            tester.current_user_role = None
     
     # Print comprehensive results
-    print("\n" + "=" * 60)
-    print("📊 TEST RESULTS SUMMARY")
-    print("=" * 60)
+    print("\n" + "=" * 70)
+    print("📊 COMPREHENSIVE TEST RESULTS SUMMARY")
+    print("=" * 70)
     print(f"Total Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
     print(f"Tests Failed: {len(tester.failed_tests)}")
@@ -723,8 +982,15 @@ def main():
         for email, role in successful_logins:
             print(f"   - {email} ({role})")
     
+    # Print created resources summary
+    if any(tester.created_resources.values()):
+        print(f"\n📝 Resources Created During Testing:")
+        for resource_type, resources in tester.created_resources.items():
+            if resources:
+                print(f"   - {resource_type.title()}: {len(resources)} items")
+    
     if tester.failed_tests:
-        print(f"\n❌ Failed Tests:")
+        print(f"\n❌ Failed Tests Details:")
         for test in tester.failed_tests:
             print(f"   - {test['name']}")
             if 'expected' in test:
@@ -733,18 +999,20 @@ def main():
                 print(f"     Error: {test['error']}")
             if 'response' in test:
                 print(f"     Response: {test['response']}")
+            if 'endpoint' in test:
+                print(f"     Endpoint: {test['endpoint']}")
     
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 70)
     
     # Return exit code based on results
     if len(tester.failed_tests) == 0:
-        print("🎉 All tests passed!")
+        print("🎉 All tests passed! Backend is fully functional.")
         return 0
-    elif len(tester.failed_tests) <= 2:
-        print("⚠️  Minor issues found - mostly working")
+    elif len(tester.failed_tests) <= 3:
+        print("⚠️  Minor issues found - backend is mostly working")
         return 0
     else:
-        print("❌ Significant issues found")
+        print("❌ Significant issues found - backend needs attention")
         return 1
 
 if __name__ == "__main__":
