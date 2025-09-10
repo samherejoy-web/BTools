@@ -345,20 +345,27 @@ def get_tools_routes():
     
     @router.get("/api/tools/compare", response_model=List[ToolResponse])
     async def compare_tools(
-        tool_ids: str = Query(..., description="Comma-separated tool IDs"),
+        tool_ids: str = Query(..., description="Comma-separated tool IDs or slugs"),
         db: Session = Depends(get_db)
     ):
-        tool_id_list = tool_ids.split(",")
+        tool_id_list = [tid.strip() for tid in tool_ids.split(",")]
         if len(tool_id_list) > 5:
             raise HTTPException(status_code=400, detail="Maximum 5 tools can be compared")
         
+        # Try to find tools by ID first, then by slug
         tools = db.query(Tool).options(joinedload(Tool.categories)).filter(
-            Tool.id.in_(tool_id_list),
+            or_(Tool.id.in_(tool_id_list), Tool.slug.in_(tool_id_list)),
             Tool.is_active == True
         ).all()
         
-        if len(tools) != len(tool_id_list):
-            raise HTTPException(status_code=404, detail="One or more tools not found")
+        if len(tools) == 0:
+            raise HTTPException(status_code=404, detail="No tools found with the provided IDs or slugs")
+        
+        # If fewer tools found than requested, still return what we found
+        found_count = len(tools)
+        requested_count = len(tool_id_list)
+        if found_count < requested_count:
+            print(f"Warning: Found {found_count} tools out of {requested_count} requested")
         
         return [
             ToolResponse(
