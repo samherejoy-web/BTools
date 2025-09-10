@@ -55,7 +55,7 @@ const UserReviews = () => {
       if (selectedRating) params.append('rating', selectedRating);
       if (selectedStatus && selectedStatus !== 'all') params.append('status', selectedStatus);
 
-      const response = await apiClient.get(`/api/user/reviews?${params}`);
+      const response = await apiClient.get(`/user/reviews?${params}`);
       setReviews(response.data.reviews || response.data || []);
     } catch (error) {
       console.error('Error fetching user reviews:', error);
