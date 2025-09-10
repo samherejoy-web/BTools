@@ -21,7 +21,7 @@ class MarketMindAPITester:
             'reviews': []
         }
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, description=None):
         """Run a single API test"""
         url = f"{self.base_url}/{endpoint}" if not endpoint.startswith('http') else endpoint
         test_headers = {'Content-Type': 'application/json'}
@@ -34,6 +34,8 @@ class MarketMindAPITester:
 
         self.tests_run += 1
         print(f"\n🔍 Testing {name}...")
+        if description:
+            print(f"   Description: {description}")
         print(f"   URL: {url}")
         
         try:
@@ -52,20 +54,26 @@ class MarketMindAPITester:
                 print(f"✅ Passed - Status: {response.status_code}")
                 try:
                     response_data = response.json()
-                    if isinstance(response_data, dict) and len(response_data) <= 5:
-                        print(f"   Response: {response_data}")
-                    elif isinstance(response_data, list) and len(response_data) <= 3:
+                    if isinstance(response_data, dict):
+                        if len(str(response_data)) <= 300:
+                            print(f"   Response: {response_data}")
+                        else:
+                            print(f"   Response: Large object with {len(response_data)} keys")
+                    elif isinstance(response_data, list):
                         print(f"   Response: {len(response_data)} items")
+                        if len(response_data) <= 3 and response_data:
+                            print(f"   Sample: {response_data[0] if response_data else 'Empty'}")
                 except:
                     print(f"   Response: {response.text[:100]}...")
             else:
                 print(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
-                print(f"   Response: {response.text[:200]}...")
+                print(f"   Response: {response.text[:300]}...")
                 self.failed_tests.append({
                     'name': name,
                     'expected': expected_status,
                     'actual': response.status_code,
-                    'response': response.text[:200]
+                    'response': response.text[:300],
+                    'endpoint': endpoint
                 })
 
             return success, response.json() if response.headers.get('content-type', '').startswith('application/json') else response.text
@@ -74,7 +82,8 @@ class MarketMindAPITester:
             print(f"❌ Failed - Error: {str(e)}")
             self.failed_tests.append({
                 'name': name,
-                'error': str(e)
+                'error': str(e),
+                'endpoint': endpoint
             })
             return False, {}
 
