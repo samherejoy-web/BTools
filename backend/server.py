@@ -115,10 +115,10 @@ if CODESPACE_NAME:
 allowed_origins.extend([
     "https://fictional-happiness-jjgp7p5p4gp4hq9rw-3000.app.github.dev",
     "https://fictional-happiness-jjgp7p5p4gp4hq9rw-8001.app.github.dev",
-    "https://93364546-03cb-4ae8-a6a0-909ce7700a55.preview.emergentagent.com",
+    "https://toolhub-sync.preview.emergentagent.com",
     "https://psychic-space-potato-x54gpgwg9pw626rpp-3000.app.github.dev",
     "https://psychic-space-potato-x54gpgwg9pw626rpp-8001.app.github.dev",
-    "https://blogtools-platform.preview.emergentagent.com"
+    "https://toolhub-sync.preview.emergentagent.com"
 ])
 
 # Enhanced dynamic pattern matching for any github.dev and emergentagent.com domains
