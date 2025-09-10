@@ -1,6 +1,7 @@
 import requests
 import sys
 import json
+import uuid
 from datetime import datetime
 
 class MarketMindAPITester:
@@ -8,9 +9,17 @@ class MarketMindAPITester:
         self.base_url = base_url
         self.token = None
         self.user_id = None
+        self.current_user_role = None
         self.tests_run = 0
         self.tests_passed = 0
         self.failed_tests = []
+        self.created_resources = {
+            'users': [],
+            'tools': [],
+            'categories': [],
+            'blogs': [],
+            'reviews': []
+        }
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
         """Run a single API test"""
