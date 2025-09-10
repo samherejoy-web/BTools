@@ -156,7 +156,7 @@ const CompareToolsPage = () => {
         status: 'draft'
       };
 
-      await apiClient.post('/api/user/blogs', blogData);
+      await apiClient.post('/user/blogs', blogData);
       toast.success('Comparison saved as blog draft!');
     } catch (error) {
       console.error('Error saving comparison as blog:', error);
