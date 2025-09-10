@@ -93,7 +93,7 @@ const UserReviews = () => {
         cons: newReview.cons.split(',').map(c => c.trim()).filter(c => c)
       };
 
-      await apiClient.post(`/api/tools/${selectedTool}/reviews`, reviewData);
+      await apiClient.post(`/tools/${selectedTool}/reviews`, reviewData);
       toast.success('Review submitted successfully!');
       
       setNewReview({ rating: 5, title: '', content: '', pros: '', cons: '' });
