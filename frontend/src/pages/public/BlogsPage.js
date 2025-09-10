@@ -74,7 +74,7 @@ const BlogsPage = () => {
 
     try {
       setLoading(true);
-      const response = await apiClient.get(`/api/blogs/search?q=${encodeURIComponent(searchTerm)}`);
+      const response = await apiClient.get(`/blogs/search?q=${encodeURIComponent(searchTerm)}`);
       setBlogs(response.data.blogs || response.data || []);
     } catch (error) {
       console.error('Error searching blogs:', error);
