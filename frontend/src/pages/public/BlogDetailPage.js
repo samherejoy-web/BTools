@@ -50,7 +50,7 @@ const BlogDetailPage = () => {
   const fetchBlogDetails = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/api/blogs/${blogSlug}`);
+      const response = await apiClient.get(`/blogs/${blogSlug}`);
       setBlog(response.data);
       setLikesCount(response.data.likes_count || 0);
       
