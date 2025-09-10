@@ -83,7 +83,7 @@ const BlogDetailPage = () => {
     }
 
     try {
-      await apiClient.post(`/api/blogs/${blogSlug}/bookmark`);
+      await apiClient.post(`/blogs/${blogSlug}/bookmark`);
       setIsBookmarked(!isBookmarked);
       toast.success(isBookmarked ? 'Removed from bookmarks' : 'Added to bookmarks');
     } catch (error) {
