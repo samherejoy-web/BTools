@@ -129,7 +129,7 @@ const ToolDetailPage = () => {
     }
 
     try {
-      await apiClient.post(`/api/tools/${toolId}/favorite`);
+      await apiClient.post(`/tools/${toolId}/favorite`);
       setIsFavorite(!isFavorite);
       toast.success(isFavorite ? 'Removed from favorites' : 'Added to favorites');
     } catch (error) {
