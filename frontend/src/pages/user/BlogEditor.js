@@ -302,7 +302,7 @@ const BlogEditor = () => {
       if (blogId && blogId !== 'new') {
         response = await apiClient.put(`/user/blogs/${blogId}`, blogData);
       } else {
-        response = await apiClient.post('/api/user/blogs', blogData);
+        response = await apiClient.post('/user/blogs', blogData);
       }
 
       toast.success(status === 'published' ? 'Blog published successfully!' : 'Blog saved as draft');
