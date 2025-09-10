@@ -100,7 +100,7 @@ const BlogDetailPage = () => {
     }
 
     try {
-      await apiClient.post(`/api/blogs/${blogSlug}/like`);
+      await apiClient.post(`/blogs/${blogSlug}/like`);
       setIsLiked(!isLiked);
       setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
       toast.success(isLiked ? 'Like removed' : 'Article liked!');
