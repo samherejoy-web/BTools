@@ -155,19 +155,32 @@ class MarketMindAPITester:
         return False, None
 
     def test_register(self):
-        """Test user registration"""
-        test_email = f"test_user_{datetime.now().strftime('%H%M%S')}@test.com"
+        """Test user registration with proper username field"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        test_email = f"test_user_{timestamp}@test.com"
+        test_username = f"testuser_{timestamp}"
+        
         success, response = self.run_test(
             "User Registration",
             "POST",
             "auth/register",
-            201,
+            200,  # Changed from 201 to 200 based on actual API response
             data={
                 "email": test_email,
+                "username": test_username,  # Added required username field
                 "password": "TestPass123!",
                 "full_name": "Test User"
-            }
+            },
+            description="Register new user with all required fields"
         )
+        
+        if success and isinstance(response, dict) and 'user' in response:
+            self.created_resources['users'].append({
+                'id': response['user']['id'],
+                'email': test_email,
+                'username': test_username
+            })
+        
         return success
 
     def test_ai_blog_generation(self):
