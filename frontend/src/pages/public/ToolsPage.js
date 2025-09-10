@@ -49,7 +49,7 @@ const ToolsPage = () => {
       if (sortBy) params.append('sort', sortBy);
       if (featuredOnly) params.append('featured', 'true');
 
-      const response = await apiClient.get(`/api/tools?${params}`);
+      const response = await apiClient.get(`/tools?${params}`);
       setTools(response.data.tools || response.data || []);
     } catch (error) {
       console.error('Error fetching tools:', error);
