@@ -117,7 +117,7 @@ code {
 
 /* Rich text editor styles */
 .ProseMirror {
-  @apply prose prose-lg max-w-none focus:outline-none min-h-[300px] p-4 border border-gray-300 rounded-lg;
+  @apply max-w-none focus:outline-none min-h-[300px] p-4 border border-gray-300 rounded-lg;
 }
 
 .ProseMirror h1 {
