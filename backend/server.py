@@ -1,29 +1,58 @@
-from fastapi import FastAPI, APIRouter
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
+from fastapi import FastAPI, HTTPException, Request, Response, Depends
+from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from sqlalchemy import create_engine, text
+from database import get_db, engine
+from models import Base
+from scheduler import start_trending_updater
 import os
 import logging
-from pathlib import Path
-from pydantic import BaseModel, Field
-from typing import List
-import uuid
+import traceback
+import time
 from datetime import datetime
+from dotenv import load_dotenv
 
+# Import route modules
+from superadmin_routes import router as superadmin_router
+from admin_routes import router as admin_router
+from user_routes import get_user_routes
+from tools_routes import get_tools_routes
+from blogs_routes import router as blogs_router
+from ai_blog_routes import router as ai_blog_router
 
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+# Configure logging
+import os
+os.makedirs('/tmp/logs', exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('/tmp/logs/backend.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+load_dotenv()
 
-# Create the main app without a prefix
-app = FastAPI()
+# Database connection test
+def test_database_connection():
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT 1"))
+            logger.info("Database connection successful")
+            return True
+    except Exception as e:
+        logger.error(f"Database connection failed: {e}")
+        return False
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+app = FastAPI(
+    title="MarketMindAI API",
+    description="Enhanced B2B Blogging and Tools Platform with AI Integration - Modular Architecture",
+    version="2.0.0",
+    debug=True
+)
 
 
 # Define Models
