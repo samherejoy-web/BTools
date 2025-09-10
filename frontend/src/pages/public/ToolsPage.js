@@ -76,7 +76,7 @@ const ToolsPage = () => {
 
     try {
       setLoading(true);
-      const response = await apiClient.get(`/api/tools/search?q=${encodeURIComponent(searchTerm)}`);
+      const response = await apiClient.get(`/tools/search?q=${encodeURIComponent(searchTerm)}`);
       setTools(response.data.tools || response.data || []);
     } catch (error) {
       console.error('Error searching tools:', error);
