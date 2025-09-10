@@ -432,13 +432,114 @@ class MarketMindAPITester:
         )
         return success
 
-    def test_debug_connectivity(self):
-        """Test debug connectivity endpoint"""
+    # ADMIN TESTS
+    def test_admin_dashboard(self):
+        """Test admin dashboard"""
+        if self.current_user_role not in ['admin', 'superadmin']:
+            print("❌ Skipping admin dashboard test - insufficient permissions")
+            return False
+        
         success, response = self.run_test(
-            "Debug Connectivity",
+            "Admin Dashboard",
             "GET",
-            "debug/connectivity",
-            200
+            "admin/dashboard",
+            200,
+            description="Get admin dashboard statistics and data"
+        )
+        return success
+
+    def test_admin_blog_management(self):
+        """Test admin blog management operations"""
+        if self.current_user_role not in ['admin', 'superadmin']:
+            print("❌ Skipping admin blog tests - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test get all blogs as admin
+        success, response = self.run_test(
+            "Get All Blogs (Admin)",
+            "GET",
+            "admin/blogs",
+            200,
+            description="Get all blogs with admin privileges"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_admin_review_management(self):
+        """Test admin review management"""
+        if self.current_user_role not in ['admin', 'superadmin']:
+            print("❌ Skipping admin review tests - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test get all reviews
+        success, response = self.run_test(
+            "Get All Reviews (Admin)",
+            "GET",
+            "admin/reviews",
+            200,
+            description="Get all reviews with admin privileges"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_admin_seo_management(self):
+        """Test admin SEO page management"""
+        if self.current_user_role not in ['admin', 'superadmin']:
+            print("❌ Skipping admin SEO tests - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test get SEO pages
+        success, response = self.run_test(
+            "Get SEO Pages (Admin)",
+            "GET",
+            "admin/seo-pages",
+            200,
+            description="Get all SEO pages configuration"
+        )
+        results.append(success)
+        
+        # Test create SEO page
+        timestamp = datetime.now().strftime('%H%M%S')
+        seo_page_data = {
+            "page_path": f"/test-page-{timestamp}",
+            "title": f"Test SEO Page {timestamp}",
+            "description": "Test SEO page created by automated testing",
+            "keywords": "test, seo, automation",
+            "meta_tags": {"robots": "index,follow"}
+        }
+        
+        success, response = self.run_test(
+            "Create SEO Page (Admin)",
+            "POST",
+            "admin/seo-pages",
+            200,
+            data=seo_page_data,
+            description="Create new SEO page configuration"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_admin_analytics(self):
+        """Test admin analytics endpoint"""
+        if self.current_user_role not in ['admin', 'superadmin']:
+            print("❌ Skipping admin analytics test - insufficient permissions")
+            return False
+        
+        success, response = self.run_test(
+            "Admin Analytics",
+            "GET",
+            "admin/analytics?days=30",
+            200,
+            description="Get analytics data for admin dashboard"
         )
         return success
 
