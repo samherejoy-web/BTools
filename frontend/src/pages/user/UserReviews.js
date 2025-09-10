@@ -110,7 +110,7 @@ const UserReviews = () => {
     if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
-      await apiClient.delete(`/api/user/reviews/${reviewId}`);
+      await apiClient.delete(`/user/reviews/${reviewId}`);
       toast.success('Review deleted successfully');
       fetchUserReviews();
     } catch (error) {
