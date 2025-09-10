@@ -55,7 +55,7 @@ const BlogDetailPage = () => {
       setLikesCount(response.data.likes_count || 0);
       
       // Increment view count
-      await apiClient.post(`/api/blogs/${blogSlug}/view`);
+      await apiClient.post(`/blogs/${blogSlug}/view`);
     } catch (error) {
       console.error('Error fetching blog details:', error);
       toast.error('Blog not found');
