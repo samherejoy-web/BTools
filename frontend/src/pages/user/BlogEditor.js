@@ -343,7 +343,7 @@ const BlogEditor = () => {
 
     try {
       setAiGenerating(true);
-      const response = await apiClient.post('/api/ai/generate-blog', {
+      const response = await apiClient.post('/ai/generate-blog', {
         topic: aiPrompt,
         style: 'professional',
         length: 'medium'
