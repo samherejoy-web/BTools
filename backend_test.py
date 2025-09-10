@@ -237,17 +237,198 @@ class MarketMindAPITester:
                 print("   AI blog generation working")
         return success
 
-    def test_user_dashboard_data(self):
-        """Test user dashboard data endpoints"""
-        if not self.token:
-            print("❌ Skipping dashboard test - no authentication token")
+    # SUPERADMIN TESTS
+    def test_superadmin_user_management(self):
+        """Test superadmin user CRUD operations"""
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping superadmin tests - insufficient permissions")
             return False
-            
+        
+        results = []
+        
+        # Test get all users
         success, response = self.run_test(
-            "User Dashboard Stats",
+            "Get All Users (Superadmin)",
             "GET",
-            "user/dashboard/stats",
-            200
+            "superadmin/users",
+            200,
+            description="Get all users with superadmin privileges"
+        )
+        results.append(success)
+        
+        # Test create user
+        timestamp = datetime.now().strftime('%H%M%S')
+        new_user_data = {
+            "email": f"admin_created_{timestamp}@test.com",
+            "username": f"admin_created_{timestamp}",
+            "password": "AdminPass123!",
+            "full_name": "Admin Created User",
+            "role": "user"
+        }
+        
+        success, response = self.run_test(
+            "Create User (Superadmin)",
+            "POST",
+            "superadmin/users",
+            200,
+            data=new_user_data,
+            description="Create new user as superadmin"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict) and 'user_id' in response:
+            created_user_id = response['user_id']
+            self.created_resources['users'].append({
+                'id': created_user_id,
+                'email': new_user_data['email'],
+                'username': new_user_data['username']
+            })
+            
+            # Test update user
+            success, response = self.run_test(
+                "Update User (Superadmin)",
+                "PUT",
+                f"superadmin/users/{created_user_id}",
+                200,
+                data={"full_name": "Updated Admin User", "role": "admin"},
+                description="Update user details as superadmin"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    def test_superadmin_category_management(self):
+        """Test superadmin category CRUD operations"""
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping superadmin category tests - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test get all categories
+        success, response = self.run_test(
+            "Get All Categories (Superadmin)",
+            "GET",
+            "superadmin/categories",
+            200,
+            description="Get all categories with superadmin privileges"
+        )
+        results.append(success)
+        
+        # Test create category
+        timestamp = datetime.now().strftime('%H%M%S')
+        new_category_data = {
+            "name": f"Test Category {timestamp}",
+            "description": "Test category created by automated test",
+            "seo_title": f"Test Category {timestamp} - SEO Title",
+            "seo_description": "SEO description for test category"
+        }
+        
+        success, response = self.run_test(
+            "Create Category (Superadmin)",
+            "POST",
+            "superadmin/categories",
+            200,
+            data=new_category_data,
+            description="Create new category as superadmin"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict) and 'category_id' in response:
+            created_category_id = response['category_id']
+            self.created_resources['categories'].append({
+                'id': created_category_id,
+                'name': new_category_data['name']
+            })
+            
+            # Test update category
+            success, response = self.run_test(
+                "Update Category (Superadmin)",
+                "PUT",
+                f"superadmin/categories/{created_category_id}",
+                200,
+                data={"name": f"Updated Test Category {timestamp}"},
+                description="Update category as superadmin"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    def test_superadmin_tool_management(self):
+        """Test superadmin tool CRUD operations"""
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping superadmin tool tests - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test get all tools
+        success, response = self.run_test(
+            "Get All Tools (Superadmin)",
+            "GET",
+            "superadmin/tools",
+            200,
+            description="Get all tools with superadmin privileges"
+        )
+        results.append(success)
+        
+        # Test create tool
+        timestamp = datetime.now().strftime('%H%M%S')
+        new_tool_data = {
+            "name": f"Test Tool {timestamp}",
+            "description": "This is a test tool created by automated testing",
+            "short_description": "Test tool for automation",
+            "url": "https://example.com/test-tool",
+            "pricing_type": "free",
+            "features": ["Feature 1", "Feature 2", "Feature 3"],
+            "pros": ["Pro 1", "Pro 2"],
+            "cons": ["Con 1"],
+            "is_featured": False,
+            "is_active": True
+        }
+        
+        success, response = self.run_test(
+            "Create Tool (Superadmin)",
+            "POST",
+            "superadmin/tools",
+            200,
+            data=new_tool_data,
+            description="Create new tool as superadmin"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict) and 'tool_id' in response:
+            created_tool_id = response['tool_id']
+            self.created_resources['tools'].append({
+                'id': created_tool_id,
+                'name': new_tool_data['name']
+            })
+            
+            # Test update tool
+            success, response = self.run_test(
+                "Update Tool (Superadmin)",
+                "PUT",
+                f"superadmin/tools/{created_tool_id}",
+                200,
+                data={"name": f"Updated Test Tool {timestamp}", "is_featured": True},
+                description="Update tool as superadmin"
+            )
+            results.append(success)
+        
+        return all(results)
+
+    def test_bulk_upload_template(self):
+        """Test CSV template download for bulk upload"""
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping bulk upload template test - insufficient permissions")
+            return False
+        
+        success, response = self.run_test(
+            "CSV Template Download",
+            "GET",
+            "superadmin/tools/csv-template",
+            200,
+            description="Download CSV template for bulk tool upload"
         )
         return success
 
