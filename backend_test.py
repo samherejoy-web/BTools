@@ -143,16 +143,48 @@ class MarketMindAPITester:
             "POST",
             "auth/login",
             200,
-            data={"email": email, "password": password}
+            data={"email": email, "password": password},
+            description=f"Login with {email}"
         )
         if success and isinstance(response, dict):
             if 'access_token' in response:
                 self.token = response['access_token']
                 self.user_id = response.get('user', {}).get('id')
+                self.current_user_role = response.get('user', {}).get('role', 'unknown')
                 user_role = response.get('user', {}).get('role', 'unknown')
                 print(f"   Logged in as: {user_role}")
                 return True, user_role
         return False, None
+
+    def test_user_dashboard(self):
+        """Test user dashboard endpoint (correct endpoint)"""
+        if not self.token:
+            print("❌ Skipping dashboard test - no authentication token")
+            return False
+            
+        success, response = self.run_test(
+            "User Dashboard",
+            "GET",
+            "user/dashboard",  # Corrected endpoint
+            200,
+            description="Get user dashboard data and statistics"
+        )
+        return success
+
+    def test_current_user_info(self):
+        """Test getting current user info"""
+        if not self.token:
+            print("❌ Skipping user info test - no authentication token")
+            return False
+            
+        success, response = self.run_test(
+            "Current User Info",
+            "GET",
+            "auth/me",
+            200,
+            description="Get current authenticated user information"
+        )
+        return success
 
     def test_register(self):
         """Test user registration with proper username field"""
