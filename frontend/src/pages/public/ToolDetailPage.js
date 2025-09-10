@@ -52,7 +52,7 @@ const ToolDetailPage = () => {
   const fetchToolDetails = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/api/tools/${toolId}`);
+      const response = await apiClient.get(`/tools/${toolId}`);
       setTool(response.data);
       
       // Fetch related tools from the same category
