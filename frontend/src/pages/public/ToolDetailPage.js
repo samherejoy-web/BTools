@@ -79,7 +79,7 @@ const ToolDetailPage = () => {
 
   const fetchRelatedTools = async (categoryId) => {
     try {
-      const response = await apiClient.get(`/api/tools?category=${categoryId}&limit=4`);
+      const response = await apiClient.get(`/tools?category=${categoryId}&limit=4`);
       const tools = response.data.tools || response.data || [];
       setRelatedTools(tools.filter(t => t.id !== tool?.id));
     } catch (error) {
