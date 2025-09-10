@@ -122,7 +122,7 @@ const CompareToolsPage = () => {
     try {
       setAiComparisonLoading(true);
       const toolIds = comparedTools.map(t => t.id);
-      const response = await apiClient.post('/api/ai/compare-tools', {
+      const response = await apiClient.post('/ai/compare-tools', {
         tool_ids: toolIds
       });
       setAiComparison(response.data);
