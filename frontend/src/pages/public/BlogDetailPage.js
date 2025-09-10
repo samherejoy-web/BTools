@@ -67,7 +67,7 @@ const BlogDetailPage = () => {
 
   const fetchRelatedBlogs = async () => {
     try {
-      const response = await apiClient.get(`/api/blogs?limit=3`);
+      const response = await apiClient.get(`/blogs?limit=3`);
       const blogs = response.data.blogs || response.data || [];
       setRelatedBlogs(blogs.filter(b => b.slug !== blogSlug));
     } catch (error) {
