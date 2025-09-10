@@ -68,7 +68,7 @@ const UserReviews = () => {
   const fetchAvailableTools = async () => {
     try {
       setToolsLoading(true);
-      const response = await apiClient.get('/api/tools?limit=100');
+      const response = await apiClient.get('/tools?limit=100');
       setTools(response.data.tools || response.data || []);
     } catch (error) {
       console.error('Error fetching tools:', error);
