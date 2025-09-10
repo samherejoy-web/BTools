@@ -67,7 +67,7 @@ const CompareToolsPage = () => {
       const tools = [];
       for (const toolId of toolIds.slice(0, 5)) { // Limit to 5 tools
         try {
-          const response = await apiClient.get(`/api/tools/${toolId}`);
+          const response = await apiClient.get(`/tools/${toolId}`);
           tools.push(response.data);
         } catch (error) {
           console.warn(`Failed to load tool ${toolId}:`, error);
