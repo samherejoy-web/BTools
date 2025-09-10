@@ -52,7 +52,7 @@ const CompareToolsPage = () => {
   const fetchAvailableTools = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get('/api/tools?limit=100');
+      const response = await apiClient.get('/tools?limit=100');
       setAvailableTools(response.data.tools || response.data || []);
     } catch (error) {
       console.error('Error fetching tools:', error);
