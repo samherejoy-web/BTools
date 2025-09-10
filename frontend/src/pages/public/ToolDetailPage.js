@@ -105,7 +105,7 @@ const ToolDetailPage = () => {
         cons: newReview.cons.split(',').map(c => c.trim()).filter(c => c)
       };
 
-      await apiClient.post(`/api/tools/${toolId}/reviews`, reviewData);
+      await apiClient.post(`/tools/${toolId}/reviews`, reviewData);
       toast.success('Review submitted successfully!');
       
       setNewReview({ title: '', content: '', pros: '', cons: '' });
