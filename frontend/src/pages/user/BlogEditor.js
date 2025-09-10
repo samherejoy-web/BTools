@@ -300,7 +300,7 @@ const BlogEditor = () => {
 
       let response;
       if (blogId && blogId !== 'new') {
-        response = await apiClient.put(`/api/user/blogs/${blogId}`, blogData);
+        response = await apiClient.put(`/user/blogs/${blogId}`, blogData);
       } else {
         response = await apiClient.post('/api/user/blogs', blogData);
       }
