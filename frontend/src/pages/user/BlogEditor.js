@@ -268,7 +268,7 @@ const BlogEditor = () => {
   const fetchBlogData = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/api/user/blogs/${blogId}`);
+      const response = await apiClient.get(`/user/blogs/${blogId}`);
       setBlog(response.data);
     } catch (error) {
       console.error('Error fetching blog data:', error);
