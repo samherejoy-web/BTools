@@ -47,7 +47,7 @@ const BlogsPage = () => {
       if (sortBy) params.append('sort', sortBy);
       if (featuredOnly) params.append('featured', 'true');
 
-      const response = await apiClient.get(`/api/blogs?${params}`);
+      const response = await apiClient.get(`/blogs?${params}`);
       setBlogs(response.data.blogs || response.data || []);
     } catch (error) {
       console.error('Error fetching blogs:', error);
