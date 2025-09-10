@@ -61,7 +61,7 @@ const ToolsPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await apiClient.get('/api/categories');
+      const response = await apiClient.get('/categories');
       setCategories(response.data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
