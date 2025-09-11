@@ -325,9 +325,10 @@ const BlogDetailPage = () => {
               {/* Article Content */}
               <div className="p-8">
                 <div className="prose prose-lg max-w-none">
-                  <div className="text-gray-800 leading-relaxed whitespace-pre-line">
-                    {formatBlogContent(blog.content)}
-                  </div>
+                  <div 
+                    className="text-gray-800 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                  />
                 </div>
               </div>
 
