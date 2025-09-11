@@ -120,6 +120,7 @@ class Blog(Base):
     author_id = Column(String, ForeignKey('users.id'), nullable=False)
     status = Column(String, default="draft")  # draft, published, archived
     view_count = Column(Integer, default=0)
+    like_count = Column(Integer, default=0)
     reading_time = Column(Integer)  # in minutes
     tags = Column(JSON)
     is_ai_generated = Column(Boolean, default=False)
@@ -133,6 +134,9 @@ class Blog(Base):
     
     # Relationships
     author = relationship("User", back_populates="blogs")
+    comments = relationship("BlogComment", back_populates="blog", cascade="all, delete-orphan")
+    likes = relationship("BlogLike", back_populates="blog", cascade="all, delete-orphan")
+    bookmarks = relationship("BlogBookmark", back_populates="blog", cascade="all, delete-orphan")
 
 class SeoPage(Base):
     __tablename__ = "seo_pages"
