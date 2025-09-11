@@ -367,6 +367,7 @@ async def update_blog(
         author_name=current_user.full_name or current_user.username,
         status=blog.status,
         view_count=blog.view_count,
+        like_count=blog.like_count,
         reading_time=blog.reading_time,
         tags=blog.tags,
         is_ai_generated=blog.is_ai_generated,
