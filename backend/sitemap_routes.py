@@ -70,7 +70,8 @@ async def get_sitemap(db: Session = Depends(get_db)):
     
     # Add tools
     for tool in tools:
-        last_mod = tool.updated_at.strftime('%Y-%m-%d') if tool.updated_at else tool.created_at.strftime('%Y-%m-%d')
+        last_mod = (tool.updated_at.strftime('%Y-%m-%d') if tool.updated_at 
+                   else tool.created_at.strftime('%Y-%m-%d'))
         sitemap_content += f'''
     <url>
         <loc>{base_url}/tools/{tool.slug}</loc>
