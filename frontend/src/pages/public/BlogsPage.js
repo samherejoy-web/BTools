@@ -357,6 +357,10 @@ const BlogsPage = () => {
                         <Eye className="h-3 w-3" />
                         <span>{formatNumber(blog.view_count || 0)}</span>
                       </div>
+                      <div className="flex items-center gap-1">
+                        <Heart className="h-3 w-3" />
+                        <span>{formatNumber(blog.like_count || 0)}</span>
+                      </div>
                     </div>
                   </div>
 
