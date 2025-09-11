@@ -270,9 +270,10 @@ function App() {
           </Routes>
           
           <Toaster position="top-right" />
-        </div>
-      </Router>
-    </AuthProvider>
+          </div>
+        </Router>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 
