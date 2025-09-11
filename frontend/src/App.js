@@ -89,9 +89,10 @@ const DashboardLayout = ({ children }) => (
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App">
+    <HelmetProvider>
+      <AuthProvider>
+        <Router>
+          <div className="App">
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={
