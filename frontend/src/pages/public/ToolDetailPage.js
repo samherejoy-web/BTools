@@ -52,7 +52,7 @@ const ToolDetailPage = () => {
   const fetchToolDetails = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/tools/${toolId}`);
+      const response = await apiClient.get(`/tools/by-slug/${toolSlug}`);
       setTool(response.data);
       
       // Fetch related tools from the same category
@@ -70,7 +70,7 @@ const ToolDetailPage = () => {
 
   const fetchToolReviews = async () => {
     try {
-      const response = await apiClient.get(`/tools/${toolId}/reviews`);
+      const response = await apiClient.get(`/tools/${tool?.id || toolSlug}/reviews`);
       setReviews(response.data.reviews || response.data || []);
     } catch (error) {
       console.error('Error fetching reviews:', error);
