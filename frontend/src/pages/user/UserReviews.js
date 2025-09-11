@@ -86,6 +86,7 @@ const UserReviews = () => {
 
     try {
       const reviewData = {
+        tool_id: selectedTool, // Backend requires tool_id in request body
         rating: newReview.rating,
         title: newReview.title,
         content: newReview.content,
