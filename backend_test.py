@@ -1184,7 +1184,7 @@ class MarketMindAPITester:
         try:
             url = f"{self.base_url}/blogs/upload-image"
             headers = {'Authorization': f'Bearer {self.token}'}
-            files = {'file': ('test_image.png', img_bytes, 'image/png')}
+            files = {'file': (filename, img_bytes, content_type)}
             
             print(f"\n🔍 Testing Image Upload...")
             print(f"   URL: {url}")
