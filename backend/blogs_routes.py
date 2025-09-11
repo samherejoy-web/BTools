@@ -145,6 +145,7 @@ async def create_blog(
         author_name=current_user.full_name or current_user.username,
         status=db_blog.status,
         view_count=db_blog.view_count,
+        like_count=db_blog.like_count,
         reading_time=db_blog.reading_time,
         tags=db_blog.tags,
         is_ai_generated=db_blog.is_ai_generated,
