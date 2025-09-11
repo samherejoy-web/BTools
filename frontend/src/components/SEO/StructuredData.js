@@ -31,37 +31,44 @@ export const generateBreadcrumbSchema = (items) => {
 };
 
 export const generateArticleSchema = (blog) => {
-  const baseUrl = process.env.REACT_APP_BACKEND_URL || '';
-  
-  return {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": blog.title,
-    "description": blog.excerpt || blog.seo_description,
-    "image": blog.featured_image || `${baseUrl}/api/images/og-default.jpg`,
-    "author": {
-      "@type": "Person",
-      "name": blog.author_name || "MarketMind Team"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "MarketMind",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${baseUrl}/api/images/logo.png`
-      }
-    },
-    "datePublished": blog.published_at || blog.created_at,
-    "dateModified": blog.updated_at || blog.created_at,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `${baseUrl}/blogs/${blog.slug}`
-    },
-    "keywords": blog.tags?.join(', ') || blog.seo_keywords,
-    "wordCount": blog.content ? blog.content.replace(/<[^>]*>/g, '').split(' ').length : 0,
-    "timeRequired": `PT${blog.reading_time || 5}M`,
-    "inLanguage": "en-US"
-  };
+  try {
+    if (!blog) return null;
+    
+    const baseUrl = process.env.REACT_APP_BACKEND_URL || '';
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": blog.title || "Blog Post",
+      "description": blog.excerpt || blog.seo_description || "Read this insightful blog post.",
+      "image": blog.featured_image || `${baseUrl}/api/images/og-default.jpg`,
+      "author": {
+        "@type": "Person",
+        "name": blog.author_name || "MarketMind Team"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "MarketMind",
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${baseUrl}/api/images/logo.png`
+        }
+      },
+      "datePublished": blog.published_at || blog.created_at || new Date().toISOString(),
+      "dateModified": blog.updated_at || blog.created_at || new Date().toISOString(),
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${baseUrl}/blogs/${blog.slug}`
+      },
+      "keywords": (Array.isArray(blog.tags) ? blog.tags.join(', ') : '') || blog.seo_keywords || '',
+      "wordCount": blog.content ? blog.content.replace(/<[^>]*>/g, '').split(' ').length : 0,
+      "timeRequired": `PT${blog.reading_time || 5}M`,
+      "inLanguage": "en-US"
+    };
+  } catch (error) {
+    console.error('Error generating article schema:', error);
+    return null;
+  }
 };
 
 export const generateProductSchema = (tool) => {
