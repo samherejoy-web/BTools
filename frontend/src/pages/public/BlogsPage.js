@@ -264,16 +264,20 @@ const BlogsPage = () => {
                       ))}
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        <span>{filteredBlogs[0].reading_time || 5} min read</span>
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          <span>{filteredBlogs[0].reading_time || 5} min read</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye className="h-4 w-4" />
+                          <span>{formatNumber(filteredBlogs[0].view_count || 0)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Heart className="h-4 w-4" />
+                          <span>{formatNumber(filteredBlogs[0].like_count || 0)}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{formatNumber(filteredBlogs[0].view_count || 0)}</span>
-                      </div>
-                    </div>
                   </div>
                   
                   <Link to={`/blogs/${filteredBlogs[0].slug}`} className="mt-6 inline-block">
