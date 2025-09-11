@@ -242,4 +242,246 @@ def get_user_routes():
             ]
         }
     
+    # Blog management routes for users
+    @router.get("/api/user/blogs", response_model=List[BlogResponse])
+    async def get_user_blogs(
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ):
+        """Get all blogs by current user"""
+        from sqlalchemy.orm import joinedload
+        
+        blogs = db.query(Blog).options(joinedload(Blog.author)).filter(
+            Blog.author_id == current_user.id
+        ).order_by(Blog.updated_at.desc()).all()
+        
+        return [
+            BlogResponse(
+                id=blog.id,
+                title=blog.title,
+                slug=blog.slug,
+                content=blog.content,
+                excerpt=blog.excerpt,
+                featured_image=blog.featured_image,
+                author_id=blog.author_id,
+                author_name=current_user.full_name or current_user.username,
+                status=blog.status,
+                view_count=blog.view_count,
+                reading_time=blog.reading_time,
+                tags=blog.tags,
+                is_ai_generated=blog.is_ai_generated,
+                created_at=blog.created_at,
+                updated_at=blog.updated_at,
+                published_at=blog.published_at,
+                seo_title=blog.seo_title,
+                seo_description=blog.seo_description,
+                seo_keywords=blog.seo_keywords
+            ) for blog in blogs
+        ]
+    
+    @router.get("/api/user/blogs/{blog_id}", response_model=BlogResponse)
+    async def get_user_blog(
+        blog_id: str,
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ):
+        """Get a specific blog by current user"""
+        from sqlalchemy.orm import joinedload
+        
+        blog = db.query(Blog).options(joinedload(Blog.author)).filter(
+            Blog.id == blog_id,
+            Blog.author_id == current_user.id
+        ).first()
+        
+        if not blog:
+            raise HTTPException(status_code=404, detail="Blog not found")
+        
+        return BlogResponse(
+            id=blog.id,
+            title=blog.title,
+            slug=blog.slug,
+            content=blog.content,
+            excerpt=blog.excerpt,
+            featured_image=blog.featured_image,
+            author_id=blog.author_id,
+            author_name=current_user.full_name or current_user.username,
+            status=blog.status,
+            view_count=blog.view_count,
+            reading_time=blog.reading_time,
+            tags=blog.tags,
+            is_ai_generated=blog.is_ai_generated,
+            created_at=blog.created_at,
+            updated_at=blog.updated_at,
+            published_at=blog.published_at,
+            seo_title=blog.seo_title,
+            seo_description=blog.seo_description,
+            seo_keywords=blog.seo_keywords
+        )
+    
+    @router.post("/api/user/blogs", response_model=BlogResponse)
+    async def create_user_blog(
+        blog: BlogCreate,
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ):
+        """Create a new blog by current user"""
+        # Generate slug
+        base_slug = generate_slug(blog.title)
+        slug = base_slug
+        counter = 1
+        
+        # Ensure slug is unique
+        while db.query(Blog).filter(Blog.slug == slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        
+        # Calculate reading time
+        reading_time = calculate_reading_time(blog.content)
+        
+        # Create blog
+        db_blog = Blog(
+            id=str(uuid.uuid4()),
+            title=blog.title,
+            slug=slug,
+            content=blog.content,
+            excerpt=blog.excerpt or blog.content[:200] + "...",
+            featured_image=blog.featured_image,
+            author_id=current_user.id,
+            reading_time=reading_time,
+            tags=blog.tags,
+            seo_title=blog.seo_title or blog.title,
+            seo_description=blog.seo_description or blog.excerpt,
+            seo_keywords=blog.seo_keywords,
+            json_ld=getattr(blog, 'json_ld', None)
+        )
+        
+        db.add(db_blog)
+        db.commit()
+        db.refresh(db_blog)
+        
+        return BlogResponse(
+            id=db_blog.id,
+            title=db_blog.title,
+            slug=db_blog.slug,
+            content=db_blog.content,
+            excerpt=db_blog.excerpt,
+            featured_image=db_blog.featured_image,
+            author_id=db_blog.author_id,
+            author_name=current_user.full_name or current_user.username,
+            status=db_blog.status,
+            view_count=db_blog.view_count,
+            reading_time=db_blog.reading_time,
+            tags=db_blog.tags,
+            is_ai_generated=db_blog.is_ai_generated,
+            created_at=db_blog.created_at,
+            updated_at=db_blog.updated_at,
+            published_at=db_blog.published_at,
+            seo_title=db_blog.seo_title,
+            seo_description=db_blog.seo_description,
+            seo_keywords=db_blog.seo_keywords
+        )
+    
+    @router.put("/api/user/blogs/{blog_id}", response_model=BlogResponse)
+    async def update_user_blog(
+        blog_id: str,
+        blog_update: BlogUpdate,
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ):
+        """Update a blog by current user"""
+        blog = db.query(Blog).filter(
+            Blog.id == blog_id,
+            Blog.author_id == current_user.id
+        ).first()
+        
+        if not blog:
+            raise HTTPException(status_code=404, detail="Blog not found")
+        
+        # Update fields
+        update_data = blog_update.dict(exclude_unset=True)
+        for field, value in update_data.items():
+            if field == "title" and value != blog.title:
+                # Update slug if title changed
+                new_slug = generate_slug(value)
+                counter = 1
+                while db.query(Blog).filter(Blog.slug == new_slug, Blog.id != blog_id).first():
+                    new_slug = f"{generate_slug(value)}-{counter}"
+                    counter += 1
+                blog.slug = new_slug
+            
+            if field == "content":
+                # Recalculate reading time
+                blog.reading_time = calculate_reading_time(value)
+            
+            setattr(blog, field, value)
+        
+        blog.updated_at = datetime.utcnow()
+        db.commit()
+        db.refresh(blog)
+        
+        return BlogResponse(
+            id=blog.id,
+            title=blog.title,
+            slug=blog.slug,
+            content=blog.content,
+            excerpt=blog.excerpt,
+            featured_image=blog.featured_image,
+            author_id=blog.author_id,
+            author_name=current_user.full_name or current_user.username,
+            status=blog.status,
+            view_count=blog.view_count,
+            reading_time=blog.reading_time,
+            tags=blog.tags,
+            is_ai_generated=blog.is_ai_generated,
+            created_at=blog.created_at,
+            updated_at=blog.updated_at,
+            published_at=blog.published_at,
+            seo_title=blog.seo_title,
+            seo_description=blog.seo_description,
+            seo_keywords=blog.seo_keywords
+        )
+    
+    @router.delete("/api/user/blogs/{blog_id}")
+    async def delete_user_blog(
+        blog_id: str,
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ):
+        """Delete a blog by current user"""
+        blog = db.query(Blog).filter(
+            Blog.id == blog_id,
+            Blog.author_id == current_user.id
+        ).first()
+        
+        if not blog:
+            raise HTTPException(status_code=404, detail="Blog not found")
+        
+        db.delete(blog)
+        db.commit()
+        
+        return {"message": "Blog deleted successfully"}
+    
+    @router.post("/api/user/blogs/{blog_id}/publish")
+    async def publish_user_blog(
+        blog_id: str,
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ):
+        """Publish a blog by current user"""
+        blog = db.query(Blog).filter(
+            Blog.id == blog_id,
+            Blog.author_id == current_user.id
+        ).first()
+        
+        if not blog:
+            raise HTTPException(status_code=404, detail="Blog not found")
+        
+        blog.status = "published"
+        blog.published_at = datetime.utcnow()
+        blog.updated_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {"message": "Blog published successfully"}
+    
     return router
