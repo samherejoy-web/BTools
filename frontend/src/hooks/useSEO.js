@@ -50,15 +50,15 @@ const useSEO = ({
 const generateKeywordsFromData = (data, type) => {
   const keywords = [];
   
-  if (type === 'article' && data.tags) {
+  if (type === 'article' && data.tags && Array.isArray(data.tags)) {
     keywords.push(...data.tags);
   }
   
-  if (type === 'product' && data.categories) {
+  if (type === 'product' && data.categories && Array.isArray(data.categories)) {
     keywords.push(...data.categories.map(cat => cat.name));
   }
   
-  if (data.features) {
+  if (data.features && Array.isArray(data.features)) {
     keywords.push(...data.features.slice(0, 3)); // Limit to 3 features
   }
   
