@@ -56,6 +56,83 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing your b
     onChange(newContent);
   };
 
+  const handleImageUpload = async (file) => {
+    try {
+      setUploading(true);
+      
+      // Validate file
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
+      }
+      
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast.error('Image size must be less than 5MB');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await apiClient.post('/blogs/upload-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      // Insert image markdown with size controls
+      const textarea = document.getElementById('blog-editor');
+      const start = textarea.selectionStart;
+      const imageMarkdown = `\n<div class="image-container" style="text-align: center; margin: 20px 0;">
+  <img src="${response.data.image_url}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 8px;" />
+  <p style="font-size: 0.9em; color: #666; margin-top: 8px; font-style: italic;">${file.name}</p>
+</div>\n`;
+      
+      const newContent = 
+        editorContent.substring(0, start) + 
+        imageMarkdown + 
+        editorContent.substring(start);
+      
+      setEditorContent(newContent);
+      onChange(newContent);
+      
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleImageButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const files = Array.from(e.dataTransfer.files);
+    const imageFile = files.find(file => file.type.startsWith('image/'));
+    
+    if (imageFile) {
+      handleImageUpload(imageFile);
+    }
+  };
+
   const insertFormatting = (format) => {
     const textarea = document.getElementById('blog-editor');
     const start = textarea.selectionStart;
