@@ -68,44 +68,52 @@ const generateKeywordsFromData = (data, type) => {
   return keywords.join(', ');
 };
 
-// Hook for blog-specific SEO
+// Hook for blog-specific SEO - optimized with useMemo
 export const useBlogSEO = (blog) => {
-  return useSEO({
-    title: blog?.seo_title || blog?.title,
-    description: blog?.seo_description || blog?.excerpt,
-    keywords: blog?.seo_keywords || blog?.tags?.join(', '),
-    canonical: `/blogs/${blog?.slug}`,
-    image: blog?.featured_image,
-    type: 'article',
-    data: {
-      article: true,
-      author: blog?.author_name,
-      publishedTime: blog?.published_at || blog?.created_at,
-      modifiedTime: blog?.updated_at,
-      jsonLd: blog?.json_ld || (blog ? generateArticleSchema(blog) : null),
-      tags: blog?.tags
-    }
-  });
+  return useMemo(() => {
+    if (!blog) return null;
+    
+    return useSEO({
+      title: blog?.seo_title || blog?.title,
+      description: blog?.seo_description || blog?.excerpt,
+      keywords: blog?.seo_keywords || blog?.tags?.join(', '),
+      canonical: `/blogs/${blog?.slug}`,
+      image: blog?.featured_image,
+      type: 'article',
+      data: {
+        article: true,
+        author: blog?.author_name,
+        publishedTime: blog?.published_at || blog?.created_at,
+        modifiedTime: blog?.updated_at,
+        jsonLd: blog?.json_ld || (blog ? generateArticleSchema(blog) : null),
+        tags: blog?.tags
+      }
+    });
+  }, [blog?.id, blog?.seo_title, blog?.title, blog?.seo_description, blog?.excerpt, blog?.updated_at]);
 };
 
-// Hook for tool-specific SEO
+// Hook for tool-specific SEO - optimized with useMemo  
 export const useToolSEO = (tool) => {
-  return useSEO({
-    title: tool?.seo_title || `${tool?.name} - Review & Pricing`,
-    description: tool?.seo_description || tool?.short_description,
-    keywords: tool?.seo_keywords,
-    canonical: `/tools/${tool?.slug}`,
-    image: tool?.screenshot_url || tool?.logo_url,
-    type: 'product',
-    data: {
-      product: true,
-      jsonLd: tool?.json_ld || (tool ? generateProductSchema(tool) : null),
-      categories: tool?.categories,
-      features: tool?.features,
-      rating: tool?.rating,
-      reviewCount: tool?.review_count
-    }
-  });
+  return useMemo(() => {
+    if (!tool) return null;
+    
+    return useSEO({
+      title: tool?.seo_title || `${tool?.name} - Review & Pricing`,
+      description: tool?.seo_description || tool?.short_description,
+      keywords: tool?.seo_keywords,
+      canonical: `/tools/${tool?.slug}`,
+      image: tool?.screenshot_url || tool?.logo_url,
+      type: 'product',
+      data: {
+        product: true,
+        jsonLd: tool?.json_ld || (tool ? generateProductSchema(tool) : null),
+        categories: tool?.categories,
+        features: tool?.features,
+        rating: tool?.rating,
+        reviewCount: tool?.review_count
+      }
+    });
+  }, [tool?.id, tool?.seo_title, tool?.name, tool?.seo_description, tool?.short_description, tool?.updated_at]);
 };
 
 // Generate JSON-LD for tools
