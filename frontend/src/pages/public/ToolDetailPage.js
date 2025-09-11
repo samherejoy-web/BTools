@@ -51,6 +51,7 @@ const ToolDetailPage = () => {
     if (toolSlug) {
       fetchToolDetails();
       fetchToolReviews();
+      fetchComments();
     }
   }, [toolSlug]);
 
