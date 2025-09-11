@@ -72,55 +72,64 @@ export const generateArticleSchema = (blog) => {
 };
 
 export const generateProductSchema = (tool) => {
-  const baseUrl = process.env.REACT_APP_BACKEND_URL || '';
-  
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": tool.name,
-    "description": tool.description || tool.short_description,
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web Browser",
-    "url": tool.url,
-    "screenshot": tool.screenshot_url,
-    "image": tool.logo_url || `${baseUrl}/api/images/tool-default.jpg`,
-    "provider": {
-      "@type": "Organization",
-      "name": tool.name
-    },
-    "dateCreated": tool.created_at,
-    "dateModified": tool.updated_at,
-    "featureList": tool.features?.join(', '),
-    "softwareVersion": "Latest"
-  };
+  try {
+    if (!tool) return null;
+    
+    const baseUrl = process.env.REACT_APP_BACKEND_URL || '';
+    
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": tool.name || "Business Tool",
+      "description": tool.description || tool.short_description || "A powerful business tool",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "url": tool.url || "",
+      "screenshot": tool.screenshot_url || "",
+      "image": tool.logo_url || `${baseUrl}/api/images/tool-default.jpg`,
+      "provider": {
+        "@type": "Organization",
+        "name": tool.name || "Tool Provider"
+      },
+      "dateCreated": tool.created_at || new Date().toISOString(),
+      "dateModified": tool.updated_at || new Date().toISOString(),
+      "featureList": Array.isArray(tool.features) ? tool.features.join(', ') : '',
+      "softwareVersion": "Latest"
+    };
 
-  // Add pricing information if available
-  if (tool.pricing_details && typeof tool.pricing_details === 'object') {
-    const pricingKeys = Object.keys(tool.pricing_details);
-    if (pricingKeys.length > 0) {
-      const firstPrice = tool.pricing_details[pricingKeys[0]];
-      schema.offers = {
-        "@type": "Offer",
-        "price": firstPrice === 'Free' || firstPrice === '$0' ? "0" : firstPrice.replace(/[^0-9.]/g, ''),
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock",
-        "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    // Add pricing information if available
+    if (tool.pricing_details && typeof tool.pricing_details === 'object') {
+      const pricingKeys = Object.keys(tool.pricing_details);
+      if (pricingKeys.length > 0) {
+        const firstPrice = tool.pricing_details[pricingKeys[0]];
+        if (firstPrice) {
+          schema.offers = {
+            "@type": "Offer",
+            "price": firstPrice === 'Free' || firstPrice === '$0' ? "0" : String(firstPrice).replace(/[^0-9.]/g, '') || "0",
+            "priceCurrency": "USD", 
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          };
+        }
+      }
+    }
+
+    // Add aggregate rating if available
+    if (tool.rating && (tool.review_count || 0) > 0) {
+      schema.aggregateRating = {
+        "@type": "AggregateRating",
+        "ratingValue": tool.rating,
+        "reviewCount": tool.review_count || 0,
+        "bestRating": 5,
+        "worstRating": 1
       };
     }
-  }
 
-  // Add aggregate rating if available
-  if (tool.rating && tool.review_count > 0) {
-    schema.aggregateRating = {
-      "@type": "AggregateRating",
-      "ratingValue": tool.rating,
-      "reviewCount": tool.review_count,
-      "bestRating": 5,
-      "worstRating": 1
-    };
+    return schema;
+  } catch (error) {
+    console.error('Error generating product schema:', error);
+    return null;
   }
-
-  return schema;
 };
 
 export const generateOrganizationSchema = () => {
