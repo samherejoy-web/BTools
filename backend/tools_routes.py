@@ -67,6 +67,7 @@ def get_tools_routes():
         rating: float
         review_count: int
         view_count: int
+        like_count: int
         trending_score: float
         is_featured: bool
         is_active: bool
@@ -76,6 +77,26 @@ def get_tools_routes():
         seo_title: Optional[str]
         seo_description: Optional[str]
         seo_keywords: Optional[str]
+    
+    class ToolCommentCreate(BaseModel):
+        content: str
+        parent_id: Optional[str] = None
+
+    class ToolCommentResponse(BaseModel):
+        id: str
+        tool_id: str
+        user_id: str
+        user_name: str
+        parent_id: Optional[str]
+        content: str
+        is_approved: bool
+        created_at: datetime
+        updated_at: datetime
+        replies: Optional[List['ToolCommentResponse']] = []
+
+    class ToolLikeResponse(BaseModel):
+        liked: bool
+        like_count: int
     
     class ReviewCreate(BaseModel):
         tool_id: str
