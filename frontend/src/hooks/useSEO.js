@@ -70,33 +70,47 @@ const generateKeywordsFromData = (data, type) => {
 
 // Hook for blog-specific SEO
 export const useBlogSEO = (blog) => {
-  if (!blog) {
-    return {
-      title: 'MarketMind - Discover the Best Business Tools',
-      description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
-      keywords: 'business tools, productivity, software comparison',
-      canonical: '',
-      image: '',
-      type: 'website'
-    };
-  }
-  
-  return useSEO({
-    title: blog.seo_title || blog.title,
-    description: blog.seo_description || blog.excerpt,
-    keywords: blog.seo_keywords || (blog.tags ? blog.tags.join(', ') : ''),
-    canonical: `/blogs/${blog.slug}`,
-    image: blog.featured_image,
-    type: 'article',
-    data: {
-      article: true,
-      author: blog.author_name,
-      publishedTime: blog.published_at || blog.created_at,
-      modifiedTime: blog.updated_at,
-      jsonLd: blog.json_ld || (blog ? generateArticleSchema(blog) : null),
-      tags: blog.tags || []
+  return useMemo(() => {
+    if (!blog) {
+      return {
+        title: 'MarketMind - Discover the Best Business Tools',
+        description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
+        keywords: 'business tools, productivity, software comparison',
+        canonical: '',
+        image: '',
+        type: 'website'
+      };
     }
-  });
+    
+    try {
+      const seoData = {
+        title: blog.seo_title || blog.title || 'Blog Post',
+        description: blog.seo_description || blog.excerpt || 'Read this insightful blog post.',
+        keywords: blog.seo_keywords || (Array.isArray(blog.tags) ? blog.tags.join(', ') : ''),
+        canonical: `/blogs/${blog.slug}`,
+        image: blog.featured_image || '',
+        type: 'article',
+        article: true,
+        author: blog.author_name || 'MarketMind Team',
+        publishedTime: blog.published_at || blog.created_at,
+        modifiedTime: blog.updated_at,
+        jsonLd: blog.json_ld || generateArticleSchema(blog),
+        tags: Array.isArray(blog.tags) ? blog.tags : []
+      };
+      
+      return seoData;
+    } catch (error) {
+      console.error('Error generating blog SEO data:', error);
+      return {
+        title: blog.title ? `${blog.title} | MarketMind` : 'Blog Post | MarketMind',
+        description: blog.excerpt || 'Read this insightful blog post.',
+        keywords: 'blog, article, MarketMind',
+        canonical: `/blogs/${blog.slug}`,
+        image: blog.featured_image || '',
+        type: 'article'
+      };
+    }
+  }, [blog]);
 };
 
 // Hook for tool-specific SEO
