@@ -284,6 +284,7 @@ def get_tools_routes():
             rating=tool.rating,
             review_count=tool.review_count,
             view_count=tool.view_count,
+            like_count=tool.like_count,
             trending_score=tool.trending_score,
             is_featured=tool.is_featured,
             is_active=tool.is_active,
