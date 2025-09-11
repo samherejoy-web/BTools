@@ -532,7 +532,8 @@ const BlogsPage = () => {
           </Card>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
