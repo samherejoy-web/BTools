@@ -101,7 +101,8 @@ async def create_blog(
         tags=blog.tags,
         seo_title=blog.seo_title or blog.title,
         seo_description=blog.seo_description or blog.excerpt,
-        seo_keywords=blog.seo_keywords
+        seo_keywords=blog.seo_keywords,
+        json_ld=blog.json_ld
     )
     
     db.add(db_blog)
