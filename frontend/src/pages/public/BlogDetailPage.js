@@ -212,8 +212,10 @@ const BlogDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <>
+      <SEOHead {...seoData} />
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-8">
         {/* Back Navigation */}
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
