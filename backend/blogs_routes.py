@@ -34,6 +34,7 @@ class BlogUpdate(BaseModel):
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
+    json_ld: Optional[dict] = None
 
 class BlogResponse(BaseModel):
     id: str
