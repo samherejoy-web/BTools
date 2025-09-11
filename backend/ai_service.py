@@ -87,24 +87,58 @@ class AIService:
         criteria_str = ", ".join(criteria)
         
         prompt = f"""
-        Create a comprehensive comparison of these tools: {tools_str}
+        Create a comprehensive, blog-ready comparison of these tools: {tools_str}
         
         Compare them based on: {criteria_str}
         
         For each tool, provide:
         1. Overview and key strengths
         2. Detailed pros and cons
-        3. Best use cases
-        4. Pricing analysis
-        5. Rating out of 5 for each criteria
+        3. Best use cases  
+        4. Pricing analysis (with specific plans if known)
+        5. Ratings out of 5 for: features, pricing, ease_of_use, customer_support, integration_capabilities
         
         Also provide:
-        - Overall recommendation based on different use cases
-        - Summary table comparing key metrics
-        - Final verdict on which tool is best for what scenarios
+        - Overall winner recommendation
+        - Summary comparing key metrics
+        - Final verdict for different scenarios
         
-        Format as JSON with structured data for easy parsing.
-        Include overall_winner, detailed_comparison (array), and summary fields.
+        Format as JSON with these exact fields:
+        {{
+          "overall_winner": "tool name",
+          "detailed_comparison": [
+            {{
+              "name": "tool name",
+              "overview_and_key_strengths": {{
+                "overview": "brief overview",
+                "key_strengths": ["strength1", "strength2", ...]
+              }},
+              "pros_and_cons": {{
+                "pros": ["pro1", "pro2", ...],
+                "cons": ["con1", "con2", ...]
+              }},
+              "best_use_cases": ["use case 1", "use case 2", ...],
+              "pricing_analysis": {{
+                "plans": [
+                  {{"name": "plan name", "price": "price", "features": "key features"}}
+                ],
+                "notes": "pricing notes"
+              }},
+              "ratings": {{
+                "features": 4.5,
+                "pricing": 3.0,
+                "ease_of_use": 4.0,
+                "customer_support": 4.5,
+                "integration_capabilities": 3.5,
+                "total_score": 19.5
+              }}
+            }}
+          ],
+          "summary": "overall comparison summary",
+          "blog_content": "complete HTML blog post content with proper headings, paragraphs, and formatting"
+        }}
+        
+        Make the blog_content field ready for publishing with proper HTML structure.
         """
         
         try:
