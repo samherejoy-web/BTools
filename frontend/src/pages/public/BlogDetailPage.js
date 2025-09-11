@@ -47,6 +47,7 @@ const BlogDetailPage = () => {
     if (blogSlug) {
       fetchBlogDetails();
       fetchRelatedBlogs();
+      fetchComments();
     }
   }, [blogSlug]);
 
