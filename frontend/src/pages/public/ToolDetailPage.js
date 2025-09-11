@@ -267,7 +267,7 @@ const ToolDetailPage = () => {
                   <h1 className="text-4xl font-bold text-gray-900 mb-4">{tool.name}</h1>
                   <p className="text-xl text-gray-600 mb-4">{tool.short_description}</p>
                   
-                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       {renderStars(tool.rating)}
                       <span className="font-semibold text-gray-900">{tool.rating}</span>
@@ -276,6 +276,10 @@ const ToolDetailPage = () => {
                     <div className="flex items-center gap-1 text-gray-500">
                       <Eye className="h-4 w-4" />
                       <span>{formatNumber(tool.view_count)} views</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <Heart className="h-4 w-4" />
+                      <span>{formatNumber(likesCount)} likes</span>
                     </div>
                   </div>
 
