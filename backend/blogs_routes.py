@@ -23,6 +23,7 @@ class BlogCreate(BaseModel):
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
+    json_ld: Optional[dict] = None
 
 class BlogUpdate(BaseModel):
     title: Optional[str] = None
