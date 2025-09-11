@@ -208,7 +208,8 @@ async def get_blogs(
             published_at=blog.published_at,
             seo_title=blog.seo_title,
             seo_description=blog.seo_description,
-            seo_keywords=blog.seo_keywords
+            seo_keywords=blog.seo_keywords,
+            json_ld=blog.json_ld
         ) for blog in blogs
     ]
 
@@ -238,7 +239,8 @@ async def get_blog(blog_id: str, db: Session = Depends(get_db)):
         published_at=blog.published_at,
         seo_title=blog.seo_title,
         seo_description=blog.seo_description,
-        seo_keywords=blog.seo_keywords
+        seo_keywords=blog.seo_keywords,
+        json_ld=blog.json_ld
     )
 
 @router.get("/api/blogs/by-slug/{blog_slug}", response_model=BlogResponse)
@@ -270,7 +272,8 @@ async def get_blog_by_slug(blog_slug: str, db: Session = Depends(get_db)):
         published_at=blog.published_at,
         seo_title=blog.seo_title,
         seo_description=blog.seo_description,
-        seo_keywords=blog.seo_keywords
+        seo_keywords=blog.seo_keywords,
+        json_ld=blog.json_ld
     )
 
 @router.post("/api/blogs/{blog_slug}/view")
@@ -343,7 +346,8 @@ async def update_blog(
         published_at=blog.published_at,
         seo_title=blog.seo_title,
         seo_description=blog.seo_description,
-        seo_keywords=blog.seo_keywords
+        seo_keywords=blog.seo_keywords,
+        json_ld=blog.json_ld
     )
 
 @router.post("/api/blogs/{blog_id}/publish")
