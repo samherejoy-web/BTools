@@ -18,7 +18,7 @@ async def get_sitemap(db: Session = Depends(get_db)):
     blogs = db.query(Blog).filter(Blog.status == 'published').all()
     
     # Get all active tools
-    tools = db.query(Tool).filter(Tool.is_active == True).all()
+    tools = db.query(Tool).filter(Tool.is_active).all()
     
     # Get all categories
     categories = db.query(Category).all()
