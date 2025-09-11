@@ -310,6 +310,10 @@ const ToolDetailPage = () => {
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Visit Website
                 </Button>
+                <Button variant="outline" onClick={handleToggleLike}>
+                  <Heart className={`h-4 w-4 mr-2 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+                  {isLiked ? 'Liked' : 'Like'} ({formatNumber(likesCount)})
+                </Button>
                 <Button variant="outline" onClick={handleToggleFavorite}>
                   <Heart className={`h-4 w-4 mr-2 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
                   {isFavorite ? 'Saved' : 'Save'}
