@@ -42,6 +42,10 @@ const ToolDetailPage = () => {
   const [newReview, setNewReview] = useState({ title: '', content: '', pros: '', cons: '' });
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentsLoading, setCommentsLoading] = useState(false);
 
   useEffect(() => {
     if (toolSlug) {
