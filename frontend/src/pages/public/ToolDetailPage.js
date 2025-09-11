@@ -49,6 +49,9 @@ const ToolDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
+  // Generate SEO data for the tool
+  const seoData = useToolSEO(tool);
+
   useEffect(() => {
     if (toolSlug) {
       fetchToolDetails();
