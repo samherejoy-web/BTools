@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Query, UploadFile, File
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import or_, and_, desc
+from sqlalchemy import or_, and_, desc, func
 from pydantic import BaseModel
 from typing import List, Optional
 from database import get_db
-from models import Blog, User
+from models import Blog, User, BlogComment, BlogLike, BlogBookmark
 from auth import get_current_user, get_current_admin
 import uuid
 from datetime import datetime
