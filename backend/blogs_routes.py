@@ -26,6 +26,29 @@ class BlogCreate(BaseModel):
     seo_keywords: Optional[str] = None
     json_ld: Optional[dict] = None
 
+class CommentCreate(BaseModel):
+    content: str
+    parent_id: Optional[str] = None
+
+class CommentResponse(BaseModel):
+    id: str
+    blog_id: str
+    user_id: str
+    user_name: str
+    parent_id: Optional[str]
+    content: str
+    is_approved: bool
+    created_at: datetime
+    updated_at: datetime
+    replies: Optional[List['CommentResponse']] = []
+
+class LikeResponse(BaseModel):
+    liked: bool
+    like_count: int
+
+class BookmarkResponse(BaseModel):
+    bookmarked: bool
+
 class BlogUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
