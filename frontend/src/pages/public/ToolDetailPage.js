@@ -255,9 +255,11 @@ const ToolDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-white border-b">
+    <>
+      <SEOHead {...seoData} />
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section */}
+        <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-6">
             <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
