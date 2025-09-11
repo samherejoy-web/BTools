@@ -74,6 +74,7 @@ class Tool(Base):
     rating = Column(Float, default=0.0)
     review_count = Column(Integer, default=0)
     view_count = Column(Integer, default=0)
+    like_count = Column(Integer, default=0)
     trending_score = Column(Float, default=0.0)
     is_featured = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
@@ -88,6 +89,8 @@ class Tool(Base):
     categories = relationship("Category", secondary=tool_categories, back_populates="tools")
     reviews = relationship("Review", back_populates="tool")
     favorited_by = relationship("User", secondary=user_tool_favorites, back_populates="favorite_tools")
+    comments = relationship("ToolComment", back_populates="tool", cascade="all, delete-orphan")
+    likes = relationship("ToolLike", back_populates="tool", cascade="all, delete-orphan")
 
 class Review(Base):
     __tablename__ = "reviews"
