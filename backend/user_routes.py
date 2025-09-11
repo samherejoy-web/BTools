@@ -316,7 +316,8 @@ def get_user_routes():
             published_at=blog.published_at,
             seo_title=blog.seo_title,
             seo_description=blog.seo_description,
-            seo_keywords=blog.seo_keywords
+            seo_keywords=blog.seo_keywords,
+            json_ld=blog.json_ld
         )
     
     @router.post("/api/user/blogs", response_model=BlogResponse)
