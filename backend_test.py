@@ -3,6 +3,10 @@ import sys
 import json
 import uuid
 from datetime import datetime
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
 
 class MarketMindAPITester:
     def __init__(self, base_url="https://codebase-explorer-14.preview.emergentagent.com/api"):
