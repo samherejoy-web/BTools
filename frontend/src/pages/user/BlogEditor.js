@@ -94,6 +94,9 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing your b
       case 'ordered-list':
         formattedText = `\n1. ${selectedText || 'list item'}\n`;
         break;
+      case 'image':
+        formattedText = `![${selectedText || 'Image description'}](image_url)`;
+        break;
       default:
         formattedText = selectedText;
     }
