@@ -177,8 +177,8 @@ const BlogsPage = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={featuredOnly}
-                  onChange={(e) => setFeaturedOnly(e.target.checked)}
+                  checked={aiGeneratedOnly}
+                  onChange={(e) => setAiGeneratedOnly(e.target.checked)}
                   className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
                 />
                 <span className="text-sm font-medium text-gray-700">AI Generated</span>
