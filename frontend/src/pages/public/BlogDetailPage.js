@@ -24,6 +24,8 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Separator } from '../../components/ui/separator';
 import { CommentsSection } from '../../components/ui/comments';
+import SEOHead from '../../components/SEO/SEOHead';
+import { useBlogSEO } from '../../hooks/useSEO';
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
