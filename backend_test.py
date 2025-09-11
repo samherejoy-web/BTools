@@ -1817,6 +1817,318 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_seo_sitemap_generation(self):
+        """Test SEO sitemap.xml generation endpoint"""
+        print("\n🗺️ SEO SITEMAP TESTING")
+        print("-" * 50)
+        
+        results = []
+        
+        # Test sitemap.xml endpoint
+        success, response = self.run_test(
+            "Sitemap XML Generation",
+            "GET",
+            "sitemap.xml",
+            200,
+            description="Test GET /sitemap.xml endpoint for SEO sitemap generation"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, str):
+            print(f"   Sitemap content length: {len(response)} characters")
+            
+            # Verify XML structure
+            if response.startswith('<?xml version="1.0" encoding="UTF-8"?>'):
+                print("   ✅ Valid XML header found")
+            else:
+                print("   ❌ Invalid XML header")
+                results.append(False)
+            
+            # Check for required sitemap elements
+            required_elements = [
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+                '<url>',
+                '<loc>',
+                '<lastmod>',
+                '<changefreq>',
+                '<priority>'
+            ]
+            
+            for element in required_elements:
+                if element in response:
+                    print(f"   ✅ Found required element: {element}")
+                else:
+                    print(f"   ❌ Missing required element: {element}")
+                    results.append(False)
+            
+            # Check for main pages
+            main_pages = ['/tools', '/blogs', '/compare']
+            for page in main_pages:
+                if page in response:
+                    print(f"   ✅ Found main page: {page}")
+                else:
+                    print(f"   ⚠️ Main page not found: {page}")
+            
+            # Count URLs in sitemap
+            url_count = response.count('<url>')
+            print(f"   Total URLs in sitemap: {url_count}")
+            
+            if url_count > 0:
+                print("   ✅ Sitemap contains URLs")
+            else:
+                print("   ❌ Sitemap contains no URLs")
+                results.append(False)
+        
+        return all(results)
+
+    def test_seo_robots_txt(self):
+        """Test SEO robots.txt generation endpoint"""
+        print("\n🤖 SEO ROBOTS.TXT TESTING")
+        print("-" * 50)
+        
+        results = []
+        
+        # Test robots.txt endpoint
+        success, response = self.run_test(
+            "Robots.txt Generation",
+            "GET",
+            "robots.txt",
+            200,
+            description="Test GET /robots.txt endpoint for SEO robots directives"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, str):
+            print(f"   Robots.txt content length: {len(response)} characters")
+            
+            # Check for required robots.txt directives
+            required_directives = [
+                'User-agent: *',
+                'Allow: /',
+                'Disallow: /admin/',
+                'Disallow: /dashboard/',
+                'Disallow: /api/',
+                'Allow: /api/blogs/',
+                'Allow: /api/tools/',
+                'Sitemap:',
+                'Crawl-delay:'
+            ]
+            
+            for directive in required_directives:
+                if directive in response:
+                    print(f"   ✅ Found required directive: {directive}")
+                else:
+                    print(f"   ❌ Missing required directive: {directive}")
+                    results.append(False)
+            
+            # Check sitemap reference
+            if 'sitemap.xml' in response.lower():
+                print("   ✅ Sitemap reference found in robots.txt")
+            else:
+                print("   ❌ Sitemap reference missing from robots.txt")
+                results.append(False)
+            
+            # Check admin area protection
+            admin_protected = all(area in response for area in ['/admin/', '/dashboard/', '/superadmin/'])
+            if admin_protected:
+                print("   ✅ Admin areas properly protected")
+            else:
+                print("   ❌ Admin areas not properly protected")
+                results.append(False)
+        
+        return all(results)
+
+    def test_seo_data_in_apis(self):
+        """Test SEO data presence in blog and tool APIs"""
+        print("\n📊 SEO DATA IN APIS TESTING")
+        print("-" * 50)
+        
+        results = []
+        
+        # Test 1: SEO data in blogs API
+        success, blogs_response = self.run_test(
+            "Blogs API - SEO Data Check",
+            "GET",
+            "blogs?limit=5",
+            200,
+            description="Test GET /api/blogs for SEO fields (seo_title, seo_description, seo_keywords)"
+        )
+        results.append(success)
+        
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            blog = blogs_response[0]
+            seo_fields = ['seo_title', 'seo_description', 'seo_keywords', 'json_ld']
+            
+            print(f"   Testing SEO fields in blog: {blog.get('title', 'Unknown')}")
+            for field in seo_fields:
+                if field in blog and blog[field] is not None:
+                    print(f"   ✅ Blog has {field}: {str(blog[field])[:50]}...")
+                else:
+                    print(f"   ⚠️ Blog missing or null {field}")
+            
+            # Test specific blog by slug for JSON-LD structured data
+            blog_slug = blog.get('slug')
+            if blog_slug:
+                success, blog_detail = self.run_test(
+                    "Blog by Slug - JSON-LD Check",
+                    "GET",
+                    f"blogs/by-slug/{blog_slug}",
+                    200,
+                    description=f"Test GET /api/blogs/by-slug/{blog_slug} for JSON-LD structured data"
+                )
+                results.append(success)
+                
+                if success and isinstance(blog_detail, dict):
+                    json_ld = blog_detail.get('json_ld')
+                    if json_ld and isinstance(json_ld, dict):
+                        print(f"   ✅ Blog has JSON-LD structured data")
+                        if '@context' in json_ld and '@type' in json_ld:
+                            print(f"   ✅ JSON-LD has required schema.org structure")
+                            print(f"   JSON-LD type: {json_ld.get('@type', 'Unknown')}")
+                        else:
+                            print(f"   ⚠️ JSON-LD missing @context or @type")
+                    else:
+                        print(f"   ⚠️ Blog missing JSON-LD structured data")
+        
+        # Test 2: SEO data in tools API
+        success, tools_response = self.run_test(
+            "Tools API - SEO Data Check",
+            "GET",
+            "tools?limit=5",
+            200,
+            description="Test GET /api/tools for SEO fields (seo_title, seo_description, seo_keywords)"
+        )
+        results.append(success)
+        
+        if success and isinstance(tools_response, list) and len(tools_response) > 0:
+            tool = tools_response[0]
+            seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+            
+            print(f"   Testing SEO fields in tool: {tool.get('name', 'Unknown')}")
+            for field in seo_fields:
+                if field in tool and tool[field] is not None:
+                    print(f"   ✅ Tool has {field}: {str(tool[field])[:50]}...")
+                else:
+                    print(f"   ⚠️ Tool missing or null {field}")
+            
+            # Test specific tool by slug
+            tool_slug = tool.get('slug')
+            if tool_slug:
+                success, tool_detail = self.run_test(
+                    "Tool by Slug - SEO Data Check",
+                    "GET",
+                    f"tools/by-slug/{tool_slug}",
+                    200,
+                    description=f"Test GET /api/tools/by-slug/{tool_slug} for SEO fields"
+                )
+                results.append(success)
+                
+                if success and isinstance(tool_detail, dict):
+                    for field in seo_fields:
+                        if field in tool_detail and tool_detail[field] is not None:
+                            print(f"   ✅ Tool detail has {field}")
+                        else:
+                            print(f"   ⚠️ Tool detail missing {field}")
+        
+        return all(results)
+
+    def test_seo_performance_impact(self):
+        """Test performance impact of SEO endpoints"""
+        print("\n⚡ SEO PERFORMANCE IMPACT TESTING")
+        print("-" * 50)
+        
+        results = []
+        import time
+        
+        # Test sitemap generation performance
+        start_time = time.time()
+        success, response = self.run_test(
+            "Sitemap Performance Test",
+            "GET",
+            "sitemap.xml",
+            200,
+            description="Measure sitemap generation response time"
+        )
+        sitemap_time = time.time() - start_time
+        results.append(success)
+        
+        print(f"   Sitemap generation time: {sitemap_time:.3f} seconds")
+        if sitemap_time < 2.0:
+            print("   ✅ Sitemap generation is fast (< 2 seconds)")
+        elif sitemap_time < 5.0:
+            print("   ⚠️ Sitemap generation is acceptable (< 5 seconds)")
+        else:
+            print("   ❌ Sitemap generation is slow (> 5 seconds)")
+            results.append(False)
+        
+        # Test robots.txt performance
+        start_time = time.time()
+        success, response = self.run_test(
+            "Robots.txt Performance Test",
+            "GET",
+            "robots.txt",
+            200,
+            description="Measure robots.txt generation response time"
+        )
+        robots_time = time.time() - start_time
+        results.append(success)
+        
+        print(f"   Robots.txt generation time: {robots_time:.3f} seconds")
+        if robots_time < 1.0:
+            print("   ✅ Robots.txt generation is fast (< 1 second)")
+        else:
+            print("   ⚠️ Robots.txt generation could be faster")
+        
+        # Test existing API performance (baseline)
+        start_time = time.time()
+        success, response = self.run_test(
+            "Baseline API Performance",
+            "GET",
+            "blogs?limit=10",
+            200,
+            description="Measure baseline API performance for comparison"
+        )
+        baseline_time = time.time() - start_time
+        results.append(success)
+        
+        print(f"   Baseline API response time: {baseline_time:.3f} seconds")
+        
+        # Compare performance
+        if sitemap_time <= baseline_time * 2:
+            print("   ✅ SEO endpoints don't significantly impact performance")
+        else:
+            print("   ⚠️ SEO endpoints may impact performance")
+        
+        return all(results)
+
+    def test_comprehensive_seo_functionality(self):
+        """Run comprehensive SEO functionality tests"""
+        print("\n🔍 COMPREHENSIVE SEO FUNCTIONALITY TESTING")
+        print("=" * 60)
+        
+        seo_results = []
+        
+        # Run all SEO tests
+        seo_results.append(self.test_seo_sitemap_generation())
+        seo_results.append(self.test_seo_robots_txt())
+        seo_results.append(self.test_seo_data_in_apis())
+        seo_results.append(self.test_seo_performance_impact())
+        
+        # Summary
+        passed_tests = sum(seo_results)
+        total_tests = len(seo_results)
+        
+        print(f"\n📋 SEO TESTING SUMMARY:")
+        print(f"   SEO Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   SEO Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   ✅ ALL SEO FUNCTIONALITY WORKING CORRECTLY")
+        else:
+            print("   ❌ SOME SEO FUNCTIONALITY NEEDS ATTENTION")
+        
+        return all(seo_results)
+
 def main():
     print("🚀 Starting MarketMind AI Platform - Tool Review Submission Bug Testing")
     print("=" * 70)
