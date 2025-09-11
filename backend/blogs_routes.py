@@ -56,6 +56,7 @@ class BlogResponse(BaseModel):
     seo_title: Optional[str]
     seo_description: Optional[str]
     seo_keywords: Optional[str]
+    json_ld: Optional[dict] = None
 
 def generate_slug(title: str) -> str:
     """Generate URL-friendly slug from title"""
