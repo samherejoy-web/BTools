@@ -8,6 +8,7 @@ import os
 router = APIRouter()
 
 @router.get("/sitemap.xml")
+@router.get("/api/sitemap.xml")
 async def get_sitemap(db: Session = Depends(get_db)):
     """Generate sitemap.xml for better SEO indexing"""
     
