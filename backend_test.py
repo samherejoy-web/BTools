@@ -2130,9 +2130,9 @@ class MarketMindAPITester:
         return all(seo_results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - Tool Review Submission Bug Testing")
+    print("🚀 Starting MarketMind AI Platform - SEO Implementation Testing")
     print("=" * 70)
-    print("🎯 FOCUS: Testing tool review submission functionality and identifying the bug")
+    print("🎯 FOCUS: Testing new SEO features - Sitemap, Robots.txt, and SEO Data")
     print("=" * 70)
     
     tester = MarketMindAPITester()
@@ -2146,50 +2146,19 @@ def main():
     tester.test_tools()
     tester.test_blogs()
     
-    # Test authentication and authenticated endpoints
-    print("\n🔐 AUTHENTICATION & AUTHENTICATED ENDPOINT TESTS")
-    print("-" * 40)
-    
-    # Test login with user account to test authenticated endpoints
-    test_accounts = [
-        ("user1@example.com", "password123", "user"),
-        ("admin@marketmind.com", "admin123", "admin"),
-        ("superadmin@marketmind.com", "admin123", "superadmin")
-    ]
-    
-    successful_logins = []
-    for email, password, expected_role in test_accounts:
-        success, role = tester.test_login(email, password)
-        if success:
-            successful_logins.append((email, role))
-            
-            # Test basic authenticated endpoints
-            tester.test_current_user_info()
-            
-            # MAIN TEST: Tool Review Submission Bug
-            print("\n🎯 MAIN TEST: TOOL REVIEW SUBMISSION BUG")
-            print("-" * 50)
-            tester.test_tool_review_submission_bug()
-            
-            # Reset token for next user
-            tester.token = None
-            tester.user_id = None
-            tester.current_user_role = None
-            break  # Only test with first successful login for focused testing
+    # MAIN TEST: Comprehensive SEO Functionality
+    print("\n🎯 MAIN TEST: SEO IMPLEMENTATION")
+    print("-" * 50)
+    seo_success = tester.test_comprehensive_seo_functionality()
     
     # Print comprehensive results
     print("\n" + "=" * 70)
-    print("📊 BLOG PUBLISHING FUNCTIONALITY TEST RESULTS")
+    print("📊 SEO IMPLEMENTATION TEST RESULTS")
     print("=" * 70)
     print(f"Total Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
     print(f"Tests Failed: {len(tester.failed_tests)}")
     print(f"Success Rate: {(tester.tests_passed/tester.tests_run)*100:.1f}%")
-    
-    if successful_logins:
-        print(f"\n✅ Successful Logins:")
-        for email, role in successful_logins:
-            print(f"   - {email} ({role})")
     
     if tester.failed_tests:
         print(f"\n❌ Failed Tests Details:")
@@ -2200,7 +2169,7 @@ def main():
             if 'error' in test:
                 print(f"     Error: {test['error']}")
             if 'response' in test:
-                print(f"     Response: {test['response']}")
+                print(f"     Response: {test['response'][:200]}...")
             if 'endpoint' in test:
                 print(f"     Endpoint: {test['endpoint']}")
     
@@ -2208,13 +2177,13 @@ def main():
     
     # Return exit code based on results
     if len(tester.failed_tests) == 0:
-        print("🎉 All blog publishing functionality tests passed!")
+        print("🎉 All SEO functionality tests passed!")
         return 0
-    elif len(tester.failed_tests) <= 3:
-        print("⚠️  Minor issues found - blog publishing functionality is mostly working")
+    elif len(tester.failed_tests) <= 2:
+        print("⚠️  Minor issues found - SEO functionality is mostly working")
         return 0
     else:
-        print("❌ Significant issues found - blog publishing functionality needs attention")
+        print("❌ Significant issues found - SEO functionality needs attention")
         return 1
 
 if __name__ == "__main__":
