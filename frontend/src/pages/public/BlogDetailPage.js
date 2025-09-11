@@ -375,12 +375,21 @@ const BlogDetailPage = () => {
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <Button variant="outline" size="sm">
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      Comments
-                    </Button>
+                    <span className="text-sm text-gray-500">
+                      {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                    </span>
                   </div>
                 </div>
+              </div>
+
+              {/* Comments Section */}
+              <div className="p-8 border-t border-gray-100">
+                <CommentsSection
+                  comments={comments}
+                  onAddComment={handleAddComment}
+                  loading={commentsLoading}
+                  title="Discussion"
+                />
               </div>
             </article>
           </div>
