@@ -121,10 +121,39 @@ const ToolsPage = () => {
     );
   }
 
+  // Generate SEO data
+  const seoTitle = selectedCategory 
+    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Tools - MarketMind`
+    : 'Business Tools Directory - Find & Compare the Best Software Tools';
+  
+  const seoDescription = selectedCategory
+    ? `Discover the best ${categories.find(c => c.slug === selectedCategory)?.name?.toLowerCase() || selectedCategory} tools. Compare features, pricing, and reviews to find the perfect solution.`
+    : 'Browse our comprehensive directory of business tools. Find, compare, and choose from thousands of productivity and business software solutions.';
+
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Tools', url: '/tools' }
+  ];
+
+  if (selectedCategory) {
+    breadcrumbItems.push({
+      name: categories.find(c => c.slug === selectedCategory)?.name || selectedCategory,
+      url: `/tools?category=${selectedCategory}`
+    });
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white py-16">
+    <>
+      <SEOHead 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={`business tools, ${selectedCategory ? `${selectedCategory} tools, ` : ''}software directory, productivity tools, SaaS tools, tool comparison`}
+        type="website"
+      />
+      <StructuredData data={generateBreadcrumbSchema(breadcrumbItems)} />
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
