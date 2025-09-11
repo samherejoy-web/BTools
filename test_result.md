@@ -396,10 +396,11 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Public API - Blogs Listing and Search"
     - "Tool Comparison Feature"
   stuck_tasks:
     - "Tool Comparison Feature"
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
