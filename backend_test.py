@@ -544,32 +544,53 @@ class MarketMindAPITester:
 
     # USER TESTS
     def test_user_blog_operations(self):
-        """Test user blog creation and management"""
+        """Test user blog creation and management using new user-specific endpoints"""
         if not self.token:
             print("❌ Skipping user blog tests - no authentication token")
             return False
         
         results = []
         
-        # Test create blog
+        # Test get user blogs (should be empty initially)
+        success, response = self.run_test(
+            "Get User Blogs",
+            "GET",
+            "user/blogs",
+            200,
+            description="Get all blogs by current user"
+        )
+        results.append(success)
+        
+        # Test create blog using user endpoint
         timestamp = datetime.now().strftime('%H%M%S')
         blog_data = {
-            "title": f"Test Blog Post {timestamp}",
-            "content": f"<h1>Test Blog Content</h1><p>This is a test blog post created at {timestamp} for automated testing purposes. It contains sample content to verify the blog creation functionality.</p>",
-            "excerpt": "This is a test blog post excerpt for automated testing",
-            "tags": ["test", "automation", "blog"],
-            "seo_title": f"Test Blog Post {timestamp} - SEO Title",
-            "seo_description": "SEO description for test blog post",
-            "seo_keywords": "test, blog, automation"
+            "title": f"User Blog Post {timestamp}",
+            "content": f"<h1>User Blog Content</h1><p>This is a user blog post created at {timestamp} for testing the new user-specific blog endpoints. It includes JSON-LD and SEO data.</p><p>This content is longer to test reading time calculation and excerpt generation functionality.</p>",
+            "excerpt": "This is a user blog post excerpt for testing user-specific endpoints",
+            "tags": ["user-test", "automation", "blog", "json-ld"],
+            "seo_title": f"User Blog Post {timestamp} - SEO Optimized Title",
+            "seo_description": "SEO description for user blog post testing new endpoints",
+            "seo_keywords": "user, blog, automation, json-ld, seo",
+            "json_ld": {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": f"User Blog Post {timestamp}",
+                "author": {
+                    "@type": "Person",
+                    "name": "Test User"
+                },
+                "datePublished": datetime.now().isoformat(),
+                "description": "Test blog post with JSON-LD structured data"
+            }
         }
         
         success, response = self.run_test(
-            "Create Blog Post",
+            "Create User Blog Post",
             "POST",
-            "blogs",
+            "user/blogs",
             200,
             data=blog_data,
-            description="Create new blog post as authenticated user"
+            description="Create new blog post using user-specific endpoint"
         )
         results.append(success)
         
@@ -580,24 +601,72 @@ class MarketMindAPITester:
                 'title': blog_data['title']
             })
             
-            # Test update blog
+            # Verify JSON-LD was stored
+            if 'json_ld' in response and response['json_ld']:
+                print(f"   ✅ JSON-LD data stored successfully")
+            else:
+                print(f"   ⚠️ JSON-LD data may not have been stored")
+            
+            # Verify SEO fields
+            if response.get('seo_title') and response.get('seo_description'):
+                print(f"   ✅ SEO fields stored successfully")
+            else:
+                print(f"   ⚠️ SEO fields may not have been stored properly")
+            
+            # Test get specific user blog
             success, response = self.run_test(
-                "Update Blog Post",
-                "PUT",
-                f"blogs/{created_blog_id}",
+                "Get Specific User Blog",
+                "GET",
+                f"user/blogs/{created_blog_id}",
                 200,
-                data={"title": f"Updated Test Blog Post {timestamp}"},
-                description="Update blog post as owner"
+                description="Get specific blog by current user"
             )
             results.append(success)
             
-            # Test publish blog
+            # Test update user blog
+            update_data = {
+                "title": f"Updated User Blog Post {timestamp}",
+                "content": f"<h1>Updated Content</h1><p>This content has been updated to test the user blog update functionality.</p>",
+                "json_ld": {
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": f"Updated User Blog Post {timestamp}",
+                    "author": {
+                        "@type": "Person",
+                        "name": "Test User"
+                    },
+                    "dateModified": datetime.now().isoformat(),
+                    "description": "Updated test blog post with JSON-LD structured data"
+                }
+            }
+            
             success, response = self.run_test(
-                "Publish Blog Post",
-                "POST",
-                f"blogs/{created_blog_id}/publish",
+                "Update User Blog Post",
+                "PUT",
+                f"user/blogs/{created_blog_id}",
                 200,
-                description="Publish blog post"
+                data=update_data,
+                description="Update blog post using user-specific endpoint"
+            )
+            results.append(success)
+            
+            # Test publish user blog
+            success, response = self.run_test(
+                "Publish User Blog Post",
+                "POST",
+                f"user/blogs/{created_blog_id}/publish",
+                200,
+                description="Publish blog post using user-specific endpoint"
+            )
+            results.append(success)
+            
+            # Test delete user blog
+            success, response = self.run_test(
+                "Delete User Blog Post",
+                "DELETE",
+                f"user/blogs/{created_blog_id}",
+                200,
+                description="Delete blog post using user-specific endpoint"
             )
             results.append(success)
         
