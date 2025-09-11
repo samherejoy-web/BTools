@@ -115,33 +115,50 @@ export const useBlogSEO = (blog) => {
 
 // Hook for tool-specific SEO
 export const useToolSEO = (tool) => {
-  if (!tool) {
-    return {
-      title: 'MarketMind - Discover the Best Business Tools',
-      description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
-      keywords: 'business tools, productivity, software comparison',
-      canonical: '',
-      image: '',
-      type: 'website'
-    };
-  }
-  
-  return useSEO({
-    title: tool.seo_title || `${tool.name} - Review & Pricing`,
-    description: tool.seo_description || tool.short_description,
-    keywords: tool.seo_keywords || '',
-    canonical: `/tools/${tool.slug}`,
-    image: tool.screenshot_url || tool.logo_url,
-    type: 'product',
-    data: {
-      product: true,
-      jsonLd: tool.json_ld || (tool ? generateProductSchema(tool) : null),
-      categories: tool.categories || [],
-      features: tool.features || [],
-      rating: tool.rating,
-      reviewCount: tool.review_count
+  return useMemo(() => {
+    if (!tool) {
+      return {
+        title: 'MarketMind - Discover the Best Business Tools',
+        description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
+        keywords: 'business tools, productivity, software comparison',
+        canonical: '',
+        image: '',
+        type: 'website'
+      };
     }
-  });
+    
+    try {
+      const seoData = {
+        title: tool.seo_title || `${tool.name} - Review & Pricing`,
+        description: tool.seo_description || tool.short_description || tool.description || 'Discover this amazing business tool.',
+        keywords: tool.seo_keywords || generateKeywordsFromData({
+          categories: tool.categories,
+          features: tool.features
+        }, 'product'),
+        canonical: `/tools/${tool.slug}`,
+        image: tool.screenshot_url || tool.logo_url || '',
+        type: 'product',
+        product: true,
+        jsonLd: tool.json_ld || generateProductSchema(tool),
+        categories: Array.isArray(tool.categories) ? tool.categories : [],
+        features: Array.isArray(tool.features) ? tool.features : [],
+        rating: tool.rating,
+        reviewCount: tool.review_count || 0
+      };
+      
+      return seoData;
+    } catch (error) {
+      console.error('Error generating tool SEO data:', error);
+      return {
+        title: tool.name ? `${tool.name} - Review & Pricing | MarketMind` : 'Business Tool | MarketMind',
+        description: tool.short_description || tool.description || 'Discover this amazing business tool.',
+        keywords: 'business tool, software, productivity',
+        canonical: `/tools/${tool.slug}`,
+        image: tool.screenshot_url || tool.logo_url || '',
+        type: 'product'
+      };
+    }
+  }, [tool]);
 };
 
 // Generate JSON-LD for tools
