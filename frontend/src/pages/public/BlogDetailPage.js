@@ -56,7 +56,7 @@ const BlogDetailPage = () => {
       setLoading(true);
       const response = await apiClient.get(`/blogs/by-slug/${blogSlug}`);
       setBlog(response.data);
-      setLikesCount(response.data.likes_count || 0);
+      setLikesCount(response.data.like_count || 0);
       
       // Increment view count
       await apiClient.post(`/blogs/${blogSlug}/view`);
