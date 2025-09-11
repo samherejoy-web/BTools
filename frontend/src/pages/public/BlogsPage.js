@@ -402,6 +402,10 @@ const BlogsPage = () => {
                           <Eye className="h-3 w-3" />
                           <span>{formatNumber(blog.view_count || 0)}</span>
                         </div>
+                        <div className="flex items-center gap-1">
+                          <Heart className="h-3 w-3" />
+                          <span>{formatNumber(blog.like_count || 0)}</span>
+                        </div>
                         {blog.is_ai_generated && (
                           <Badge className="bg-purple-100 text-purple-800 text-xs">
                             <Brain className="h-3 w-3 mr-1" />
