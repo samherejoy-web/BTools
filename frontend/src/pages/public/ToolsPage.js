@@ -455,7 +455,8 @@ const ToolsPage = () => {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
