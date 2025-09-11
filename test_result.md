@@ -255,12 +255,36 @@ backend:
         comment: "✅ URGENT INVESTIGATION COMPLETE: Comprehensive testing of comment functionality reveals ALL BACKEND APIS ARE WORKING PERFECTLY. Blog comments: POST/GET /api/blogs/{slug}/comments (100% success rate). Tool comments: POST/GET /api/tools/{slug}/comments (100% success rate). Authentication working, database constraints working, nested comments supported, response structure complete. Tested edge cases: long content, special characters, invalid requests - all handled properly. ROOT CAUSE: The issue preventing users from writing comments is NOT in the backend - it's in the FRONTEND implementation. Backend comment APIs are fully functional and production-ready."
 
 frontend:
+  - task: "Blog Comment Functionality"
+    implemented: true
+    working: false
+    file: "frontend/src/pages/public/BlogDetailPage.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Blog comments API is working perfectly (returns 12 comments with 200 status), but the CommentsSection component is not rendering any comments or comment form. The fetchComments() function is called and receives data, but the UI shows no textarea, no existing comments, and no comment form. Root cause: React component rendering issue in CommentsSection - comments data is fetched but not displayed."
+
+  - task: "Tool Comment Functionality"
+    implemented: false
+    working: false
+    file: "frontend/src/pages/public/ToolDetailPage.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Tool comments completely missing from UI. The ToolDetailPage shows tabs for 'Overview', 'Features', 'Reviews (0)', 'Pricing' but NO 'Discussion' tab. The code shows Discussion tab should be at index 4 with comments count, but it's not rendered. Root cause: Discussion tab is not being rendered in the TabsList component."
+
   - task: "Blog Editor UI Integration"
     implemented: false
     working: "NA"
     file: "frontend/src/components/BlogEditor.js"
     stuck_count: 0
-    priority: "high"
+    priority: "medium"
     needs_retesting: true
     status_history:
       - working: "NA"
