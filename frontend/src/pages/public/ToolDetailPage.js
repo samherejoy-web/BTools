@@ -148,6 +148,7 @@ const ToolDetailPage = () => {
     try {
       setReviewLoading(true);
       const reviewData = {
+        tool_id: tool?.id || toolSlug, // Backend requires tool_id in request body
         rating: newRating,
         title: newReview.title,
         content: newReview.content,
