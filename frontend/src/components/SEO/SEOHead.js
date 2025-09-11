@@ -71,14 +71,14 @@ const SEOHead = React.memo(({
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
+      {/* Basic Meta Tags - These will override static HTML meta tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       <link rel="canonical" href={currentUrl} />
       
-      {/* Open Graph Meta Tags */}
+      {/* Open Graph Meta Tags - These will override static HTML meta tags */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
@@ -95,7 +95,7 @@ const SEOHead = React.memo(({
       {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {article && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       
-      {/* Twitter Card Meta Tags */}
+      {/* Twitter Card Meta Tags - These will override static HTML meta tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
@@ -107,9 +107,11 @@ const SEOHead = React.memo(({
       <meta name="theme-color" content="#3B82F6" />
       
       {/* Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify(generateJsonLd())}
-      </script>
+      {generateJsonLd() && (
+        <script type="application/ld+json">
+          {JSON.stringify(generateJsonLd())}
+        </script>
+      )}
     </Helmet>
   );
 });
