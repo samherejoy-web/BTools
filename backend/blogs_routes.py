@@ -446,3 +446,168 @@ async def serve_blog_image(filename: str):
         return FileResponse(file_path)
     else:
         raise HTTPException(status_code=404, detail="Image not found")
+
+# Comment endpoints
+@router.post("/api/blogs/{blog_slug}/comments", response_model=CommentResponse)
+async def create_comment(
+    blog_slug: str,
+    comment: CommentCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    blog = db.query(Blog).filter(Blog.slug == blog_slug, Blog.status == "published").first()
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    db_comment = BlogComment(
+        id=str(uuid.uuid4()),
+        blog_id=blog.id,
+        user_id=current_user.id,
+        parent_id=comment.parent_id,
+        content=comment.content
+    )
+    
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    
+    return CommentResponse(
+        id=db_comment.id,
+        blog_id=db_comment.blog_id,
+        user_id=db_comment.user_id,
+        user_name=current_user.full_name or current_user.username,
+        parent_id=db_comment.parent_id,
+        content=db_comment.content,
+        is_approved=db_comment.is_approved,
+        created_at=db_comment.created_at,
+        updated_at=db_comment.updated_at,
+        replies=[]
+    )
+
+@router.get("/api/blogs/{blog_slug}/comments", response_model=List[CommentResponse])
+async def get_comments(
+    blog_slug: str,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    blog = db.query(Blog).filter(Blog.slug == blog_slug).first()
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Get root comments (no parent)
+    root_comments = db.query(BlogComment).options(joinedload(BlogComment.user)).filter(
+        BlogComment.blog_id == blog.id,
+        BlogComment.parent_id.is_(None),
+        BlogComment.is_approved == True
+    ).order_by(desc(BlogComment.created_at)).offset(skip).limit(limit).all()
+    
+    result = []
+    for comment in root_comments:
+        # Get replies for each root comment
+        replies = db.query(BlogComment).options(joinedload(BlogComment.user)).filter(
+            BlogComment.parent_id == comment.id,
+            BlogComment.is_approved == True
+        ).order_by(BlogComment.created_at).all()
+        
+        reply_responses = [
+            CommentResponse(
+                id=reply.id,
+                blog_id=reply.blog_id,
+                user_id=reply.user_id,
+                user_name=reply.user.full_name or reply.user.username,
+                parent_id=reply.parent_id,
+                content=reply.content,
+                is_approved=reply.is_approved,
+                created_at=reply.created_at,
+                updated_at=reply.updated_at,
+                replies=[]
+            ) for reply in replies
+        ]
+        
+        result.append(CommentResponse(
+            id=comment.id,
+            blog_id=comment.blog_id,
+            user_id=comment.user_id,
+            user_name=comment.user.full_name or comment.user.username,
+            parent_id=comment.parent_id,
+            content=comment.content,
+            is_approved=comment.is_approved,
+            created_at=comment.created_at,
+            updated_at=comment.updated_at,
+            replies=reply_responses
+        ))
+    
+    return result
+
+# Like endpoints
+@router.post("/api/blogs/{blog_slug}/like", response_model=LikeResponse)
+async def toggle_blog_like(
+    blog_slug: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    blog = db.query(Blog).filter(Blog.slug == blog_slug).first()
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Check if already liked
+    existing_like = db.query(BlogLike).filter(
+        BlogLike.blog_id == blog.id,
+        BlogLike.user_id == current_user.id
+    ).first()
+    
+    if existing_like:
+        # Remove like
+        db.delete(existing_like)
+        blog.like_count = max(0, blog.like_count - 1)
+        liked = False
+    else:
+        # Add like
+        new_like = BlogLike(
+            id=str(uuid.uuid4()),
+            blog_id=blog.id,
+            user_id=current_user.id
+        )
+        db.add(new_like)
+        blog.like_count += 1
+        liked = True
+    
+    db.commit()
+    
+    return LikeResponse(liked=liked, like_count=blog.like_count)
+
+# Bookmark endpoints
+@router.post("/api/blogs/{blog_slug}/bookmark", response_model=BookmarkResponse)
+async def toggle_blog_bookmark(
+    blog_slug: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    blog = db.query(Blog).filter(Blog.slug == blog_slug).first()
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Check if already bookmarked
+    existing_bookmark = db.query(BlogBookmark).filter(
+        BlogBookmark.blog_id == blog.id,
+        BlogBookmark.user_id == current_user.id
+    ).first()
+    
+    if existing_bookmark:
+        # Remove bookmark
+        db.delete(existing_bookmark)
+        bookmarked = False
+    else:
+        # Add bookmark
+        new_bookmark = BlogBookmark(
+            id=str(uuid.uuid4()),
+            blog_id=blog.id,
+            user_id=current_user.id
+        )
+        db.add(new_bookmark)
+        bookmarked = True
+    
+    db.commit()
+    
+    return BookmarkResponse(bookmarked=bookmarked)
