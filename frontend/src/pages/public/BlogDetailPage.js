@@ -506,7 +506,8 @@ const BlogDetailPage = () => {
           onClick={() => setShowShareMenu(false)}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
