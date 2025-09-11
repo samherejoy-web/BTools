@@ -314,8 +314,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Blog Comment Functionality"
-    - "Tool Comment Functionality"
+    - "Tool Review Submission Bug"
   stuck_tasks:
     - "Blog Comment Functionality"
     - "Tool Comment Functionality"
