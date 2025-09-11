@@ -256,8 +256,8 @@ const ToolDetailPage = () => {
 
   return (
     <>
-      {/* Only render SEO data when tool is loaded */}
-      {tool && <SEOHead {...seoData} />}
+      {/* Only render SEO data when tool is loaded and SEO data is available */}
+      {tool && seoData && <SEOHead {...seoData} />}
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
         <div className="bg-white border-b">
