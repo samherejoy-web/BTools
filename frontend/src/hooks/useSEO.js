@@ -89,7 +89,7 @@ export const useBlogSEO = (blog) => {
         tags: blog?.tags
       }
     });
-  }, [blog?.id, blog?.seo_title, blog?.title, blog?.seo_description, blog?.excerpt, blog?.updated_at]);
+  }, [blog]);
 };
 
 // Hook for tool-specific SEO - optimized with useMemo  
@@ -113,7 +113,7 @@ export const useToolSEO = (tool) => {
         reviewCount: tool?.review_count
       }
     });
-  }, [tool?.id, tool?.seo_title, tool?.name, tool?.seo_description, tool?.short_description, tool?.updated_at]);
+  }, [tool]);
 };
 
 // Generate JSON-LD for tools
