@@ -2597,31 +2597,7 @@ class MarketMindAPITester:
 
     def test_comprehensive_seo_functionality(self):
         """Run comprehensive SEO functionality tests"""
-        print("\n🔍 COMPREHENSIVE SEO FUNCTIONALITY TESTING")
-        print("=" * 60)
-        
-        seo_results = []
-        
-        # Run all SEO tests
-        seo_results.append(self.test_seo_sitemap_generation())
-        seo_results.append(self.test_seo_robots_txt())
-        seo_results.append(self.test_seo_data_in_apis())
-        seo_results.append(self.test_seo_performance_impact())
-        
-        # Summary
-        passed_tests = sum(seo_results)
-        total_tests = len(seo_results)
-        
-        print(f"\n📋 SEO TESTING SUMMARY:")
-        print(f"   SEO Tests Passed: {passed_tests}/{total_tests}")
-        print(f"   SEO Success Rate: {(passed_tests/total_tests*100):.1f}%")
-        
-        if passed_tests == total_tests:
-            print("   ✅ ALL SEO FUNCTIONALITY WORKING CORRECTLY")
-        else:
-            print("   ❌ SOME SEO FUNCTIONALITY NEEDS ATTENTION")
-        
-        return all(seo_results)
+        return self.test_comprehensive_seo_implementation()
 
 def main():
     print("🚀 Starting MarketMind AI Platform - SEO Implementation Testing")
