@@ -68,52 +68,66 @@ const generateKeywordsFromData = (data, type) => {
   return keywords.join(', ');
 };
 
-// Hook for blog-specific SEO - optimized with useMemo
+// Hook for blog-specific SEO
 export const useBlogSEO = (blog) => {
-  return useMemo(() => {
-    if (!blog) return null;
-    
-    return useSEO({
-      title: blog?.seo_title || blog?.title,
-      description: blog?.seo_description || blog?.excerpt,
-      keywords: blog?.seo_keywords || blog?.tags?.join(', '),
-      canonical: `/blogs/${blog?.slug}`,
-      image: blog?.featured_image,
-      type: 'article',
-      data: {
-        article: true,
-        author: blog?.author_name,
-        publishedTime: blog?.published_at || blog?.created_at,
-        modifiedTime: blog?.updated_at,
-        jsonLd: blog?.json_ld || (blog ? generateArticleSchema(blog) : null),
-        tags: blog?.tags
-      }
-    });
-  }, [blog]);
+  if (!blog) {
+    return {
+      title: 'MarketMind - Discover the Best Business Tools',
+      description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
+      keywords: 'business tools, productivity, software comparison',
+      canonical: '',
+      image: '',
+      type: 'website'
+    };
+  }
+  
+  return useSEO({
+    title: blog.seo_title || blog.title,
+    description: blog.seo_description || blog.excerpt,
+    keywords: blog.seo_keywords || (blog.tags ? blog.tags.join(', ') : ''),
+    canonical: `/blogs/${blog.slug}`,
+    image: blog.featured_image,
+    type: 'article',
+    data: {
+      article: true,
+      author: blog.author_name,
+      publishedTime: blog.published_at || blog.created_at,
+      modifiedTime: blog.updated_at,
+      jsonLd: blog.json_ld || (blog ? generateArticleSchema(blog) : null),
+      tags: blog.tags || []
+    }
+  });
 };
 
-// Hook for tool-specific SEO - optimized with useMemo  
+// Hook for tool-specific SEO
 export const useToolSEO = (tool) => {
-  return useMemo(() => {
-    if (!tool) return null;
-    
-    return useSEO({
-      title: tool?.seo_title || `${tool?.name} - Review & Pricing`,
-      description: tool?.seo_description || tool?.short_description,
-      keywords: tool?.seo_keywords,
-      canonical: `/tools/${tool?.slug}`,
-      image: tool?.screenshot_url || tool?.logo_url,
-      type: 'product',
-      data: {
-        product: true,
-        jsonLd: tool?.json_ld || (tool ? generateProductSchema(tool) : null),
-        categories: tool?.categories,
-        features: tool?.features,
-        rating: tool?.rating,
-        reviewCount: tool?.review_count
-      }
-    });
-  }, [tool]);
+  if (!tool) {
+    return {
+      title: 'MarketMind - Discover the Best Business Tools',
+      description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
+      keywords: 'business tools, productivity, software comparison',
+      canonical: '',
+      image: '',
+      type: 'website'
+    };
+  }
+  
+  return useSEO({
+    title: tool.seo_title || `${tool.name} - Review & Pricing`,
+    description: tool.seo_description || tool.short_description,
+    keywords: tool.seo_keywords || '',
+    canonical: `/tools/${tool.slug}`,
+    image: tool.screenshot_url || tool.logo_url,
+    type: 'product',
+    data: {
+      product: true,
+      jsonLd: tool.json_ld || (tool ? generateProductSchema(tool) : null),
+      categories: tool.categories || [],
+      features: tool.features || [],
+      rating: tool.rating,
+      reviewCount: tool.review_count
+    }
+  });
 };
 
 // Generate JSON-LD for tools
