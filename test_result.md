@@ -85,6 +85,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ All user blog endpoints working correctly: GET /api/user/blogs (list), POST /api/user/blogs (create), GET /api/user/blogs/{id} (get specific), PUT /api/user/blogs/{id} (update), DELETE /api/user/blogs/{id} (delete), POST /api/user/blogs/{id}/publish (publish). All CRUD operations tested successfully with proper authentication."
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL FIX VERIFIED: User blog CRUD endpoints now properly include like_count field in all responses. Fixed missing like_count field in POST /api/user/blogs endpoint. All 5 requested endpoints tested successfully: 1) GET /api/user/blogs includes like_count, 2) POST /api/user/blogs returns blog with like_count=0, 3) PUT /api/user/blogs/{id} returns updated blog with like_count, 4) GET /api/user/blogs/{id} includes like_count, 5) POST /api/user/blogs/{id}/publish works without issues. 100% success rate (7/7 tests passed)."
 
   - task: "Blog Image Upload"
     implemented: true
