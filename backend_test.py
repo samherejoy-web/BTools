@@ -1489,6 +1489,7 @@ def main():
                 print(f"\n👤 USER TESTS (as {role})")
                 print("-" * 40)
                 tester.test_user_blog_operations()
+                tester.test_blog_image_upload()
                 tester.test_user_profile_operations()
                 tester.test_tool_interactions()
             
