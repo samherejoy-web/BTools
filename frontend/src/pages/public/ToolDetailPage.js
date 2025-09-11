@@ -60,6 +60,7 @@ const ToolDetailPage = () => {
       setLoading(true);
       const response = await apiClient.get(`/tools/by-slug/${toolSlug}`);
       setTool(response.data);
+      setLikesCount(response.data.like_count || 0);
       
       // Fetch related tools from the same category
       if (response.data.categories?.length > 0) {
