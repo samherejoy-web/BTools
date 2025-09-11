@@ -764,6 +764,166 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_tool_review_submission_bug(self):
+        """Test tool review submission functionality - SPECIFIC BUG TESTING"""
+        print("\n🐛 TOOL REVIEW SUBMISSION BUG TESTING")
+        print("-" * 50)
+        
+        if not self.token:
+            print("❌ Skipping tool review tests - no authentication token")
+            return False
+        
+        results = []
+        
+        # First get available tools
+        success, tools_response = self.run_test(
+            "Get Tools for Review Testing",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get tools to test review submission"
+        )
+        results.append(success)
+        
+        if success and isinstance(tools_response, list) and len(tools_response) > 0:
+            test_tool = tools_response[0]
+            tool_id = test_tool['id']
+            tool_slug = test_tool.get('slug', 'unknown-slug')
+            
+            print(f"   Testing with tool: {test_tool['name']}")
+            print(f"   Tool ID: {tool_id}")
+            print(f"   Tool Slug: {tool_slug}")
+            
+            # Test 1: POST /api/tools/{tool_id}/reviews with tool_id in URL and body
+            review_data = {
+                "tool_id": tool_id,  # Backend expects this in body
+                "rating": 4,
+                "title": "Comprehensive Review Test",
+                "content": "This is a comprehensive test of the tool review submission functionality. Testing if the backend properly handles review creation with proper authentication and data validation.",
+                "pros": ["Easy to use", "Good features", "Reliable", "Well documented"],
+                "cons": ["Could be faster", "Limited customization"]
+            }
+            
+            success, response = self.run_test(
+                "Tool Review - Correct Format (ID in URL + Body)",
+                "POST",
+                f"tools/{tool_id}/reviews",
+                200,
+                data=review_data,
+                description=f"Test POST /api/tools/{tool_id}/reviews with tool_id in body"
+            )
+            results.append(success)
+            
+            if success and isinstance(response, dict):
+                print(f"   ✅ Review created successfully")
+                print(f"   Review ID: {response.get('id', 'Unknown')}")
+                print(f"   Rating: {response.get('rating', 'Unknown')}")
+                print(f"   Title: {response.get('title', 'Unknown')}")
+                self.created_resources['reviews'].append({
+                    'id': response.get('id'),
+                    'tool_id': tool_id,
+                    'title': response.get('title')
+                })
+            
+            # Test 2: POST /api/tools/{tool_slug}/reviews (using slug instead of ID)
+            review_data_slug = {
+                "tool_id": tool_id,  # Still need tool_id in body even with slug in URL
+                "rating": 5,
+                "title": "Slug-based Review Test",
+                "content": "Testing review submission using tool slug in URL path instead of tool ID.",
+                "pros": ["Excellent performance", "Great UI/UX"],
+                "cons": ["Minor learning curve"]
+            }
+            
+            success, response = self.run_test(
+                "Tool Review - Slug in URL (Should Fail)",
+                "POST",
+                f"tools/{tool_slug}/reviews",
+                404,  # Expected to fail since endpoint expects tool_id not slug
+                data=review_data_slug,
+                description=f"Test POST /api/tools/{tool_slug}/reviews (should fail)"
+            )
+            results.append(success)
+            
+            # Test 3: Missing tool_id in request body
+            review_data_missing_id = {
+                # "tool_id": tool_id,  # Intentionally missing
+                "rating": 3,
+                "title": "Missing Tool ID Test",
+                "content": "Testing what happens when tool_id is missing from request body.",
+                "pros": ["Good concept"],
+                "cons": ["Missing required field"]
+            }
+            
+            success, response = self.run_test(
+                "Tool Review - Missing tool_id in Body",
+                "POST",
+                f"tools/{tool_id}/reviews",
+                422,  # Expected validation error
+                data=review_data_missing_id,
+                description="Test review creation without tool_id in body (should fail)"
+            )
+            results.append(success)
+            
+            # Test 4: Invalid tool_id format
+            review_data_invalid_id = {
+                "tool_id": "invalid-tool-id-format",
+                "rating": 2,
+                "title": "Invalid Tool ID Test",
+                "content": "Testing with invalid tool ID format.",
+                "pros": ["Testing edge cases"],
+                "cons": ["Invalid data"]
+            }
+            
+            success, response = self.run_test(
+                "Tool Review - Invalid tool_id",
+                "POST",
+                f"tools/{tool_id}/reviews",
+                404,  # Expected tool not found
+                data=review_data_invalid_id,
+                description="Test review creation with invalid tool_id (should fail)"
+            )
+            results.append(success)
+            
+            # Test 5: Frontend-style request (what frontend is likely sending)
+            # Frontend sends to `/tools/${tool?.id || toolSlug}/reviews`
+            # This would be `/api/tools/{tool_id}/reviews` but might be missing tool_id in body
+            frontend_style_data = {
+                # Frontend might not include tool_id in body, expecting it from URL
+                "rating": 4,
+                "title": "Frontend Style Review",
+                "content": "Testing how frontend likely sends review data - without tool_id in body.",
+                "pros": ["User-friendly approach"],
+                "cons": ["Missing backend requirement"]
+            }
+            
+            success, response = self.run_test(
+                "Tool Review - Frontend Style (No tool_id in body)",
+                "POST",
+                f"tools/{tool_id}/reviews",
+                422,  # Expected validation error due to missing tool_id
+                data=frontend_style_data,
+                description="Test frontend-style review submission (likely to fail)"
+            )
+            results.append(success)
+            
+            # Test 6: Get existing reviews to verify creation worked
+            success, response = self.run_test(
+                "Get Tool Reviews",
+                "GET",
+                f"tools/{tool_id}/reviews",
+                200,
+                description=f"Get reviews for tool {tool_id}"
+            )
+            results.append(success)
+            
+            if success and isinstance(response, list):
+                print(f"   Found {len(response)} reviews for this tool")
+                for review in response[:3]:  # Show first 3 reviews
+                    print(f"   - Review: {review.get('title', 'No title')} (Rating: {review.get('rating', 'N/A')})")
+        
+        return all(results)
+
     def test_tool_interactions(self):
         """Test user tool interactions (reviews, favorites)"""
         if not self.token:
