@@ -1165,13 +1165,20 @@ class MarketMindAPITester:
         
         # Create a simple test image file in memory
         import io
-        from PIL import Image
         
-        # Create a simple test image
-        img = Image.new('RGB', (100, 100), color='red')
-        img_bytes = io.BytesIO()
-        img.save(img_bytes, format='PNG')
-        img_bytes.seek(0)
+        if Image is None:
+            # Create a simple text file as fallback
+            img_bytes = io.BytesIO(b"fake image content for testing")
+            filename = 'test_image.txt'
+            content_type = 'text/plain'
+        else:
+            # Create a simple test image
+            img = Image.new('RGB', (100, 100), color='red')
+            img_bytes = io.BytesIO()
+            img.save(img_bytes, format='PNG')
+            img_bytes.seek(0)
+            filename = 'test_image.png'
+            content_type = 'image/png'
         
         # Test image upload
         try:
