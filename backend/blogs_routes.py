@@ -71,6 +71,7 @@ class BlogResponse(BaseModel):
     author_name: str
     status: str
     view_count: int
+    like_count: int
     reading_time: Optional[int]
     tags: Optional[List[str]]
     is_ai_generated: bool
