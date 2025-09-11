@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 
 class MarketMindAPITester:
-    def __init__(self, base_url="https://blogtools-central.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://codebase-explorer-14.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
