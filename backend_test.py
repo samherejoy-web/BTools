@@ -1287,6 +1287,9 @@ def main():
     tester.test_blogs_advanced()
     tester.test_tool_comparison()
     
+    # Test production-ready fixes (public endpoints)
+    tester.test_production_ready_fixes()
+    
     # Test authentication with different user roles
     print("\n🔐 AUTHENTICATION & ROLE-BASED TESTS")
     print("-" * 40)
