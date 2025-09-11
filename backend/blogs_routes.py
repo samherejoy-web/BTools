@@ -292,6 +292,7 @@ async def get_blog_by_slug(blog_slug: str, db: Session = Depends(get_db)):
         author_name=blog.author.full_name or blog.author.username,
         status=blog.status,
         view_count=blog.view_count,
+        like_count=blog.like_count,
         reading_time=blog.reading_time,
         tags=blog.tags,
         is_ai_generated=blog.is_ai_generated,
