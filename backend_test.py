@@ -1778,9 +1778,9 @@ class MarketMindAPITester:
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - Blog Publishing Functionality Tests")
+    print("🚀 Starting MarketMind AI Platform - Tool Review Submission Bug Testing")
     print("=" * 70)
-    print("🎯 FOCUS: Testing blog publishing functionality and new endpoints")
+    print("🎯 FOCUS: Testing tool review submission functionality and identifying the bug")
     print("=" * 70)
     
     tester = MarketMindAPITester()
@@ -1793,16 +1793,6 @@ def main():
     tester.test_categories()
     tester.test_tools()
     tester.test_blogs()
-    
-    # Test the specific functionality requested in the review
-    print("\n🎯 REVIEW REQUEST SPECIFIC TESTS")
-    print("-" * 40)
-    
-    # Test blog publishing functionality (public endpoints)
-    tester.test_blog_publishing_functionality()
-    
-    # Test tool endpoints functionality (public endpoints)
-    tester.test_tool_endpoints_functionality()
     
     # Test authentication and authenticated endpoints
     print("\n🔐 AUTHENTICATION & AUTHENTICATED ENDPOINT TESTS")
@@ -1824,11 +1814,10 @@ def main():
             # Test basic authenticated endpoints
             tester.test_current_user_info()
             
-            # Re-test blog and tool functionality with authentication
-            print(f"\n🔄 RE-TESTING WITH AUTHENTICATION (as {role})")
-            print("-" * 40)
-            tester.test_blog_publishing_functionality()
-            tester.test_tool_endpoints_functionality()
+            # MAIN TEST: Tool Review Submission Bug
+            print("\n🎯 MAIN TEST: TOOL REVIEW SUBMISSION BUG")
+            print("-" * 50)
+            tester.test_tool_review_submission_bug()
             
             # Reset token for next user
             tester.token = None
