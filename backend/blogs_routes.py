@@ -408,7 +408,16 @@ async def upload_blog_image(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Get the backend URL from environment
-    backend_url = os.getenv('REACT_APP_BACKEND_URL', 'http://localhost:8001')
+    return {"message": "Image uploaded successfully", "image_url": f"/api/uploads/blog-images/{filename}"}
+
+@router.get("/api/uploads/blog-images/{filename}")
+async def serve_blog_image(filename: str):
+    """Serve blog images through API to ensure proper routing"""
+    from fastapi import HTTPException
+    from fastapi.responses import FileResponse
     
-    return {"message": "Image uploaded successfully", "image_url": f"{backend_url}/uploads/blog-images/{filename}"}
+    file_path = f"uploads/blog-images/{filename}"
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    else:
+        raise HTTPException(status_code=404, detail="Image not found")
