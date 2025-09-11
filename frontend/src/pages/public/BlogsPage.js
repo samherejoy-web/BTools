@@ -111,10 +111,39 @@ const BlogsPage = () => {
     );
   }
 
+  // Generate SEO data
+  const seoTitle = selectedCategory 
+    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Articles - MarketMind Blog`
+    : 'Expert Guides & Tool Reviews - MarketMind Blog';
+  
+  const seoDescription = selectedCategory
+    ? `Read expert ${categories.find(c => c.slug === selectedCategory)?.name?.toLowerCase() || selectedCategory} guides and articles. Get insights from industry experts and make better tool decisions.`
+    : 'Read expert guides, in-depth tool reviews, and comparisons to make better software decisions for your business. AI-generated content and community insights.';
+
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Blog', url: '/blogs' }
+  ];
+
+  if (selectedCategory) {
+    breadcrumbItems.push({
+      name: categories.find(c => c.slug === selectedCategory)?.name || selectedCategory,
+      url: `/blogs?category=${selectedCategory}`
+    });
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-purple-800 text-white py-16">
+    <>
+      <SEOHead 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={`tool reviews, software guides, ${selectedCategory ? `${selectedCategory} articles, ` : ''}business productivity, tech blog, AI content`}
+        type="website"
+      />
+      <StructuredData data={generateBreadcrumbSchema(breadcrumbItems)} />
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-purple-800 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
