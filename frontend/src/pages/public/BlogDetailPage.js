@@ -128,9 +128,10 @@ const BlogDetailPage = () => {
     }
 
     try {
-      await apiClient.post(`/blogs/${blogSlug}/like`);
+      const response = await apiClient.post(`/blogs/${blogSlug}/like`);
       setIsLiked(!isLiked);
-      setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
+      // Use the actual like count from response if available
+      setLikesCount(response.data?.like_count || (isLiked ? likesCount - 1 : likesCount + 1));
       toast.success(isLiked ? 'Like removed' : 'Article liked!');
     } catch (error) {
       console.error('Error toggling like:', error);
