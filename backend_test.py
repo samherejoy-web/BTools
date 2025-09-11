@@ -1618,7 +1618,9 @@ class MarketMindAPITester:
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform Comprehensive API Tests")
+    print("🚀 Starting MarketMind AI Platform - Blog Publishing Functionality Tests")
+    print("=" * 70)
+    print("🎯 FOCUS: Testing blog publishing functionality and new endpoints")
     print("=" * 70)
     
     tester = MarketMindAPITester()
@@ -1632,28 +1634,25 @@ def main():
     tester.test_tools()
     tester.test_blogs()
     
-    # Test enhanced public APIs
-    print("\n🔧 ENHANCED PUBLIC API TESTS")
-    print("-" * 40)
-    tester.test_tools_advanced()
-    tester.test_blogs_advanced()
-    tester.test_tool_comparison()
-    
-    # Test production-ready fixes (public endpoints)
-    tester.test_production_ready_fixes()
-    
-    # Test authentication with different user roles
-    print("\n🔐 AUTHENTICATION & ROLE-BASED TESTS")
+    # Test the specific functionality requested in the review
+    print("\n🎯 REVIEW REQUEST SPECIFIC TESTS")
     print("-" * 40)
     
-    # Test user registration
-    tester.test_register()
+    # Test blog publishing functionality (public endpoints)
+    tester.test_blog_publishing_functionality()
     
-    # Test login with different roles and comprehensive role-based testing
+    # Test tool endpoints functionality (public endpoints)
+    tester.test_tool_endpoints_functionality()
+    
+    # Test authentication and authenticated endpoints
+    print("\n🔐 AUTHENTICATION & AUTHENTICATED ENDPOINT TESTS")
+    print("-" * 40)
+    
+    # Test login with user account to test authenticated endpoints
     test_accounts = [
-        ("superadmin@marketmind.com", "admin123", "superadmin"),
+        ("user1@example.com", "password123", "user"),
         ("admin@marketmind.com", "admin123", "admin"),
-        ("user1@example.com", "password123", "user")
+        ("superadmin@marketmind.com", "admin123", "superadmin")
     ]
     
     successful_logins = []
@@ -1664,57 +1663,22 @@ def main():
             
             # Test basic authenticated endpoints
             tester.test_current_user_info()
-            tester.test_user_dashboard()
             
-            # Test role-specific functionality
-            if role == 'superadmin':
-                print(f"\n👑 SUPERADMIN TESTS (as {role})")
-                print("-" * 40)
-                tester.test_superadmin_user_management()
-                tester.test_superadmin_category_management()
-                tester.test_superadmin_tool_management()
-                tester.test_bulk_upload_template()
-                
-                # Also test admin functions as superadmin
-                tester.test_admin_dashboard()
-                tester.test_admin_blog_management()
-                tester.test_admin_review_management()
-                tester.test_admin_seo_management()
-                tester.test_admin_analytics()
-                
-            elif role == 'admin':
-                print(f"\n🛡️ ADMIN TESTS (as {role})")
-                print("-" * 40)
-                tester.test_admin_dashboard()
-                tester.test_admin_blog_management()
-                tester.test_admin_review_management()
-                tester.test_admin_seo_management()
-                tester.test_admin_analytics()
-            
-            elif role == 'user':
-                print(f"\n👤 USER TESTS (as {role})")
-                print("-" * 40)
-                tester.test_user_blog_operations()
-                tester.test_blog_image_upload()
-                tester.test_user_profile_operations()
-                tester.test_tool_interactions()
-            
-            # Test AI integration (available to all authenticated users)
-            if role in ['user', 'admin', 'superadmin']:
-                print(f"\n🤖 AI INTEGRATION TESTS (as {role})")
-                print("-" * 40)
-                tester.test_ai_blog_generation()
-                tester.test_ai_tool_comparison()
-                tester.test_ai_blog_topics()
+            # Re-test blog and tool functionality with authentication
+            print(f"\n🔄 RE-TESTING WITH AUTHENTICATION (as {role})")
+            print("-" * 40)
+            tester.test_blog_publishing_functionality()
+            tester.test_tool_endpoints_functionality()
             
             # Reset token for next user
             tester.token = None
             tester.user_id = None
             tester.current_user_role = None
+            break  # Only test with first successful login for focused testing
     
     # Print comprehensive results
     print("\n" + "=" * 70)
-    print("📊 COMPREHENSIVE TEST RESULTS SUMMARY")
+    print("📊 BLOG PUBLISHING FUNCTIONALITY TEST RESULTS")
     print("=" * 70)
     print(f"Total Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
@@ -1725,13 +1689,6 @@ def main():
         print(f"\n✅ Successful Logins:")
         for email, role in successful_logins:
             print(f"   - {email} ({role})")
-    
-    # Print created resources summary
-    if any(tester.created_resources.values()):
-        print(f"\n📝 Resources Created During Testing:")
-        for resource_type, resources in tester.created_resources.items():
-            if resources:
-                print(f"   - {resource_type.title()}: {len(resources)} items")
     
     if tester.failed_tests:
         print(f"\n❌ Failed Tests Details:")
@@ -1750,13 +1707,13 @@ def main():
     
     # Return exit code based on results
     if len(tester.failed_tests) == 0:
-        print("🎉 All tests passed! Backend is fully functional.")
+        print("🎉 All blog publishing functionality tests passed!")
         return 0
     elif len(tester.failed_tests) <= 3:
-        print("⚠️  Minor issues found - backend is mostly working")
+        print("⚠️  Minor issues found - blog publishing functionality is mostly working")
         return 0
     else:
-        print("❌ Significant issues found - backend needs attention")
+        print("❌ Significant issues found - blog publishing functionality needs attention")
         return 1
 
 if __name__ == "__main__":
