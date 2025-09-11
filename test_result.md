@@ -299,12 +299,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Published Blogs API Endpoint"
-    - "Blog Detail by Slug Endpoint"
-    - "Blog Like and Comment Endpoints"
-    - "Tool Detail by Slug Endpoint"
-    - "Tool Like and Comment Endpoints"
-  stuck_tasks: []
+    - "Blog Comment Functionality"
+    - "Tool Comment Functionality"
+  stuck_tasks:
+    - "Blog Comment Functionality"
+    - "Tool Comment Functionality"
   test_all: false
   test_priority: "high_first"
 
@@ -319,3 +318,5 @@ agent_communication:
     message: "🔧 CRITICAL FIX APPLIED & VERIFIED: Successfully identified and fixed missing like_count field in user blog CRUD endpoints. The issue was in POST /api/user/blogs endpoint in user_routes.py where BlogResponse was missing the like_count field, causing 500 errors. Applied fix by adding like_count=db_blog.like_count to the BlogResponse. All 5 requested endpoints now working perfectly: 1) GET /api/user/blogs includes like_count field, 2) POST /api/user/blogs returns blog with like_count=0, 3) PUT /api/user/blogs/{id} returns updated blog with like_count field, 4) GET /api/user/blogs/{id} includes like_count field, 5) POST /api/user/blogs/{id}/publish works without issues. 100% success rate (7/7 tests passed). No 500 errors occur. All responses include like_count field as required."
   - agent: "testing"
     message: "🚨 URGENT COMMENT FUNCTIONALITY INVESTIGATION COMPLETE: Comprehensive testing reveals that ALL BACKEND COMMENT FUNCTIONALITY IS WORKING PERFECTLY. ✅ Blog Comments: POST /api/blogs/{slug}/comments and GET /api/blogs/{slug}/comments working 100% (12/12 tests passed). ✅ Tool Comments: POST /api/tools/{slug}/comments and GET /api/tools/{slug}/comments working 100% (12/12 tests passed). ✅ Authentication: JWT tokens valid, user authentication working. ✅ Database: Comment tables exist, constraints working, nested comments supported. ✅ Response Structure: All required fields present, content integrity maintained. ✅ Edge Cases: Handles long content, special characters, invalid requests properly. CONCLUSION: The issue preventing users from writing comments is NOT in the backend - it's in the FRONTEND implementation. Backend APIs are fully functional and ready for production use."
+  - agent: "testing"
+    message: "🚨 URGENT FRONTEND COMMENT TESTING COMPLETE: Identified exact root causes preventing users from writing comments. ❌ BLOG COMMENTS: API works perfectly (returns 12 comments, 200 status) but CommentsSection component fails to render. No textarea, no existing comments displayed, no comment form visible despite fetchComments() being called successfully. ❌ TOOL COMMENTS: Discussion tab completely missing from UI. ToolDetailPage shows only 4 tabs (Overview, Features, Reviews, Pricing) but Discussion tab (index 4) is not rendered. Both issues are FRONTEND RENDERING PROBLEMS, not API issues. Backend comment functionality is 100% operational."
