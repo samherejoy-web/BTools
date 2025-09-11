@@ -8,6 +8,7 @@ import {
   Eye,
   User,
   Tag,
+  Heart,
   BookOpen,
   TrendingUp,
   Brain,
