@@ -45,7 +45,7 @@ const BlogsPage = () => {
       
       if (selectedCategory) params.append('category', selectedCategory);
       if (sortBy) params.append('sort', sortBy);
-      if (featuredOnly) params.append('featured', 'true');
+      if (aiGeneratedOnly) params.append('featured', 'true');
 
       const response = await apiClient.get(`/blogs?${params}`);
       setBlogs(response.data.blogs || response.data || []);
