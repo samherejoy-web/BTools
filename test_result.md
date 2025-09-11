@@ -318,11 +318,14 @@ backend:
     file: "tools_routes.py"
     stuck_count: 1
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "testing"
         comment: "Tool comparison endpoint returning 404 'Tool not found' error when comparing valid tool IDs. Issue with tool ID validation or query logic in comparison endpoint."
+      - working: "NA"
+        agent: "main"
+        comment: "Tool comparison endpoint exists and should work. Updated AI comparison format to be blog-ready. Needs retesting to verify fixes."
 
   - task: "AI Blog Generation"
     implemented: true
