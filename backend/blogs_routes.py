@@ -190,9 +190,37 @@ async def get_blog(blog_id: str, db: Session = Depends(get_db)):
     if not blog:
         raise HTTPException(status_code=404, detail="Blog not found")
     
-    # Increment view count
-    blog.view_count += 1
-    db.commit()
+    return BlogResponse(
+        id=blog.id,
+        title=blog.title,
+        slug=blog.slug,
+        content=blog.content,
+        excerpt=blog.excerpt,
+        featured_image=blog.featured_image,
+        author_id=blog.author_id,
+        author_name=blog.author.full_name or blog.author.username,
+        status=blog.status,
+        view_count=blog.view_count,
+        reading_time=blog.reading_time,
+        tags=blog.tags,
+        is_ai_generated=blog.is_ai_generated,
+        created_at=blog.created_at,
+        updated_at=blog.updated_at,
+        published_at=blog.published_at,
+        seo_title=blog.seo_title,
+        seo_description=blog.seo_description,
+        seo_keywords=blog.seo_keywords
+    )
+
+@router.get("/api/blogs/by-slug/{blog_slug}", response_model=BlogResponse)
+async def get_blog_by_slug(blog_slug: str, db: Session = Depends(get_db)):
+    blog = db.query(Blog).options(joinedload(Blog.author)).filter(
+        Blog.slug == blog_slug,
+        Blog.status == "published"
+    ).first()
+    
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
     
     return BlogResponse(
         id=blog.id,
@@ -215,6 +243,19 @@ async def get_blog(blog_id: str, db: Session = Depends(get_db)):
         seo_description=blog.seo_description,
         seo_keywords=blog.seo_keywords
     )
+
+@router.post("/api/blogs/{blog_slug}/view")
+async def increment_blog_view(blog_slug: str, db: Session = Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.slug == blog_slug).first()
+    
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Increment view count
+    blog.view_count += 1
+    db.commit()
+    
+    return {"message": "View count incremented", "view_count": blog.view_count}
 
 @router.put("/api/blogs/{blog_id}", response_model=BlogResponse)
 async def update_blog(
