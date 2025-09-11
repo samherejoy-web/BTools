@@ -267,6 +267,14 @@ app.include_router(get_tools_routes(), prefix="", tags=["tools", "free-tools"])
 app.include_router(blogs_router, prefix="", tags=["blogs"])
 app.include_router(ai_blog_router, prefix="", tags=["ai-blog"])
 
+# Create uploads directory if it doesn't exist
+os.makedirs("uploads", exist_ok=True)
+os.makedirs("uploads/blog-images", exist_ok=True)
+os.makedirs("uploads/avatars", exist_ok=True)
+
+# Mount static files for uploads
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 # Global Categories Route
 @app.get("/api/categories")
 async def get_categories_global(db: Session = Depends(get_db)):
