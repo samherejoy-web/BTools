@@ -281,6 +281,10 @@ const ToolsPage = () => {
                       <Eye className="h-4 w-4" />
                       <span>{formatNumber(tool.view_count)}</span>
                     </div>
+                    <div className="flex items-center gap-1">
+                      <Heart className="h-4 w-4" />
+                      <span>{formatNumber(tool.like_count || 0)}</span>
+                    </div>
                   </div>
                 </CardHeader>
 
