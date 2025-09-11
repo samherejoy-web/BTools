@@ -98,6 +98,9 @@ export const useBlogSEO = (blog) => {
         tags: Array.isArray(blog.tags) ? blog.tags : []
       };
       
+      // Debug logging to check SEO data
+      console.log('Blog SEO Data Generated:', seoData);
+      
       return seoData;
     } catch (error) {
       console.error('Error generating blog SEO data:', error);
