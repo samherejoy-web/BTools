@@ -2063,11 +2063,10 @@ class MarketMindAPITester:
         
         # Test robots.txt performance
         start_time = time.time()
-        robots_url = f"{self.base_url.replace('/api', '')}/robots.txt"
         success, response = self.run_test(
             "Robots.txt Performance Test",
             "GET",
-            robots_url,
+            "robots.txt",
             200,
             description="Measure robots.txt generation response time"
         )
