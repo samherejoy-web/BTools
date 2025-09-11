@@ -307,11 +307,22 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing your b
         </div>
       </div>
 
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+
       {/* Editor */}
       <textarea
         id="blog-editor"
         value={editorContent}
         onChange={handleContentChange}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
         placeholder={placeholder}
         className="w-full h-96 p-4 resize-none focus:outline-none text-gray-800 leading-relaxed"
         style={{ fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace' }}
