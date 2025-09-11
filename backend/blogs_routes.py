@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Query, UploadFile, File
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_, desc
 from pydantic import BaseModel
