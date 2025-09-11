@@ -88,9 +88,31 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-24 lg:py-32">
+    <>
+      <SEOHead 
+        title="MarketMind - Discover the Best Business Tools"
+        description="Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews from 10,000+ users."
+        keywords="business tools, productivity software, SaaS tools, tool comparison, software reviews, business productivity"
+        type="website"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "MarketMind",
+          "url": process.env.REACT_APP_BACKEND_URL || '',
+          "description": "Discover and compare the best business tools",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": `${process.env.REACT_APP_BACKEND_URL || ''}/tools?q={search_term_string}`
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-24 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-center mb-6">
