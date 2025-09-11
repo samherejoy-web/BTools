@@ -79,6 +79,30 @@ const BlogDetailPage = () => {
     }
   };
 
+  const fetchComments = async () => {
+    try {
+      setCommentsLoading(true);
+      const response = await apiClient.get(`/blogs/${blogSlug}/comments`);
+      setComments(response.data || []);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+
+  const handleAddComment = async (commentData) => {
+    try {
+      await apiClient.post(`/blogs/${blogSlug}/comments`, commentData);
+      await fetchComments(); // Refresh comments
+      toast.success('Comment added successfully!');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      toast.error('Failed to add comment');
+      throw error;
+    }
+  };
+
   const handleToggleBookmark = async () => {
     if (!user) {
       toast.error('Please login to bookmark articles');
