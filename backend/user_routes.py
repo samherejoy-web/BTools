@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from database import get_db
 from models import User, Blog, Review, Tool
+from blogs_routes import BlogCreate, BlogUpdate, BlogResponse, generate_slug, calculate_reading_time
 from auth import get_password_hash, verify_password, create_access_token, get_current_user
 import uuid
 from datetime import datetime
