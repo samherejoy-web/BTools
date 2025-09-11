@@ -93,7 +93,8 @@ async def get_sitemap(db: Session = Depends(get_db)):
     
     # Add SEO pages
     for seo_page in seo_pages:
-        last_mod = seo_page.updated_at.strftime('%Y-%m-%d') if seo_page.updated_at else seo_page.created_at.strftime('%Y-%m-%d')
+        last_mod = (seo_page.updated_at.strftime('%Y-%m-%d') if seo_page.updated_at 
+                   else seo_page.created_at.strftime('%Y-%m-%d'))
         sitemap_content += f'''
     <url>
         <loc>{base_url}{seo_page.page_path}</loc>
