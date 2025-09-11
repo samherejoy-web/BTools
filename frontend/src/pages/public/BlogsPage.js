@@ -31,7 +31,7 @@ const BlogsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [viewMode, setViewMode] = useState('grid');
-  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [aiGeneratedOnly, setAiGeneratedOnly] = useState(false);
 
   useEffect(() => {
     fetchBlogs();
