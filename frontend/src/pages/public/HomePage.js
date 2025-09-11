@@ -15,6 +15,7 @@ import {
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
+import SEOHead from '../../components/SEO/SEOHead';
 import apiClient from '../../utils/apiClient';
 import { formatNumber, formatRating } from '../../utils/formatters';
 
