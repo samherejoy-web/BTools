@@ -402,10 +402,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Public API - Blogs Listing and Search"
-    - "Tool Comparison Feature"
-  stuck_tasks:
-    - "Tool Comparison Feature"
+    - "Image Upload and Static File Serving"
+    - "AI Tool Comparison Format"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
