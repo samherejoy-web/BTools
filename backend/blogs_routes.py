@@ -176,7 +176,8 @@ async def get_blogs(
         query = query.order_by(desc(Blog.view_count))
     elif sort == "trending":
         # Trending = combination of recent views and creation date
-        query = query.order_by(desc(Blog.view_count * 0.7 + Blog.created_at.desc() * 0.3))
+        # Use view_count as primary sort, then created_at as secondary
+        query = query.order_by(desc(Blog.view_count), desc(Blog.created_at))
     else:
         query = query.order_by(desc(Blog.created_at))
     
