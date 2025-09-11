@@ -128,7 +128,8 @@ async def create_blog(
         published_at=db_blog.published_at,
         seo_title=db_blog.seo_title,
         seo_description=db_blog.seo_description,
-        seo_keywords=db_blog.seo_keywords
+        seo_keywords=db_blog.seo_keywords,
+        json_ld=db_blog.json_ld
     )
 
 @router.get("/api/blogs", response_model=List[BlogResponse])
