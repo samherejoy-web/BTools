@@ -99,7 +99,7 @@ export const useToolSEO = (tool) => {
     type: 'product',
     data: {
       product: true,
-      jsonLd: tool?.json_ld || generateToolJsonLd(tool),
+      jsonLd: tool?.json_ld || (tool ? generateProductSchema(tool) : null),
       categories: tool?.categories,
       features: tool?.features,
       rating: tool?.rating,
