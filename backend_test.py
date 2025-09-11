@@ -1389,6 +1389,212 @@ class MarketMindAPITester:
             print("❌ Cannot test static file serving - image upload failed")
             return False
 
+    def test_blog_publishing_functionality(self):
+        """Test blog publishing functionality as requested in review"""
+        print("\n📝 BLOG PUBLISHING FUNCTIONALITY TESTING")
+        print("-" * 50)
+        
+        results = []
+        
+        # Test 1: Published blogs API endpoint (/api/blogs)
+        success, response = self.run_test(
+            "Published Blogs API Endpoint",
+            "GET",
+            "blogs",
+            200,
+            description="Test /api/blogs endpoint returns published blogs correctly"
+        )
+        results.append(success)
+        
+        published_blogs = []
+        if success and isinstance(response, list):
+            published_blogs = response
+            print(f"   Found {len(published_blogs)} published blogs")
+            # Verify all returned blogs are published
+            non_published = [blog for blog in published_blogs if blog.get('status') != 'published']
+            if non_published:
+                print(f"   ❌ Found {len(non_published)} non-published blogs in results")
+                results.append(False)
+            else:
+                print(f"   ✅ All {len(published_blogs)} blogs are published")
+        
+        # Test 2: Blog detail by slug (/api/blogs/by-slug/{slug})
+        if published_blogs:
+            test_blog = published_blogs[0]
+            blog_slug = test_blog.get('slug')
+            
+            if blog_slug:
+                success, response = self.run_test(
+                    "Blog Detail by Slug",
+                    "GET",
+                    f"blogs/by-slug/{blog_slug}",
+                    200,
+                    description=f"Test /api/blogs/by-slug/{blog_slug} endpoint"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, dict):
+                    print(f"   Blog retrieved: {response.get('title', 'Unknown')}")
+                    print(f"   Status: {response.get('status', 'Unknown')}")
+                    print(f"   Author: {response.get('author_name', 'Unknown')}")
+                    
+                    # Verify it's published
+                    if response.get('status') != 'published':
+                        print(f"   ❌ Blog status is not 'published': {response.get('status')}")
+                        results.append(False)
+                    else:
+                        print(f"   ✅ Blog is published")
+        
+        # Test 3: Blog like and comment endpoints (require authentication)
+        if self.token and published_blogs:
+            test_blog = published_blogs[0]
+            blog_slug = test_blog.get('slug')
+            
+            if blog_slug:
+                # Test POST /api/blogs/{slug}/like
+                success, response = self.run_test(
+                    "Blog Like Endpoint",
+                    "POST",
+                    f"blogs/{blog_slug}/like",
+                    200,
+                    description=f"Test POST /api/blogs/{blog_slug}/like endpoint"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, dict):
+                    print(f"   Like status: {response.get('liked', 'Unknown')}")
+                    print(f"   Like count: {response.get('like_count', 'Unknown')}")
+                
+                # Test POST /api/blogs/{slug}/comments
+                comment_data = {
+                    "content": "This is a test comment for blog publishing functionality testing."
+                }
+                success, response = self.run_test(
+                    "Blog Comment Creation",
+                    "POST",
+                    f"blogs/{blog_slug}/comments",
+                    200,
+                    data=comment_data,
+                    description=f"Test POST /api/blogs/{blog_slug}/comments endpoint"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, dict):
+                    print(f"   Comment created: {response.get('id', 'Unknown')}")
+                    print(f"   Comment content: {response.get('content', 'Unknown')[:50]}...")
+                
+                # Test GET /api/blogs/{slug}/comments
+                success, response = self.run_test(
+                    "Blog Comments Retrieval",
+                    "GET",
+                    f"blogs/{blog_slug}/comments",
+                    200,
+                    description=f"Test GET /api/blogs/{blog_slug}/comments endpoint"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, list):
+                    print(f"   Retrieved {len(response)} comments")
+        else:
+            print("❌ Skipping blog like/comment tests - no authentication token or no published blogs")
+        
+        return all(results)
+
+    def test_tool_endpoints_functionality(self):
+        """Test new tool endpoints as requested in review"""
+        print("\n🔧 TOOL ENDPOINTS FUNCTIONALITY TESTING")
+        print("-" * 50)
+        
+        results = []
+        
+        # First get some tools to test with
+        success, tools_response = self.run_test(
+            "Get Tools for Testing",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get tools to test new endpoints"
+        )
+        results.append(success)
+        
+        available_tools = []
+        if success and isinstance(tools_response, list):
+            available_tools = tools_response
+            print(f"   Found {len(available_tools)} tools for testing")
+        
+        if available_tools:
+            test_tool = available_tools[0]
+            tool_slug = test_tool.get('slug')
+            
+            if tool_slug:
+                # Test 1: GET /api/tools/by-slug/{slug}
+                success, response = self.run_test(
+                    "Tool Detail by Slug",
+                    "GET",
+                    f"tools/by-slug/{tool_slug}",
+                    200,
+                    description=f"Test GET /api/tools/by-slug/{tool_slug} endpoint"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, dict):
+                    print(f"   Tool retrieved: {response.get('name', 'Unknown')}")
+                    print(f"   Tool slug: {response.get('slug', 'Unknown')}")
+                    print(f"   Tool active: {response.get('is_active', 'Unknown')}")
+                
+                # Test tool like and comment endpoints (require authentication)
+                if self.token:
+                    # Test 2: POST /api/tools/{slug}/like
+                    success, response = self.run_test(
+                        "Tool Like Endpoint",
+                        "POST",
+                        f"tools/{tool_slug}/like",
+                        200,
+                        description=f"Test POST /api/tools/{tool_slug}/like endpoint"
+                    )
+                    results.append(success)
+                    
+                    if success and isinstance(response, dict):
+                        print(f"   Like status: {response.get('liked', 'Unknown')}")
+                        print(f"   Like count: {response.get('like_count', 'Unknown')}")
+                    
+                    # Test 3: POST /api/tools/{slug}/comments
+                    comment_data = {
+                        "content": "This is a test comment for tool functionality testing."
+                    }
+                    success, response = self.run_test(
+                        "Tool Comment Creation",
+                        "POST",
+                        f"tools/{tool_slug}/comments",
+                        200,
+                        data=comment_data,
+                        description=f"Test POST /api/tools/{tool_slug}/comments endpoint"
+                    )
+                    results.append(success)
+                    
+                    if success and isinstance(response, dict):
+                        print(f"   Comment created: {response.get('id', 'Unknown')}")
+                        print(f"   Comment content: {response.get('content', 'Unknown')[:50]}...")
+                    
+                    # Test 4: GET /api/tools/{slug}/comments
+                    success, response = self.run_test(
+                        "Tool Comments Retrieval",
+                        "GET",
+                        f"tools/{tool_slug}/comments",
+                        200,
+                        description=f"Test GET /api/tools/{tool_slug}/comments endpoint"
+                    )
+                    results.append(success)
+                    
+                    if success and isinstance(response, list):
+                        print(f"   Retrieved {len(response)} comments")
+                else:
+                    print("❌ Skipping tool like/comment tests - no authentication token")
+        else:
+            print("❌ No tools available for testing")
+        
+        return all(results)
+
     def test_production_ready_fixes(self):
         """Run all production-ready fix tests"""
         print("\n🔧 PRODUCTION-READY FIXES TESTING")
