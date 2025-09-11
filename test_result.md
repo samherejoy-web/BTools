@@ -256,11 +256,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "User Blog CRUD Operations"
-    - "Blog Image Upload"
-    - "Blog Image Serving"
-    - "JSON-LD Support"
-    - "SEO Meta Data"
+    - "Published Blogs API Endpoint"
+    - "Blog Detail by Slug Endpoint"
+    - "Blog Like and Comment Endpoints"
+    - "Tool Detail by Slug Endpoint"
+    - "Tool Like and Comment Endpoints"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -270,3 +270,5 @@ agent_communication:
     message: "✅ BACKEND TESTING COMPLETE: All primary blog management functionality is working correctly. Fixed critical JSON-LD issue in user routes. All user blog endpoints (/api/user/blogs/*) are functional with proper authentication, CRUD operations, image upload, JSON-LD support, and SEO metadata. Backend is ready for frontend integration. One minor timeout issue with AI tool comparison endpoint but this doesn't affect core blog functionality."
   - agent: "testing"
     message: "🖼️ IMAGE FUNCTIONALITY TESTING COMPLETE: Comprehensive testing of image upload and serving functionality shows 100% success rate (5/5 tests passed). POST /api/blogs/upload-image works perfectly with correct URL format '/api/uploads/blog-images/{filename}'. GET /api/uploads/blog-images/{filename} serves images with proper Content-Type headers (image/png, image/jpeg). Images are accessible from frontend with no CORS issues. Multiple formats supported (PNG, JPEG). Files stored correctly in backend/uploads/blog-images/. Previous issue with broken thumbnails is RESOLVED - images now display properly through dedicated API endpoint."
+  - agent: "testing"
+    message: "🎯 REVIEW REQUEST TESTING COMPLETE: All requested blog publishing functionality endpoints are working perfectly with 100% success rate (21/21 tests passed). CRITICAL DATABASE FIX: Resolved missing like_count columns in tools and blogs tables that were causing 500 errors. All endpoints now functional: ✅ GET /api/blogs (published blogs only), ✅ GET /api/blogs/by-slug/{slug} (published blog details), ✅ POST/GET /api/blogs/{slug}/like and /api/blogs/{slug}/comments (blog interactions), ✅ GET /api/tools/by-slug/{slug} (tool details), ✅ POST/GET /api/tools/{slug}/like and /api/tools/{slug}/comments (tool interactions). Blog publishing functionality is fully operational and ready for production use."
