@@ -40,7 +40,28 @@
         <link rel="dns-prefetch" href="//google-analytics.com" />
         <link rel="dns-prefetch" href="//googletagmanager.com" />
         
+        <!-- Resource Hints for Better Performance -->
+        <link rel="prefetch" href="/api/blogs" />
+        <link rel="prefetch" href="/api/tools" />
+        <link rel="preload" href="/api/sitemap.xml" as="fetch" crossorigin="anonymous" />
+        
         <title>MarketMind - Discover the Best Business Tools</title>
+        
+        <!-- Service Worker Registration for Performance & SEO -->
+        <script>
+            // Register Service Worker for better performance and SEO
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(function(registration) {
+                            console.log('SW registered: ', registration);
+                        })
+                        .catch(function(registrationError) {
+                            console.log('SW registration failed: ', registrationError);
+                        });
+                });
+            }
+        </script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
