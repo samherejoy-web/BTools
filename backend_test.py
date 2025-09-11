@@ -2042,11 +2042,10 @@ class MarketMindAPITester:
         
         # Test sitemap generation performance
         start_time = time.time()
-        sitemap_url = f"{self.base_url.replace('/api', '')}/sitemap.xml"
         success, response = self.run_test(
             "Sitemap Performance Test",
             "GET",
-            sitemap_url,
+            "sitemap.xml",
             200,
             description="Measure sitemap generation response time"
         )
