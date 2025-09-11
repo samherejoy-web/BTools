@@ -542,7 +542,73 @@ class MarketMindAPITester:
         )
         return success
 
-    # USER TESTS
+    def test_blog_image_upload(self):
+        """Test blog image upload functionality"""
+        if not self.token:
+            print("❌ Skipping image upload test - no authentication token")
+            return False
+        
+        try:
+            # Create a simple test image file
+            import io
+            from PIL import Image as PILImage
+            
+            # Create a simple 100x100 red image
+            img = PILImage.new('RGB', (100, 100), color='red')
+            img_bytes = io.BytesIO()
+            img.save(img_bytes, format='PNG')
+            img_bytes.seek(0)
+            
+            # Test image upload
+            files = {'file': ('test_image.png', img_bytes, 'image/png')}
+            headers = {'Authorization': f'Bearer {self.token}'}
+            
+            url = f"{self.base_url}/blogs/upload-image"
+            print(f"\n🔍 Testing Blog Image Upload...")
+            print(f"   URL: {url}")
+            
+            response = requests.post(url, files=files, headers=headers, timeout=30)
+            
+            success = response.status_code == 200
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Status: {response.status_code}")
+                try:
+                    response_data = response.json()
+                    if 'image_url' in response_data:
+                        print(f"   Image URL: {response_data['image_url']}")
+                        print(f"   ✅ Image upload successful with proper URL")
+                    else:
+                        print(f"   ⚠️ Response missing image_url field")
+                    print(f"   Response: {response_data}")
+                except:
+                    print(f"   Response: {response.text[:100]}...")
+            else:
+                print(f"❌ Failed - Expected 200, got {response.status_code}")
+                print(f"   Response: {response.text[:300]}...")
+                self.failed_tests.append({
+                    'name': 'Blog Image Upload',
+                    'expected': 200,
+                    'actual': response.status_code,
+                    'response': response.text[:300],
+                    'endpoint': 'blogs/upload-image'
+                })
+            
+            self.tests_run += 1
+            return success
+            
+        except ImportError:
+            print("❌ PIL/Pillow not available - skipping image upload test")
+            return True  # Don't fail the test if PIL is not available
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            self.failed_tests.append({
+                'name': 'Blog Image Upload',
+                'error': str(e),
+                'endpoint': 'blogs/upload-image'
+            })
+            self.tests_run += 1
+            return False
     def test_user_blog_operations(self):
         """Test user blog creation and management using new user-specific endpoints"""
         if not self.token:
