@@ -43,6 +43,8 @@ import { formatDate } from '../../utils/formatters';
 const RichTextEditor = ({ content, onChange, placeholder = "Start writing your blog..." }) => {
   const [editorContent, setEditorContent] = useState(content || '');
   const [selectedFormat, setSelectedFormat] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = React.useRef(null);
 
   useEffect(() => {
     setEditorContent(content || '');
