@@ -213,7 +213,8 @@ const BlogDetailPage = () => {
 
   return (
     <>
-      <SEOHead {...seoData} />
+      {/* Only render SEO data when blog is loaded */}
+      {blog && <SEOHead {...seoData} />}
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
         {/* Back Navigation */}
