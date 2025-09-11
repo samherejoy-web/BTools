@@ -877,6 +877,394 @@ class MarketMindAPITester:
         )
         return success
 
+    # PRODUCTION-READY FIXES TESTING
+    def test_blog_by_slug_endpoint(self):
+        """Test new blog by slug endpoint for published blogs"""
+        results = []
+        
+        # First get some published blogs to test with
+        success, blogs_response = self.run_test(
+            "Get Published Blogs for Slug Test",
+            "GET",
+            "blogs?status=published&limit=3",
+            200,
+            description="Get published blogs to test slug endpoint"
+        )
+        results.append(success)
+        
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            # Test with valid slug
+            test_blog = blogs_response[0]
+            blog_slug = test_blog.get('slug')
+            
+            if blog_slug:
+                success, response = self.run_test(
+                    "Get Blog by Slug - Valid",
+                    "GET",
+                    f"blogs/by-slug/{blog_slug}",
+                    200,
+                    description=f"Get blog by slug: {blog_slug}"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, dict):
+                    print(f"   Blog found: {response.get('title', 'Unknown')}")
+                    print(f"   Status: {response.get('status', 'Unknown')}")
+                    print(f"   Author: {response.get('author_name', 'Unknown')}")
+        
+        # Test with invalid slug
+        success, response = self.run_test(
+            "Get Blog by Slug - Invalid",
+            "GET",
+            "blogs/by-slug/non-existent-blog-slug",
+            404,
+            description="Test blog by slug with invalid slug"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_blog_view_increment(self):
+        """Test blog view increment endpoint"""
+        results = []
+        
+        # First get a published blog
+        success, blogs_response = self.run_test(
+            "Get Published Blog for View Test",
+            "GET",
+            "blogs?status=published&limit=1",
+            200,
+            description="Get published blog to test view increment"
+        )
+        results.append(success)
+        
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            test_blog = blogs_response[0]
+            blog_slug = test_blog.get('slug')
+            initial_view_count = test_blog.get('view_count', 0)
+            
+            if blog_slug:
+                # Test view increment
+                success, response = self.run_test(
+                    "Increment Blog View Count",
+                    "POST",
+                    f"blogs/{blog_slug}/view",
+                    200,
+                    description=f"Increment view count for blog: {blog_slug}"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, dict):
+                    new_view_count = response.get('view_count', 0)
+                    print(f"   View count: {initial_view_count} -> {new_view_count}")
+                    
+                    # Verify view count increased
+                    if new_view_count > initial_view_count:
+                        print("   ✅ View count incremented successfully")
+                    else:
+                        print("   ⚠️ View count may not have incremented properly")
+        
+        # Test with invalid slug
+        success, response = self.run_test(
+            "Increment View - Invalid Slug",
+            "POST",
+            "blogs/non-existent-slug/view",
+            404,
+            description="Test view increment with invalid slug"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_blog_listing_with_filters(self):
+        """Test blog listing with new sorting and filtering options"""
+        results = []
+        
+        # Test different sorting options
+        sort_options = ["newest", "oldest", "most_viewed", "trending"]
+        for sort_option in sort_options:
+            success, response = self.run_test(
+                f"Blog Listing - Sort by {sort_option}",
+                "GET",
+                f"blogs?sort={sort_option}&limit=5",
+                200,
+                description=f"Get blogs sorted by {sort_option}"
+            )
+            results.append(success)
+            
+            if success and isinstance(response, list):
+                print(f"   Found {len(response)} blogs with {sort_option} sort")
+        
+        # Test AI generated filter (using featured parameter)
+        success, response = self.run_test(
+            "Blog Listing - AI Generated Only",
+            "GET",
+            "blogs?featured=true&limit=5",
+            200,
+            description="Get only AI generated blogs"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            ai_blogs = [blog for blog in response if blog.get('is_ai_generated', False)]
+            print(f"   Found {len(ai_blogs)} AI generated blogs out of {len(response)} total")
+        
+        # Test non-AI generated filter
+        success, response = self.run_test(
+            "Blog Listing - Non-AI Generated Only",
+            "GET",
+            "blogs?featured=false&limit=5",
+            200,
+            description="Get only non-AI generated blogs"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            non_ai_blogs = [blog for blog in response if not blog.get('is_ai_generated', False)]
+            print(f"   Found {len(non_ai_blogs)} non-AI generated blogs out of {len(response)} total")
+        
+        # Test default filtering (should only show published)
+        success, response = self.run_test(
+            "Blog Listing - Default Published Filter",
+            "GET",
+            "blogs?limit=10",
+            200,
+            description="Test default filtering to published blogs only"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            published_blogs = [blog for blog in response if blog.get('status') == 'published']
+            print(f"   All {len(response)} blogs are published: {len(published_blogs) == len(response)}")
+        
+        return all(results)
+
+    def test_tool_comparison_fixed(self):
+        """Test the fixed tool comparison endpoint"""
+        results = []
+        
+        # First get some tools to compare
+        success, tools_response = self.run_test(
+            "Get Tools for Fixed Comparison",
+            "GET",
+            "tools?limit=5",
+            200,
+            description="Get tools to test fixed comparison feature"
+        )
+        results.append(success)
+        
+        if success and isinstance(tools_response, list) and len(tools_response) >= 2:
+            # Test with tool IDs
+            tool_ids = [tool['id'] for tool in tools_response[:2]]
+            tool_ids_str = ",".join(tool_ids)
+            
+            success, response = self.run_test(
+                "Compare Tools - Fixed Endpoint (IDs)",
+                "GET",
+                f"tools/compare?tool_ids={tool_ids_str}",
+                200,
+                description="Compare tools using IDs (should be fixed now)"
+            )
+            results.append(success)
+            
+            if success and isinstance(response, list):
+                print(f"   Successfully compared {len(response)} tools")
+                for tool in response:
+                    print(f"   - {tool.get('name', 'Unknown')} (ID: {tool.get('id', 'Unknown')[:8]}...)")
+            
+            # Test with tool slugs if available
+            tool_slugs = [tool.get('slug') for tool in tools_response[:2] if tool.get('slug')]
+            if len(tool_slugs) >= 2:
+                tool_slugs_str = ",".join(tool_slugs)
+                
+                success, response = self.run_test(
+                    "Compare Tools - Fixed Endpoint (Slugs)",
+                    "GET",
+                    f"tools/compare?tool_ids={tool_slugs_str}",
+                    200,
+                    description="Compare tools using slugs (should be fixed now)"
+                )
+                results.append(success)
+                
+                if success and isinstance(response, list):
+                    print(f"   Successfully compared {len(response)} tools using slugs")
+        
+        # Test with invalid tool IDs
+        success, response = self.run_test(
+            "Compare Tools - Invalid IDs",
+            "GET",
+            "tools/compare?tool_ids=invalid-id-1,invalid-id-2",
+            404,
+            description="Test comparison with invalid tool IDs"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_ai_tool_comparison_format(self):
+        """Test AI tool comparison for blog-ready output format"""
+        if not self.token:
+            print("❌ Skipping AI tool comparison format test - no authentication token")
+            return False
+        
+        results = []
+        
+        # First get some tools
+        success, tools_response = self.run_test(
+            "Get Tools for AI Comparison Format",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get tools for AI comparison format test"
+        )
+        results.append(success)
+        
+        if success and isinstance(tools_response, list) and len(tools_response) >= 2:
+            tool_ids = [tool['id'] for tool in tools_response[:2]]
+            
+            success, response = self.run_test(
+                "AI Tool Comparison - Blog Format",
+                "POST",
+                "ai/compare-tools",
+                200,
+                data={
+                    "tool_ids": tool_ids,
+                    "comparison_criteria": ["Features", "Pricing", "Ease of Use", "Performance"],
+                    "create_blog": True,
+                    "auto_publish": False
+                },
+                description="Generate AI tool comparison in blog-ready format"
+            )
+            results.append(success)
+            
+            if success and isinstance(response, dict):
+                print(f"   AI comparison generated successfully")
+                if response.get('blog_created'):
+                    print(f"   Blog created: {response.get('blog_id', 'Unknown ID')}")
+                    print(f"   Blog slug: {response.get('blog_slug', 'Unknown slug')}")
+                
+                # Check for blog-ready content structure
+                if 'summary' in response:
+                    print(f"   Summary available: {len(response['summary'])} characters")
+                if 'detailed_comparison' in response:
+                    print(f"   Detailed comparison available: {len(response['detailed_comparison'])} items")
+                if 'overall_winner' in response:
+                    print(f"   Overall winner: {response['overall_winner']}")
+        
+        return all(results)
+
+    def test_image_upload_endpoint(self):
+        """Test blog image upload endpoint"""
+        if not self.token:
+            print("❌ Skipping image upload test - no authentication token")
+            return False
+        
+        # Create a simple test image file in memory
+        import io
+        from PIL import Image
+        
+        # Create a simple test image
+        img = Image.new('RGB', (100, 100), color='red')
+        img_bytes = io.BytesIO()
+        img.save(img_bytes, format='PNG')
+        img_bytes.seek(0)
+        
+        # Test image upload
+        try:
+            url = f"{self.base_url}/blogs/upload-image"
+            headers = {'Authorization': f'Bearer {self.token}'}
+            files = {'file': ('test_image.png', img_bytes, 'image/png')}
+            
+            print(f"\n🔍 Testing Image Upload...")
+            print(f"   URL: {url}")
+            
+            response = requests.post(url, files=files, headers=headers, timeout=30)
+            
+            success = response.status_code == 200
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Status: {response.status_code}")
+                try:
+                    response_data = response.json()
+                    print(f"   Response: {response_data}")
+                    if 'image_url' in response_data:
+                        print(f"   Image URL: {response_data['image_url']}")
+                        return True, response_data['image_url']
+                except:
+                    print(f"   Response: {response.text[:100]}...")
+            else:
+                print(f"❌ Failed - Expected 200, got {response.status_code}")
+                print(f"   Response: {response.text[:300]}...")
+                self.failed_tests.append({
+                    'name': 'Image Upload',
+                    'expected': 200,
+                    'actual': response.status_code,
+                    'response': response.text[:300],
+                    'endpoint': 'blogs/upload-image'
+                })
+            
+            self.tests_run += 1
+            return success, None
+            
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            self.failed_tests.append({
+                'name': 'Image Upload',
+                'error': str(e),
+                'endpoint': 'blogs/upload-image'
+            })
+            self.tests_run += 1
+            return False, None
+
+    def test_static_file_serving(self):
+        """Test if uploaded images are accessible via /uploads/ path"""
+        # First try to upload an image
+        upload_success, image_url = self.test_image_upload_endpoint()
+        
+        if upload_success and image_url:
+            # Test accessing the uploaded image
+            full_image_url = f"{self.base_url.replace('/api', '')}{image_url}"
+            
+            success, response = self.run_test(
+                "Static File Access",
+                "GET",
+                full_image_url,
+                200,
+                description=f"Test accessing uploaded image at {image_url}"
+            )
+            
+            if success:
+                print(f"   Image accessible at: {full_image_url}")
+                return True
+            else:
+                print(f"   Image not accessible at: {full_image_url}")
+                return False
+        else:
+            print("❌ Cannot test static file serving - image upload failed")
+            return False
+
+    def test_production_ready_fixes(self):
+        """Run all production-ready fix tests"""
+        print("\n🔧 PRODUCTION-READY FIXES TESTING")
+        print("-" * 50)
+        
+        results = []
+        
+        # Test all the specific areas mentioned in the review request
+        results.append(self.test_blog_by_slug_endpoint())
+        results.append(self.test_blog_view_increment())
+        results.append(self.test_blog_listing_with_filters())
+        results.append(self.test_tool_comparison_fixed())
+        
+        # Test AI and image features (require authentication)
+        if self.token:
+            results.append(self.test_ai_tool_comparison_format())
+            results.append(self.test_static_file_serving())
+        else:
+            print("❌ Skipping AI and image tests - no authentication token")
+        
+        return all(results)
+
 def main():
     print("🚀 Starting MarketMind AI Platform Comprehensive API Tests")
     print("=" * 70)
