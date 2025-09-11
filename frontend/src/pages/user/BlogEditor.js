@@ -297,8 +297,10 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing your b
           <Button
             size="sm"
             variant="ghost"
+            onClick={handleImageButtonClick}
             className="h-8 w-8 p-0"
-            title="Image"
+            title="Upload Image"
+            disabled={uploading}
           >
             <Image className="h-4 w-4" />
           </Button>
