@@ -303,11 +303,14 @@ backend:
     file: "blogs_routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "testing"
         comment: "Blog API working correctly: get published blogs, search blogs by keyword, retrieve blog details. Proper filtering and search functionality implemented."
+      - working: "NA"
+        agent: "main"
+        comment: "Updated blog API with slug-based endpoint, proper sorting/filtering support, and AI-generated filter. Added static file serving for image uploads. Needs retesting."
 
   - task: "Tool Comparison Feature"
     implemented: true
