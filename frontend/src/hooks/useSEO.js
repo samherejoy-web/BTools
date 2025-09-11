@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { generateArticleSchema, generateProductSchema } from '../components/SEO/StructuredData';
 
 // Custom hook for generating SEO data with performance optimizations
 const useSEO = ({
