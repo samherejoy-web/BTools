@@ -41,7 +41,7 @@ const useSEO = ({
       type,
       ...data
     };
-  }, [title, description, keywords, canonical, image, type, JSON.stringify(data)]);
+  }, [title, description, keywords, canonical, image, type, data]);
 
   return seoData;
 };
