@@ -183,6 +183,7 @@ test_plan:
   current_focus:
     - "User Blog CRUD Operations"
     - "Blog Image Upload"
+    - "Blog Image Serving"
     - "JSON-LD Support"
     - "SEO Meta Data"
   stuck_tasks: []
