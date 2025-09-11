@@ -45,6 +45,9 @@ const BlogDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
+  // Generate SEO data for the blog
+  const seoData = useBlogSEO(blog);
+
   useEffect(() => {
     if (blogSlug) {
       fetchBlogDetails();
