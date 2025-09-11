@@ -216,13 +216,6 @@ const BlogDetailPage = () => {
     <>
       {/* Always render SEO data, even if blog is null */}
       <SEOHead {...seoData} />
-      {/* Test basic Helmet functionality */}
-      <Helmet>
-        <meta name="test-meta" content="This is a test meta tag" />
-        <meta name="description" content="HARDCODED: This should be visible if Helmet is working" />
-        <meta property="og:title" content="HARDCODED: Test OG Title" />
-        <meta property="og:description" content="HARDCODED: Test OG Description" />
-      </Helmet>
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
         {/* Back Navigation */}
