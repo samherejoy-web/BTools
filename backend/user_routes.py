@@ -312,6 +312,7 @@ def get_user_routes():
             reading_time=blog.reading_time,
             tags=blog.tags,
             is_ai_generated=blog.is_ai_generated,
+            like_count=blog.like_count,
             created_at=blog.created_at,
             updated_at=blog.updated_at,
             published_at=blog.published_at,
