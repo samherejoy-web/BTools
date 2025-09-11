@@ -59,7 +59,8 @@ async def get_sitemap(db: Session = Depends(get_db)):
     
     # Add blogs
     for blog in blogs:
-        last_mod = blog.updated_at.strftime('%Y-%m-%d') if blog.updated_at else blog.created_at.strftime('%Y-%m-%d')
+        last_mod = (blog.updated_at.strftime('%Y-%m-%d') if blog.updated_at 
+                   else blog.created_at.strftime('%Y-%m-%d'))
         sitemap_content += f'''
     <url>
         <loc>{base_url}/blogs/{blog.slug}</loc>
