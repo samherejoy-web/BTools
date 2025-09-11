@@ -179,6 +179,60 @@ def get_tools_routes():
             ) for tool in tools
         ]
     
+    @router.get("/api/tools/compare", response_model=List[ToolResponse])
+    async def compare_tools(
+        tool_ids: str = Query(..., description="Comma-separated tool IDs or slugs"),
+        db: Session = Depends(get_db)
+    ):
+        tool_id_list = [tid.strip() for tid in tool_ids.split(",")]
+        if len(tool_id_list) > 5:
+            raise HTTPException(status_code=400, detail="Maximum 5 tools can be compared")
+        
+        # Try to find tools by ID first, then by slug
+        tools = db.query(Tool).options(joinedload(Tool.categories)).filter(
+            or_(Tool.id.in_(tool_id_list), Tool.slug.in_(tool_id_list)),
+            Tool.is_active == True
+        ).all()
+        
+        if len(tools) == 0:
+            raise HTTPException(status_code=404, detail="No tools found with the provided IDs or slugs")
+        
+        # If fewer tools found than requested, still return what we found
+        found_count = len(tools)
+        requested_count = len(tool_id_list)
+        if found_count < requested_count:
+            print(f"Warning: Found {found_count} tools out of {requested_count} requested")
+        
+        return [
+            ToolResponse(
+                id=tool.id,
+                name=tool.name,
+                slug=tool.slug,
+                description=tool.description,
+                short_description=tool.short_description,
+                url=tool.url,
+                logo_url=tool.logo_url,
+                screenshot_url=tool.screenshot_url,
+                pricing_type=tool.pricing_type,
+                pricing_details=tool.pricing_details or {},
+                features=tool.features or [],
+                pros=tool.pros or [],
+                cons=tool.cons or [],
+                rating=tool.rating,
+                review_count=tool.review_count,
+                view_count=tool.view_count,
+                trending_score=tool.trending_score,
+                is_featured=tool.is_featured,
+                is_active=tool.is_active,
+                created_at=tool.created_at,
+                updated_at=tool.updated_at,
+                categories=[{"id": cat.id, "name": cat.name, "slug": cat.slug} for cat in tool.categories],
+                seo_title=tool.seo_title,
+                seo_description=tool.seo_description,
+                seo_keywords=tool.seo_keywords
+            ) for tool in tools
+        ]
+    
     @router.get("/api/tools/{tool_id}", response_model=ToolResponse)
     async def get_tool(tool_id: str, db: Session = Depends(get_db)):
         tool = db.query(Tool).options(joinedload(Tool.categories)).filter(Tool.id == tool_id).first()
