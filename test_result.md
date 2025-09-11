@@ -381,6 +381,18 @@ backend:
         agent: "testing"
         comment: "Database connectivity excellent. All SQLAlchemy models working correctly with proper relationships. CRUD operations successful across all entities. UUID-based primary keys working properly."
 
+  - task: "Image Upload and Static File Serving"
+    implemented: true
+    working: true
+    file: "blogs_routes.py, server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Image upload endpoint working (/api/blogs/upload-image) - requires authentication, generates unique filenames, saves to uploads/blog-images/. ✅ Static file serving working - uploaded images accessible via /uploads/ path. Server properly mounts StaticFiles for uploads directory."
+
 frontend:
   - task: "Frontend Testing"
     implemented: false
