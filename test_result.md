@@ -317,11 +317,11 @@ backend:
 
   - task: "Tool Comparison Feature"
     implemented: true
-    working: false
+    working: true
     file: "tools_routes.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "testing"
@@ -329,6 +329,9 @@ backend:
       - working: "NA"
         agent: "main"
         comment: "Tool comparison endpoint exists and should work. Updated AI comparison format to be blog-ready. Needs retesting to verify fixes."
+      - working: true
+        agent: "testing"
+        comment: "FIXED: Tool comparison endpoint now working correctly. Issue was route ordering - /api/tools/compare was being matched by /api/tools/{tool_id} route. Moved compare route before {tool_id} route and removed duplicate function. Successfully tested with both tool IDs and slugs. ✅ /api/tools/compare endpoint working with comma-separated tool IDs or slugs."
 
   - task: "AI Blog Generation"
     implemented: true
