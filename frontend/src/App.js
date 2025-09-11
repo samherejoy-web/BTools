@@ -105,7 +105,7 @@ function App() {
               </Layout>
             } />
             
-            <Route path="/tools/:toolId" element={
+            <Route path="/tools/:toolSlug" element={
               <Layout>
                 <ToolDetailPage />
               </Layout>
@@ -124,9 +124,11 @@ function App() {
             } />
             
             <Route path="/compare" element={
-              <Layout>
-                <CompareToolsPage />
-              </Layout>
+              <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
+                <Layout>
+                  <CompareToolsPage />
+                </Layout>
+              </ProtectedRoute>
             } />
             
             {/* Auth Routes */}
