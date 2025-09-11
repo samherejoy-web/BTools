@@ -160,6 +160,81 @@ backend:
         agent: "testing"
         comment: "✅ Blog publishing workflow working correctly. Blogs start as 'draft' status and can be published using POST /api/user/blogs/{id}/publish. Published blogs get published_at timestamp and status changes to 'published'."
 
+  - task: "Published Blogs API Endpoint"
+    implemented: true
+    working: true
+    file: "backend/blogs_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ REVIEW REQUEST TESTING: GET /api/blogs endpoint working perfectly. Returns only published blogs correctly (6 published blogs found). All returned blogs have status='published'. Proper filtering ensures draft blogs are not exposed to public API."
+
+  - task: "Blog Detail by Slug Endpoint"
+    implemented: true
+    working: true
+    file: "backend/blogs_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ REVIEW REQUEST TESTING: GET /api/blogs/by-slug/{slug} endpoint working perfectly. Successfully retrieves published blogs by slug. Proper validation ensures only published blogs are accessible. Returns complete blog data including author information, SEO metadata, and JSON-LD structured data."
+
+  - task: "Blog Like and Comment Endpoints"
+    implemented: true
+    working: true
+    file: "backend/blogs_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ REVIEW REQUEST TESTING: All blog interaction endpoints working perfectly. POST /api/blogs/{slug}/like successfully toggles likes and returns proper like count. POST /api/blogs/{slug}/comments creates comments with proper user attribution. GET /api/blogs/{slug}/comments retrieves comments with nested reply support. All endpoints require authentication and work with published blogs only."
+
+  - task: "Tool Detail by Slug Endpoint"
+    implemented: true
+    working: true
+    file: "backend/tools_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ REVIEW REQUEST TESTING: GET /api/tools/by-slug/{slug} endpoint working perfectly. Successfully retrieves active tools by slug. Increments view count properly. Returns complete tool data including categories, pricing, features, and SEO metadata."
+
+  - task: "Tool Like and Comment Endpoints"
+    implemented: true
+    working: true
+    file: "backend/tools_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ REVIEW REQUEST TESTING: All tool interaction endpoints working perfectly. POST /api/tools/{slug}/like successfully toggles likes and returns proper like count. POST /api/tools/{slug}/comments creates comments with proper user attribution. GET /api/tools/{slug}/comments retrieves comments with nested reply support. All endpoints require authentication and work with active tools only."
+
+  - task: "Database Schema Fix"
+    implemented: true
+    working: true
+    file: "backend/models.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ Database schema was missing like_count columns in tools and blogs tables, causing 500 errors on API endpoints."
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL FIX: Added missing like_count columns to both tools and blogs tables using ALTER TABLE statements. All API endpoints now working correctly. Database schema is now in sync with models."
+
 frontend:
   - task: "Blog Editor UI Integration"
     implemented: false
