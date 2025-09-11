@@ -294,6 +294,18 @@ frontend:
         agent: "testing"
         comment: "Frontend testing not performed as per system limitations. Backend APIs are ready for frontend integration."
 
+  - task: "Tool Review Submission Bug"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/user/UserReviews.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL BUG IDENTIFIED AND FIXED: Tool review submission was failing because frontend was missing 'tool_id' field in request body. Backend endpoint POST /api/tools/{tool_id}/reviews requires 'tool_id' in the ReviewCreate model, but frontend was only sending rating, title, content, pros, cons. FIXED by adding 'tool_id: selectedTool' to the reviewData object in UserReviews.js line 89. Backend API is working correctly - the issue was purely frontend data format. Testing confirmed fix resolves 'failed to submit review' error. All review endpoints tested successfully: POST /api/tools/{tool_id}/reviews (create), GET /api/tools/{tool_id}/reviews (list). Authentication working properly. Review validation working correctly (422 for missing fields, 400 for duplicate reviews, 404 for invalid tool_id)."
+
 metadata:
   created_by: "testing_agent"
   version: "1.1"
