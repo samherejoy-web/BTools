@@ -408,4 +408,7 @@ async def upload_blog_image(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    return {"message": "Image uploaded successfully", "image_url": f"/uploads/blog-images/{filename}"}
+    # Get the backend URL from environment
+    backend_url = os.getenv('REACT_APP_BACKEND_URL', 'http://localhost:8001')
+    
+    return {"message": "Image uploaded successfully", "image_url": f"{backend_url}/uploads/blog-images/{filename}"}
