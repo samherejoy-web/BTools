@@ -82,7 +82,7 @@ export const useBlogSEO = (blog) => {
       author: blog?.author_name,
       publishedTime: blog?.published_at || blog?.created_at,
       modifiedTime: blog?.updated_at,
-      jsonLd: blog?.json_ld,
+      jsonLd: blog?.json_ld || (blog ? generateArticleSchema(blog) : null),
       tags: blog?.tags
     }
   });
