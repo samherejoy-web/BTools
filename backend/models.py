@@ -153,3 +153,77 @@ class SeoPage(Base):
     meta_tags = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+# Comment and Like Models for Blogs
+class BlogComment(Base):
+    __tablename__ = "blog_comments"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    blog_id = Column(String, ForeignKey('blogs.id'), nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    parent_id = Column(String, ForeignKey('blog_comments.id'))  # For nested comments/replies
+    content = Column(Text, nullable=False)
+    is_approved = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    blog = relationship("Blog", back_populates="comments")
+    user = relationship("User")
+    parent = relationship("BlogComment", remote_side=[id])
+    replies = relationship("BlogComment", cascade="all, delete-orphan")
+
+class BlogLike(Base):
+    __tablename__ = "blog_likes"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    blog_id = Column(String, ForeignKey('blogs.id'), nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    blog = relationship("Blog", back_populates="likes")
+    user = relationship("User")
+
+class BlogBookmark(Base):
+    __tablename__ = "blog_bookmarks"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    blog_id = Column(String, ForeignKey('blogs.id'), nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    blog = relationship("Blog", back_populates="bookmarks")
+    user = relationship("User")
+
+# Comment and Like Models for Tools
+class ToolComment(Base):
+    __tablename__ = "tool_comments"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tool_id = Column(String, ForeignKey('tools.id'), nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    parent_id = Column(String, ForeignKey('tool_comments.id'))  # For nested comments/replies
+    content = Column(Text, nullable=False)
+    is_approved = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    tool = relationship("Tool", back_populates="comments")
+    user = relationship("User")
+    parent = relationship("ToolComment", remote_side=[id])
+    replies = relationship("ToolComment", cascade="all, delete-orphan")
+
+class ToolLike(Base):
+    __tablename__ = "tool_likes"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    tool_id = Column(String, ForeignKey('tools.id'), nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    tool = relationship("Tool", back_populates="likes")
+    user = relationship("User")
