@@ -49,7 +49,7 @@ const ToolDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
-  // Generate SEO data for the tool
+  // Generate SEO data for the tool - only when tool data is loaded
   const seoData = useToolSEO(tool);
 
   useEffect(() => {
