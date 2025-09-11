@@ -93,6 +93,21 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Image upload functionality working correctly at POST /api/blogs/upload-image. Successfully creates uploads/blog-images directory, generates unique filenames, saves files properly, and returns correct image URLs. Tested with PNG format."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE IMAGE TESTING COMPLETE: Image upload (POST /api/blogs/upload-image) working perfectly. Returns correct URL format '/api/uploads/blog-images/{filename}'. Supports multiple formats (PNG, JPEG). Files stored correctly in backend/uploads/blog-images/. All 5 image tests passed with 100% success rate."
+
+  - task: "Blog Image Serving"
+    implemented: true
+    working: true
+    file: "backend/blogs_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ Image serving functionality working perfectly at GET /api/uploads/blog-images/{filename}. Proper Content-Type headers (image/png, image/jpeg). Images accessible from frontend with correct CORS handling. FileResponse serving actual image data correctly. No broken thumbnails - images display properly."
 
   - task: "JSON-LD Support"
     implemented: true
