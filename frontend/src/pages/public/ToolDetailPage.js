@@ -645,6 +645,15 @@ const ToolDetailPage = () => {
                   </CardContent>
                 </Card>
               </TabsContent>
+
+              <TabsContent value="discussion" className="space-y-6">
+                <CommentsSection
+                  comments={comments}
+                  onAddComment={handleAddComment}
+                  loading={commentsLoading}
+                  title="Community Discussion"
+                />
+              </TabsContent>
             </Tabs>
           </div>
 
