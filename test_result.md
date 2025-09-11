@@ -303,7 +303,7 @@ backend:
     file: "blogs_routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "testing"
@@ -311,6 +311,9 @@ backend:
       - working: "NA"
         agent: "main"
         comment: "Updated blog API with slug-based endpoint, proper sorting/filtering support, and AI-generated filter. Added static file serving for image uploads. Needs retesting."
+      - working: true
+        agent: "testing"
+        comment: "Production-ready fixes verified: ✅ Blog by slug endpoint working (/api/blogs/by-slug/{slug}), ✅ Blog view increment working (/api/blogs/{slug}/view), ✅ All sorting options working (newest, oldest, most_viewed, trending), ✅ AI generated filter working (featured=true/false), ✅ Default published filter working, ✅ Static file serving accessible. Fixed trending sort SQL issue."
 
   - task: "Tool Comparison Feature"
     implemented: true
