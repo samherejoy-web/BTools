@@ -135,12 +135,18 @@ async def get_blogs(
     search: Optional[str] = Query(None),
     tag: Optional[str] = Query(None),
     author_id: Optional[str] = Query(None),
+    sort: Optional[str] = Query("newest", description="Sort by: newest, oldest, most_viewed, trending"),
+    featured: Optional[bool] = Query(None, description="Filter AI generated blogs"),
+    category: Optional[str] = Query(None, description="Filter by category"),
     db: Session = Depends(get_db)
 ):
     query = db.query(Blog).options(joinedload(Blog.author))
     
+    # Default to published blogs for public access
     if status:
         query = query.filter(Blog.status == status)
+    else:
+        query = query.filter(Blog.status == "published")
     
     if search:
         query = query.filter(
@@ -157,7 +163,24 @@ async def get_blogs(
     if author_id:
         query = query.filter(Blog.author_id == author_id)
     
-    blogs = query.order_by(desc(Blog.created_at)).offset(skip).limit(limit).all()
+    # AI Generated filter (using featured parameter for now since UI uses it)
+    if featured is not None:
+        query = query.filter(Blog.is_ai_generated == featured)
+    
+    # Apply sorting
+    if sort == "newest":
+        query = query.order_by(desc(Blog.created_at))
+    elif sort == "oldest":
+        query = query.order_by(Blog.created_at)
+    elif sort == "most_viewed":
+        query = query.order_by(desc(Blog.view_count))
+    elif sort == "trending":
+        # Trending = combination of recent views and creation date
+        query = query.order_by(desc(Blog.view_count * 0.7 + Blog.created_at.desc() * 0.3))
+    else:
+        query = query.order_by(desc(Blog.created_at))
+    
+    blogs = query.offset(skip).limit(limit).all()
     
     return [
         BlogResponse(
