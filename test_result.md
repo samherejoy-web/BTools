@@ -362,7 +362,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Tool Review Submission Bug"
+    - "SEO Implementation Testing"
   stuck_tasks:
     - "Blog Comment Functionality"
     - "Tool Comment Functionality"
