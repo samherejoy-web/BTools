@@ -114,6 +114,7 @@ async def get_sitemap(db: Session = Depends(get_db)):
     )
 
 @router.get("/robots.txt")
+@router.get("/api/robots.txt")
 async def get_robots():
     """Generate robots.txt for SEO"""
     
