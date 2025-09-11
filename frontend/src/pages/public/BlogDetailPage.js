@@ -213,8 +213,8 @@ const BlogDetailPage = () => {
 
   return (
     <>
-      {/* Render SEO data when available */}
-      {seoData && <SEOHead {...seoData} />}
+      {/* Always render SEO data, even if blog is null */}
+      <SEOHead {...seoData} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
         {/* Back Navigation */}
