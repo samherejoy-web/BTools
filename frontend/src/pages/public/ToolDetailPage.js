@@ -94,6 +94,49 @@ const ToolDetailPage = () => {
     }
   };
 
+  const fetchComments = async () => {
+    try {
+      setCommentsLoading(true);
+      const response = await apiClient.get(`/tools/${toolSlug}/comments`);
+      setComments(response.data || []);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+
+  const handleAddComment = async (commentData) => {
+    try {
+      await apiClient.post(`/tools/${toolSlug}/comments`, commentData);
+      await fetchComments(); // Refresh comments
+      toast.success('Comment added successfully!');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      toast.error('Failed to add comment');
+      throw error;
+    }
+  };
+
+  const handleToggleLike = async () => {
+    if (!user) {
+      toast.error('Please login to like tools');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await apiClient.post(`/tools/${toolSlug}/like`);
+      setIsLiked(!isLiked);
+      // Use the actual like count from response if available
+      setLikesCount(response.data?.like_count || (isLiked ? likesCount - 1 : likesCount + 1));
+      toast.success(isLiked ? 'Like removed' : 'Tool liked!');
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      toast.error('Failed to update like');
+    }
+  };
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (!user) {
