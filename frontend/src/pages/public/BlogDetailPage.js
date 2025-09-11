@@ -45,7 +45,7 @@ const BlogDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
-  // Generate SEO data for the blog
+  // Generate SEO data for the blog - only when blog data is loaded
   const seoData = useBlogSEO(blog);
 
   useEffect(() => {
