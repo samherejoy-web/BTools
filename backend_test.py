@@ -1824,11 +1824,12 @@ class MarketMindAPITester:
         
         results = []
         
-        # Test sitemap.xml endpoint
+        # Test sitemap.xml endpoint (note: not prefixed with /api/)
+        sitemap_url = f"{self.base_url.replace('/api', '')}/sitemap.xml"
         success, response = self.run_test(
             "Sitemap XML Generation",
             "GET",
-            "sitemap.xml",
+            sitemap_url,
             200,
             description="Test GET /sitemap.xml endpoint for SEO sitemap generation"
         )
