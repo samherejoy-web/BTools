@@ -1888,14 +1888,13 @@ class MarketMindAPITester:
         
         results = []
         
-        # Test robots.txt endpoint (note: not prefixed with /api/)
-        robots_url = f"{self.base_url.replace('/api', '')}/robots.txt"
+        # Test robots.txt endpoint
         success, response = self.run_test(
             "Robots.txt Generation",
             "GET",
-            robots_url,
+            "robots.txt",
             200,
-            description="Test GET /robots.txt endpoint for SEO robots directives"
+            description="Test GET /api/robots.txt endpoint for SEO robots directives"
         )
         results.append(success)
         
