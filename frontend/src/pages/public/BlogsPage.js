@@ -456,7 +456,7 @@ const BlogsPage = () => {
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('');
-                  setFeaturedOnly(false);
+                  setAiGeneratedOnly(false);
                   fetchBlogs();
                 }}
                 variant="outline"
