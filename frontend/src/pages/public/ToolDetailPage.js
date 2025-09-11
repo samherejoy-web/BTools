@@ -29,7 +29,7 @@ import { formatDate, formatNumber } from '../../utils/formatters';
 import { useAuth } from '../../contexts/AuthContext';
 
 const ToolDetailPage = () => {
-  const { toolId } = useParams();
+  const { toolSlug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [tool, setTool] = useState(null);
@@ -43,11 +43,11 @@ const ToolDetailPage = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    if (toolId) {
+    if (toolSlug) {
       fetchToolDetails();
       fetchToolReviews();
     }
-  }, [toolId]);
+  }, [toolSlug]);
 
   const fetchToolDetails = async () => {
     try {
