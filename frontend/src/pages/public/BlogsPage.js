@@ -36,7 +36,7 @@ const BlogsPage = () => {
   useEffect(() => {
     fetchBlogs();
     fetchCategories();
-  }, [selectedCategory, sortBy, featuredOnly]);
+  }, [selectedCategory, sortBy, aiGeneratedOnly]);
 
   const fetchBlogs = async () => {
     try {
