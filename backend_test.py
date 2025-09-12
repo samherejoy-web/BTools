@@ -1658,6 +1658,218 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_superadmin_seo_management(self):
+        """Test Super Admin SEO management endpoints"""
+        print("\n🔧 SUPER ADMIN SEO MANAGEMENT TESTING")
+        print("=" * 60)
+        
+        # First authenticate as superadmin
+        print("\n1. SUPERADMIN AUTHENTICATION")
+        success, user_role = self.test_login("superadmin@marketmind.com", "admin123")
+        if not success or user_role != "superadmin":
+            print("❌ Failed to authenticate as superadmin - cannot test SEO endpoints")
+            return False
+        
+        print(f"✅ Successfully authenticated as {user_role}")
+        
+        all_results = []
+        
+        # Test 2: SEO Overview
+        print("\n2. SEO OVERVIEW ENDPOINT")
+        success, response = self.run_test(
+            "Super Admin SEO Overview",
+            "GET",
+            "superadmin/seo/overview",
+            200,
+            description="Get comprehensive SEO overview for Super Admin"
+        )
+        all_results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   Overview data received:")
+            if 'overview' in response:
+                overview = response['overview']
+                print(f"   - Total pages: {overview.get('total_pages', 'N/A')}")
+                print(f"   - SEO optimized: {overview.get('seo_optimized', 'N/A')}")
+                print(f"   - SEO health score: {overview.get('seo_health_score', 'N/A')}%")
+                print(f"   - Critical issues: {overview.get('critical_issues', 'N/A')}")
+            
+            if 'tools' in response:
+                tools = response['tools']
+                print(f"   Tools: {tools.get('total', 0)} total, {tools.get('with_seo', 0)} with SEO ({tools.get('completion_rate', 0)}%)")
+            
+            if 'blogs' in response:
+                blogs = response['blogs']
+                print(f"   Blogs: {blogs.get('total', 0)} total, {blogs.get('with_seo', 0)} with SEO ({blogs.get('completion_rate', 0)}%)")
+        
+        # Test 3: SEO Issues Analysis
+        print("\n3. SEO ISSUES ANALYSIS")
+        success, response = self.run_test(
+            "Super Admin SEO Issues Analysis",
+            "GET",
+            "superadmin/seo/issues",
+            200,
+            description="Analyze SEO issues across the platform"
+        )
+        all_results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   Issues analysis:")
+            print(f"   - Total issues: {response.get('total_issues', 'N/A')}")
+            if 'summary' in response:
+                summary = response['summary']
+                print(f"   - Critical: {summary.get('critical', 0)}")
+                print(f"   - High: {summary.get('high', 0)}")
+                print(f"   - Medium: {summary.get('medium', 0)}")
+                print(f"   - Low: {summary.get('low', 0)}")
+            
+            # Test filtering by severity
+            success_filter, response_filter = self.run_test(
+                "SEO Issues - High Severity Filter",
+                "GET",
+                "superadmin/seo/issues?severity=high",
+                200,
+                description="Filter SEO issues by high severity"
+            )
+            all_results.append(success_filter)
+            
+            if success_filter:
+                print(f"   - High severity issues: {response_filter.get('total_issues', 0)}")
+        
+        # Test 4: Get tools for detailed SEO testing
+        print("\n4. TOOL SEO DETAILS")
+        success, tools_response = self.run_test(
+            "Get Tools for SEO Testing",
+            "GET",
+            "tools?limit=1",
+            200,
+            description="Get tools to test detailed SEO endpoints"
+        )
+        
+        if success and isinstance(tools_response, list) and len(tools_response) > 0:
+            tool_id = tools_response[0]['id']
+            tool_name = tools_response[0]['name']
+            print(f"   Testing with tool: {tool_name} (ID: {tool_id})")
+            
+            success, response = self.run_test(
+                "Tool SEO Details",
+                "GET",
+                f"superadmin/seo/tools/{tool_id}",
+                200,
+                description=f"Get detailed SEO information for tool {tool_id}"
+            )
+            all_results.append(success)
+            
+            if success and isinstance(response, dict):
+                if 'seo_analysis' in response:
+                    analysis = response['seo_analysis']
+                    print(f"   - SEO Score: {analysis.get('score', 'N/A')}%")
+                    print(f"   - Title length: {analysis.get('title_length', 0)} chars")
+                    print(f"   - Description length: {analysis.get('description_length', 0)} chars")
+                    print(f"   - Keywords count: {analysis.get('keywords_count', 0)}")
+                    
+                    if 'checks' in analysis:
+                        checks = analysis['checks']
+                        passed_checks = sum(1 for check in checks.values() if check)
+                        total_checks = len(checks)
+                        print(f"   - SEO checks passed: {passed_checks}/{total_checks}")
+        
+        # Test 5: Get blogs for detailed SEO testing
+        print("\n5. BLOG SEO DETAILS")
+        success, blogs_response = self.run_test(
+            "Get Blogs for SEO Testing",
+            "GET",
+            "blogs?limit=1",
+            200,
+            description="Get blogs to test detailed SEO endpoints"
+        )
+        
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            blog_id = blogs_response[0]['id']
+            blog_title = blogs_response[0]['title']
+            print(f"   Testing with blog: {blog_title} (ID: {blog_id})")
+            
+            success, response = self.run_test(
+                "Blog SEO Details",
+                "GET",
+                f"superadmin/seo/blogs/{blog_id}",
+                200,
+                description=f"Get detailed SEO information for blog {blog_id}"
+            )
+            all_results.append(success)
+            
+            if success and isinstance(response, dict):
+                if 'seo_analysis' in response:
+                    analysis = response['seo_analysis']
+                    print(f"   - SEO Score: {analysis.get('score', 'N/A')}%")
+                    print(f"   - Title length: {analysis.get('title_length', 0)} chars")
+                    print(f"   - Description length: {analysis.get('description_length', 0)} chars")
+                    print(f"   - Keywords count: {analysis.get('keywords_count', 0)}")
+                    
+                    if 'checks' in analysis:
+                        checks = analysis['checks']
+                        passed_checks = sum(1 for check in checks.values() if check)
+                        total_checks = len(checks)
+                        print(f"   - SEO checks passed: {passed_checks}/{total_checks}")
+        
+        # Test 6: SEO Template Generation
+        print("\n6. SEO TEMPLATE GENERATION")
+        success, response = self.run_test(
+            "Generate SEO Templates - Tools",
+            "POST",
+            "superadmin/seo/generate-templates?page_type=tools&count=5",
+            200,
+            description="Generate SEO templates for tools missing SEO data"
+        )
+        all_results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   - Tools updated: {response.get('updated_count', 0)}")
+            print(f"   - Message: {response.get('message', 'N/A')}")
+        
+        success, response = self.run_test(
+            "Generate SEO Templates - Blogs",
+            "POST",
+            "superadmin/seo/generate-templates?page_type=blogs&count=5",
+            200,
+            description="Generate SEO templates for blogs missing SEO data"
+        )
+        all_results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   - Blogs updated: {response.get('updated_count', 0)}")
+            print(f"   - Message: {response.get('message', 'N/A')}")
+        
+        # Test 7: Admin SEO Pages (existing endpoint that was failing)
+        print("\n7. ADMIN SEO PAGES (Previously Failing)")
+        success, response = self.run_test(
+            "Admin SEO Pages",
+            "GET",
+            "admin/seo-pages",
+            200,
+            description="Test the existing admin SEO pages endpoint"
+        )
+        all_results.append(success)
+        
+        if success:
+            print(f"   ✅ Admin SEO pages endpoint now working!")
+            if isinstance(response, list):
+                print(f"   - Found {len(response)} SEO pages")
+            elif isinstance(response, dict) and 'pages' in response:
+                print(f"   - Found {len(response['pages'])} SEO pages")
+        
+        # Summary
+        print(f"\n📊 SUPER ADMIN SEO TESTING SUMMARY")
+        print(f"Tests passed: {sum(all_results)}/{len(all_results)}")
+        
+        if all(all_results):
+            print("✅ All Super Admin SEO endpoints working correctly!")
+        else:
+            failed_count = len(all_results) - sum(all_results)
+            print(f"❌ {failed_count} tests failed - see details above")
+        
+        return all(all_results)
+
     def test_comprehensive_seo_implementation(self):
         """Comprehensive SEO implementation testing"""
         print("\n🎯 COMPREHENSIVE SEO IMPLEMENTATION TESTING")
