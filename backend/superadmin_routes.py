@@ -408,7 +408,27 @@ async def create_tool(
         seo_title=tool.seo_title or tool.name,
         seo_description=tool.seo_description,
         seo_keywords=tool.seo_keywords,
-        json_ld=tool.json_ld
+        json_ld=tool.json_ld,
+        # New enhancement fields
+        domain_website=tool.domain_website,
+        linkedin_url=tool.linkedin_url,
+        founded_year=tool.founded_year,
+        about_section=tool.about_section,
+        founders=tool.founders,
+        latest_news=tool.latest_news,
+        latest_feeds=tool.latest_feeds,
+        job_openings=tool.job_openings,
+        revenue=tool.revenue,
+        locations=tool.locations,
+        company_size=tool.company_size,
+        funding_info=tool.funding_info,
+        tech_stack=tool.tech_stack,
+        integrations=tool.integrations,
+        languages_supported=tool.languages_supported,
+        target_audience=tool.target_audience,
+        use_cases=tool.use_cases,
+        alternatives=tool.alternatives,
+        local_logo_path=tool.local_logo_path
     )
     
     db.add(db_tool)
