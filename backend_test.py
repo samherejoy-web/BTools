@@ -1739,13 +1739,12 @@ class MarketMindAPITester:
         
         results = []
         
-        # Test 1: Tool page audit
+        # Test 1: Tool page audit (using query parameters)
         success, response = self.run_test(
             "SEO Page Audit - Tool Page",
             "POST",
-            "seo/audit/page",
+            "seo/audit/page?page_url=/tools/notion&page_type=tool",
             200,
-            data={"page_url": "/tools/notion", "page_type": "tool"},
             description="Test comprehensive SEO audit for a tool page"
         )
         results.append(success)
@@ -1780,13 +1779,12 @@ class MarketMindAPITester:
                     print(f"   Content Analysis: {content_analysis.get('word_count', 0)} words, "
                           f"readability: {content_analysis.get('readability_score', 0)}")
         
-        # Test 2: Blog page audit
+        # Test 2: Blog page audit (using query parameters)
         success, response = self.run_test(
             "SEO Page Audit - Blog Page",
             "POST",
-            "seo/audit/page",
+            "seo/audit/page?page_url=/blogs/productivity-tools-2024&page_type=blog",
             200,
-            data={"page_url": "/blogs/productivity-tools-2024", "page_type": "blog"},
             description="Test comprehensive SEO audit for a blog page"
         )
         results.append(success)
@@ -1795,9 +1793,8 @@ class MarketMindAPITester:
         success, response = self.run_test(
             "SEO Page Audit - Invalid Page",
             "POST",
-            "seo/audit/page",
+            "seo/audit/page?page_url=/nonexistent-page&page_type=webpage",
             404,
-            data={"page_url": "/nonexistent-page", "page_type": "webpage"},
             description="Test SEO audit error handling for non-existent page"
         )
         results.append(success)
