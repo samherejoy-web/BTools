@@ -2812,10 +2812,10 @@ class MarketMindAPITester:
         return self.test_comprehensive_seo_implementation()
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - SEO Implementation Testing")
-    print("=" * 70)
-    print("🎯 FOCUS: Testing new SEO features - Sitemap, Robots.txt, and SEO Data")
-    print("=" * 70)
+    print("🚀 Starting MarketMind AI Platform - Super Admin SEO Management Testing")
+    print("=" * 80)
+    print("🎯 FOCUS: Testing new Super Admin SEO management endpoints")
+    print("=" * 80)
     
     tester = MarketMindAPITester()
     
@@ -2828,15 +2828,15 @@ def main():
     tester.test_tools()
     tester.test_blogs()
     
-    # MAIN TEST: Comprehensive SEO Functionality
-    print("\n🎯 MAIN TEST: SEO IMPLEMENTATION")
+    # MAIN TEST: Super Admin SEO Management
+    print("\n🎯 MAIN TEST: SUPER ADMIN SEO MANAGEMENT")
     print("-" * 50)
-    seo_success = tester.test_comprehensive_seo_functionality()
+    seo_success = tester.test_superadmin_seo_management()
     
     # Print comprehensive results
-    print("\n" + "=" * 70)
-    print("📊 SEO IMPLEMENTATION TEST RESULTS")
-    print("=" * 70)
+    print("\n" + "=" * 80)
+    print("📊 SUPER ADMIN SEO MANAGEMENT TEST RESULTS")
+    print("=" * 80)
     print(f"Total Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
     print(f"Tests Failed: {len(tester.failed_tests)}")
@@ -2855,17 +2855,17 @@ def main():
             if 'endpoint' in test:
                 print(f"     Endpoint: {test['endpoint']}")
     
-    print("\n" + "=" * 70)
+    print("\n" + "=" * 80)
     
     # Return exit code based on results
     if len(tester.failed_tests) == 0:
-        print("🎉 All SEO functionality tests passed!")
+        print("🎉 All Super Admin SEO management tests passed!")
         return 0
     elif len(tester.failed_tests) <= 2:
-        print("⚠️  Minor issues found - SEO functionality is mostly working")
+        print("⚠️  Minor issues found - Super Admin SEO functionality is mostly working")
         return 0
     else:
-        print("❌ Significant issues found - SEO functionality needs attention")
+        print("❌ Significant issues found - Super Admin SEO functionality needs attention")
         return 1
 
 if __name__ == "__main__":
