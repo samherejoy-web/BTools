@@ -276,6 +276,17 @@ app.include_router(sitemap_router, prefix="", tags=["seo"])
 os.makedirs("uploads", exist_ok=True)
 os.makedirs("uploads/blog-images", exist_ok=True)
 os.makedirs("uploads/avatars", exist_ok=True)
+os.makedirs("uploads/logos", exist_ok=True)
+
+# Logo serving endpoint
+@app.get("/api/uploads/logos/{filename}")
+async def serve_logo(filename: str):
+    """Serve uploaded logo files"""
+    logo_path = f"uploads/logos/{filename}"
+    if os.path.exists(logo_path):
+        return FileResponse(logo_path)
+    else:
+        raise HTTPException(status_code=404, detail="Logo not found")
 
 # Mount static files for uploads
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
