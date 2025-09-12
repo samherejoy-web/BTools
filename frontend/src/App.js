@@ -4,6 +4,10 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Toaster } from './components/ui/sonner';
 
+// SEO and Performance Components
+import SEOMonitor from './components/SEO/SEOMonitor';
+import PerformanceMonitor from './components/SEO/PerformanceMonitor';
+
 // Layout Components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
