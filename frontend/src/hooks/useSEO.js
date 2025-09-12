@@ -94,7 +94,7 @@ export const useBlogSEO = (blog) => {
         author: blog.author_name || 'MarketMind Team',
         publishedTime: blog.published_at || blog.created_at,
         modifiedTime: blog.updated_at,
-        jsonLd: blog.json_ld || generateArticleSchema(blog),
+        jsonLd: (blog.json_ld && Object.keys(blog.json_ld).length > 0) ? blog.json_ld : generateArticleSchema(blog),
         tags: Array.isArray(blog.tags) ? blog.tags : []
       };
       
