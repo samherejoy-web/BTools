@@ -4094,9 +4094,9 @@ def main():
     
     print("✅ Basic connectivity successful")
     
-    # Run the email verification system tests
-    print("\n🔐 EMAIL VERIFICATION SYSTEM TESTING")
-    verification_success = tester.test_email_verification_system()
+    # Run the enhanced email verification system tests
+    print("\n🔐 ENHANCED EMAIL VERIFICATION SYSTEM TESTING")
+    verification_success = tester.test_enhanced_email_verification_system()
     
     # Print comprehensive results
     print("\n" + "=" * 80)
