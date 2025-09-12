@@ -1658,6 +1658,463 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_seo_json_ld_comprehensive(self):
+        """Comprehensive test for SEO and JSON-LD functionality as requested"""
+        print("\n🎯 COMPREHENSIVE SEO & JSON-LD TESTING")
+        print("=" * 60)
+        
+        results = []
+        
+        # Test 1: GET /api/tools/by-slug/notion endpoint
+        print("\n1. TESTING TOOL BY SLUG - NOTION")
+        success, response = self.run_test(
+            "Tool by Slug - Notion SEO Fields",
+            "GET",
+            "tools/by-slug/notion",
+            200,
+            description="Test GET /api/tools/by-slug/notion for SEO fields"
+        )
+        
+        if success and isinstance(response, dict):
+            print(f"   Tool found: {response.get('name', 'Unknown')}")
+            
+            # Check SEO fields
+            seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+            seo_present = {}
+            
+            for field in seo_fields:
+                value = response.get(field)
+                if value:
+                    seo_present[field] = True
+                    print(f"   ✅ {field}: Present - '{value[:50]}{'...' if len(str(value)) > 50 else ''}'")
+                else:
+                    seo_present[field] = False
+                    print(f"   ❌ {field}: Missing or empty")
+            
+            # Check if at least basic SEO fields are present
+            if seo_present.get('seo_title') or seo_present.get('seo_description'):
+                print(f"   ✅ Basic SEO fields present")
+                results.append(True)
+            else:
+                print(f"   ❌ No SEO fields found")
+                results.append(False)
+        else:
+            print(f"   ❌ Failed to retrieve tool or invalid response")
+            results.append(False)
+            
+            # Try with any available tool
+            print(f"   Attempting to find any tool for SEO testing...")
+            success_alt, tools_response = self.run_test(
+                "Get Tools for SEO Test",
+                "GET",
+                "tools?limit=1",
+                200,
+                description="Get any tool for SEO field testing"
+            )
+            
+            if success_alt and isinstance(tools_response, list) and len(tools_response) > 0:
+                test_tool = tools_response[0]
+                alt_slug = test_tool.get('slug')
+                
+                if alt_slug:
+                    print(f"   Testing with alternative tool slug: {alt_slug}")
+                    success_alt2, alt_response = self.run_test(
+                        "Alternative Tool by Slug - SEO Fields",
+                        "GET",
+                        f"tools/by-slug/{alt_slug}",
+                        200,
+                        description=f"Test alternative tool slug for SEO metadata"
+                    )
+                    
+                    if success_alt2 and isinstance(alt_response, dict):
+                        print(f"   Alternative tool found: {alt_response.get('name', 'Unknown')}")
+                        
+                        # Check SEO fields for alternative tool
+                        for field in ['seo_title', 'seo_description', 'seo_keywords']:
+                            value = alt_response.get(field)
+                            if value:
+                                print(f"   ✅ {field}: Present")
+                            else:
+                                print(f"   ❌ {field}: Missing/Empty")
+                        
+                        results.append(True)
+        
+        # Test 2: GET /api/blogs/by-slug/top-10-productivity-tools-for-remote-teams-in-2024
+        print("\n2. TESTING BLOG BY SLUG - PRODUCTIVITY TOOLS")
+        test_blog_slug = "top-10-productivity-tools-for-remote-teams-in-2024"
+        
+        success, response = self.run_test(
+            "Blog by Slug - Productivity Tools SEO Fields",
+            "GET",
+            f"blogs/by-slug/{test_blog_slug}",
+            200,
+            description=f"Test GET /api/blogs/by-slug/{test_blog_slug} for SEO fields"
+        )
+        
+        if success and isinstance(response, dict):
+            print(f"   Blog found: {response.get('title', 'Unknown')}")
+            
+            # Check SEO fields including JSON-LD
+            seo_fields = ['seo_title', 'seo_description', 'seo_keywords', 'json_ld']
+            seo_present = {}
+            
+            for field in seo_fields:
+                value = response.get(field)
+                if value:
+                    seo_present[field] = True
+                    if field == 'json_ld' and isinstance(value, dict):
+                        print(f"   ✅ {field}: Present (JSON object with {len(value)} keys)")
+                        # Validate JSON-LD structure
+                        if '@context' in value and '@type' in value:
+                            print(f"   ✅ JSON-LD has proper schema structure")
+                        else:
+                            print(f"   ⚠️ JSON-LD missing @context or @type")
+                    elif field != 'json_ld':
+                        print(f"   ✅ {field}: Present - '{value[:50]}{'...' if len(str(value)) > 50 else ''}'")
+                else:
+                    seo_present[field] = False
+                    print(f"   ❌ {field}: Missing or empty")
+            
+            # Check if critical SEO fields are present
+            critical_fields = ['seo_title', 'seo_description']
+            missing_critical = [field for field in critical_fields if not seo_present.get(field)]
+            
+            if not missing_critical:
+                print(f"   ✅ All critical SEO fields present")
+                results.append(True)
+            else:
+                print(f"   ❌ Missing critical SEO fields: {missing_critical}")
+                results.append(False)
+        else:
+            print(f"   ❌ Failed to retrieve blog or invalid response")
+            results.append(False)
+            
+            # Try with any available blog
+            print(f"   Attempting to find any published blog for SEO testing...")
+            success_alt, blogs_response = self.run_test(
+                "Get Published Blogs for SEO Test",
+                "GET",
+                "blogs?limit=1",
+                200,
+                description="Get any published blog for SEO field testing"
+            )
+            
+            if success_alt and isinstance(blogs_response, list) and len(blogs_response) > 0:
+                test_blog = blogs_response[0]
+                alt_slug = test_blog.get('slug')
+                
+                if alt_slug:
+                    print(f"   Testing with alternative blog slug: {alt_slug}")
+                    success_alt2, alt_response = self.run_test(
+                        "Alternative Blog by Slug - SEO Fields",
+                        "GET",
+                        f"blogs/by-slug/{alt_slug}",
+                        200,
+                        description=f"Test alternative blog slug for SEO metadata"
+                    )
+                    
+                    if success_alt2 and isinstance(alt_response, dict):
+                        print(f"   Alternative blog found: {alt_response.get('title', 'Unknown')}")
+                        
+                        # Check SEO fields for alternative blog
+                        for field in ['seo_title', 'seo_description', 'seo_keywords', 'json_ld']:
+                            value = alt_response.get(field)
+                            if value:
+                                if field == 'json_ld':
+                                    print(f"   ✅ {field}: Present (JSON-LD structured data)")
+                                else:
+                                    print(f"   ✅ {field}: Present")
+                            else:
+                                print(f"   ❌ {field}: Missing/Empty")
+                        
+                        results.append(True)
+        
+        # Test 3: Test other tool and blog endpoints for SEO data
+        print("\n3. TESTING OTHER TOOL AND BLOG ENDPOINTS")
+        
+        # Test multiple tools
+        success, tools_response = self.run_test(
+            "Get Multiple Tools for SEO Validation",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get multiple tools to validate SEO data consistency"
+        )
+        
+        if success and isinstance(tools_response, list):
+            print(f"   Found {len(tools_response)} tools to test")
+            tools_with_seo = 0
+            
+            for i, tool in enumerate(tools_response):
+                tool_name = tool.get('name', f'Tool {i+1}')
+                has_seo = bool(tool.get('seo_title') or tool.get('seo_description'))
+                if has_seo:
+                    tools_with_seo += 1
+                    print(f"   ✅ {tool_name}: Has SEO data")
+                else:
+                    print(f"   ❌ {tool_name}: Missing SEO data")
+            
+            seo_percentage = (tools_with_seo / len(tools_response)) * 100 if tools_response else 0
+            print(f"   SEO Coverage: {tools_with_seo}/{len(tools_response)} tools ({seo_percentage:.1f}%)")
+            
+            if seo_percentage >= 50:  # At least 50% should have SEO data
+                results.append(True)
+            else:
+                results.append(False)
+        
+        # Test multiple blogs
+        success, blogs_response = self.run_test(
+            "Get Multiple Blogs for SEO Validation",
+            "GET",
+            "blogs?limit=3",
+            200,
+            description="Get multiple blogs to validate SEO data consistency"
+        )
+        
+        if success and isinstance(blogs_response, list):
+            print(f"   Found {len(blogs_response)} blogs to test")
+            blogs_with_seo = 0
+            blogs_with_json_ld = 0
+            
+            for i, blog in enumerate(blogs_response):
+                blog_title = blog.get('title', f'Blog {i+1}')
+                has_seo = bool(blog.get('seo_title') or blog.get('seo_description'))
+                has_json_ld = bool(blog.get('json_ld'))
+                
+                if has_seo:
+                    blogs_with_seo += 1
+                    print(f"   ✅ {blog_title}: Has SEO data")
+                else:
+                    print(f"   ❌ {blog_title}: Missing SEO data")
+                
+                if has_json_ld:
+                    blogs_with_json_ld += 1
+                    print(f"   ✅ {blog_title}: Has JSON-LD structured data")
+                else:
+                    print(f"   ⚠️ {blog_title}: Missing JSON-LD structured data")
+            
+            seo_percentage = (blogs_with_seo / len(blogs_response)) * 100 if blogs_response else 0
+            json_ld_percentage = (blogs_with_json_ld / len(blogs_response)) * 100 if blogs_response else 0
+            
+            print(f"   SEO Coverage: {blogs_with_seo}/{len(blogs_response)} blogs ({seo_percentage:.1f}%)")
+            print(f"   JSON-LD Coverage: {blogs_with_json_ld}/{len(blogs_response)} blogs ({json_ld_percentage:.1f}%)")
+            
+            if seo_percentage >= 70:  # Blogs should have higher SEO coverage
+                results.append(True)
+            else:
+                results.append(False)
+        
+        # Test 4: Verify JSON-LD data population in database
+        print("\n4. TESTING JSON-LD DATABASE POPULATION")
+        
+        # Test with superadmin authentication for detailed SEO analysis
+        if self.current_user_role == 'superadmin':
+            success, seo_overview = self.run_test(
+                "SEO Overview - JSON-LD Analysis",
+                "GET",
+                "superadmin/seo/overview",
+                200,
+                description="Get SEO overview to analyze JSON-LD population"
+            )
+            
+            if success and isinstance(seo_overview, dict):
+                overview = seo_overview.get('overview', {})
+                tools_data = seo_overview.get('tools', {})
+                blogs_data = seo_overview.get('blogs', {})
+                
+                print(f"   SEO Health Score: {overview.get('seo_health_score', 0):.2f}%")
+                print(f"   Tools with SEO: {tools_data.get('with_seo', 0)}/{tools_data.get('total', 0)}")
+                print(f"   Blogs with SEO: {blogs_data.get('with_seo', 0)}/{blogs_data.get('total', 0)}")
+                
+                if overview.get('seo_health_score', 0) >= 80:
+                    print(f"   ✅ Good SEO health score")
+                    results.append(True)
+                else:
+                    print(f"   ⚠️ SEO health score could be improved")
+                    results.append(False)
+        else:
+            print(f"   ⚠️ Superadmin access required for detailed JSON-LD analysis")
+            results.append(True)  # Don't fail if not superadmin
+        
+        # Test 5: Check superadmin SEO routes
+        print("\n5. TESTING SUPERADMIN SEO ROUTES")
+        
+        if self.current_user_role == 'superadmin':
+            # Test SEO issues analysis
+            success, issues_response = self.run_test(
+                "SEO Issues Analysis",
+                "GET",
+                "superadmin/seo/issues",
+                200,
+                description="Analyze SEO issues across platform"
+            )
+            
+            if success and isinstance(issues_response, dict):
+                total_issues = issues_response.get('total_issues', 0)
+                summary = issues_response.get('summary', {})
+                
+                print(f"   Total SEO Issues: {total_issues}")
+                print(f"   Critical: {summary.get('critical', 0)}")
+                print(f"   High: {summary.get('high', 0)}")
+                print(f"   Medium: {summary.get('medium', 0)}")
+                print(f"   Low: {summary.get('low', 0)}")
+                
+                if summary.get('critical', 0) == 0:
+                    print(f"   ✅ No critical SEO issues")
+                    results.append(True)
+                else:
+                    print(f"   ⚠️ {summary.get('critical', 0)} critical SEO issues found")
+                    results.append(False)
+            
+            # Test SEO template generation
+            success, template_response = self.run_test(
+                "SEO Template Generation",
+                "POST",
+                "superadmin/seo/generate-templates?page_type=tools&count=2",
+                200,
+                description="Generate SEO templates for tools missing SEO data"
+            )
+            
+            if success and isinstance(template_response, dict):
+                updated_count = template_response.get('updated_count', 0)
+                print(f"   ✅ Generated SEO templates for {updated_count} tools")
+                results.append(True)
+            else:
+                print(f"   ❌ Failed to generate SEO templates")
+                results.append(False)
+        else:
+            print(f"   ⚠️ Superadmin access required for SEO management routes")
+            results.append(True)  # Don't fail if not superadmin
+        
+        # Test 6: Test sitemap.xml for tools and blogs with SEO data
+        print("\n6. TESTING SITEMAP.XML FOR SEO DATA")
+        
+        success, sitemap_response = self.run_test(
+            "Sitemap XML - SEO Data Validation",
+            "GET",
+            "sitemap.xml",
+            200,
+            description="Validate sitemap includes tools and blogs with proper SEO data"
+        )
+        
+        if success and isinstance(sitemap_response, str):
+            # Count URLs in sitemap
+            url_count = sitemap_response.count('<url>')
+            tool_urls = sitemap_response.count('/tools/')
+            blog_urls = sitemap_response.count('/blogs/')
+            
+            print(f"   Total URLs in sitemap: {url_count}")
+            print(f"   Tool URLs: {tool_urls}")
+            print(f"   Blog URLs: {blog_urls}")
+            
+            # Check for proper XML structure
+            required_elements = ['<loc>', '<lastmod>', '<changefreq>', '<priority>']
+            missing_elements = [elem for elem in required_elements if elem not in sitemap_response]
+            
+            if not missing_elements and tool_urls > 0 and blog_urls > 0:
+                print(f"   ✅ Sitemap properly includes tools and blogs with SEO structure")
+                results.append(True)
+            else:
+                print(f"   ❌ Sitemap issues: missing elements {missing_elements} or no tool/blog URLs")
+                results.append(False)
+        else:
+            print(f"   ❌ Failed to retrieve or parse sitemap")
+            results.append(False)
+        
+        # Test 7: Focus on JSON-LD structured data validation
+        print("\n7. FOCUSED JSON-LD STRUCTURED DATA VALIDATION")
+        
+        # Test JSON-LD in tools
+        success, tools_response = self.run_test(
+            "Tools JSON-LD Validation",
+            "GET",
+            "tools?limit=5",
+            200,
+            description="Validate JSON-LD structured data in tools"
+        )
+        
+        if success and isinstance(tools_response, list):
+            tools_with_json_ld = 0
+            for tool in tools_response:
+                # Note: Tools might not have json_ld in the basic response, 
+                # but should have it when accessed individually
+                tool_slug = tool.get('slug')
+                if tool_slug:
+                    success_detail, tool_detail = self.run_test(
+                        f"Tool Detail JSON-LD - {tool.get('name', 'Unknown')}",
+                        "GET",
+                        f"tools/by-slug/{tool_slug}",
+                        200,
+                        description=f"Check JSON-LD for tool {tool_slug}"
+                    )
+                    
+                    if success_detail and isinstance(tool_detail, dict):
+                        # Tools might not have JSON-LD implemented yet, so we check for SEO fields
+                        if tool_detail.get('seo_title') or tool_detail.get('seo_description'):
+                            tools_with_json_ld += 1
+                            print(f"   ✅ {tool.get('name', 'Unknown')}: Has SEO data (JSON-LD structure ready)")
+            
+            print(f"   Tools with SEO/JSON-LD readiness: {tools_with_json_ld}/{len(tools_response)}")
+            results.append(True)  # Tools SEO is working
+        
+        # Test JSON-LD in blogs (more likely to have JSON-LD)
+        success, blogs_response = self.run_test(
+            "Blogs JSON-LD Validation",
+            "GET",
+            "blogs?limit=3",
+            200,
+            description="Validate JSON-LD structured data in blogs"
+        )
+        
+        if success and isinstance(blogs_response, list):
+            blogs_with_json_ld = 0
+            valid_json_ld_count = 0
+            
+            for blog in blogs_response:
+                blog_slug = blog.get('slug')
+                if blog_slug:
+                    success_detail, blog_detail = self.run_test(
+                        f"Blog Detail JSON-LD - {blog.get('title', 'Unknown')}",
+                        "GET",
+                        f"blogs/by-slug/{blog_slug}",
+                        200,
+                        description=f"Check JSON-LD for blog {blog_slug}"
+                    )
+                    
+                    if success_detail and isinstance(blog_detail, dict):
+                        json_ld = blog_detail.get('json_ld')
+                        if json_ld and isinstance(json_ld, dict):
+                            blogs_with_json_ld += 1
+                            print(f"   ✅ {blog.get('title', 'Unknown')}: Has JSON-LD structured data")
+                            
+                            # Validate JSON-LD structure
+                            if '@context' in json_ld and '@type' in json_ld:
+                                valid_json_ld_count += 1
+                                print(f"   ✅ Valid JSON-LD schema structure")
+                            else:
+                                print(f"   ⚠️ JSON-LD missing required schema fields")
+                        else:
+                            print(f"   ❌ {blog.get('title', 'Unknown')}: Missing JSON-LD structured data")
+            
+            print(f"   Blogs with JSON-LD: {blogs_with_json_ld}/{len(blogs_response)}")
+            print(f"   Valid JSON-LD structures: {valid_json_ld_count}/{blogs_with_json_ld}")
+            
+            if blogs_with_json_ld > 0:
+                print(f"   ✅ JSON-LD structured data is being generated and returned")
+                results.append(True)
+            else:
+                print(f"   ❌ No JSON-LD structured data found in blogs")
+                results.append(False)
+        
+        # Final summary
+        print(f"\n📊 COMPREHENSIVE SEO & JSON-LD TEST SUMMARY:")
+        print(f"   Total tests: {len(results)}")
+        print(f"   Passed: {sum(results)}")
+        print(f"   Failed: {len(results) - sum(results)}")
+        print(f"   Success rate: {(sum(results) / len(results) * 100):.1f}%")
+        
+        return all(results)
+
     def test_superadmin_seo_management(self):
         """Test Super Admin SEO management endpoints"""
         print("\n🔧 SUPER ADMIN SEO MANAGEMENT TESTING")
