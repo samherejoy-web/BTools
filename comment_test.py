@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 class CommentTester:
-    def __init__(self, base_url="https://secure-signup-4.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://tools-expansion.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
