@@ -59,6 +59,25 @@ const LoginPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleResendVerification = async () => {
+    if (!formData.email) {
+      toast.error('Please enter your email address first');
+      return;
+    }
+
+    setResendLoading(true);
+    try {
+      const result = await resendVerification(formData.email);
+      if (result.success) {
+        setShowResendVerification(false);
+      }
+    } catch (error) {
+      console.error('Resend verification error:', error);
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -67,6 +86,7 @@ const LoginPage = () => {
     }
 
     setLoading(true);
+    setShowResendVerification(false);
     
     try {
       const result = await login(formData.email, formData.password);
@@ -80,6 +100,9 @@ const LoginPage = () => {
           : from;
         
         navigate(redirectPath, { replace: true });
+      } else if (result.error && result.error.toLowerCase().includes('verify')) {
+        // Show resend verification option if email not verified
+        setShowResendVerification(true);
       }
     } catch (error) {
       toast.error('Login failed. Please try again.');
