@@ -86,6 +86,60 @@ The MarketMind Team
     
     return send_email(to_email, subject, body)
 
+def send_otp_verification_email(to_email: str, username: str, otp_code: str) -> bool:
+    """Send OTP verification email"""
+    subject = "Your MarketMind verification code"
+    
+    body = f"""
+Hello {username},
+
+Welcome to MarketMind! Please use the verification code below to complete your account setup.
+
+Your verification code is: {otp_code}
+
+This code will expire in 10 minutes.
+
+Alternatively, you can also verify your email using the link method on our website.
+
+If you didn't create an account with MarketMind, please ignore this email.
+
+Best regards,
+The MarketMind Team
+    """
+    
+    return send_email(to_email, subject, body)
+
+def send_verification_with_both_options(to_email: str, username: str, verification_token: str, otp_code: str) -> bool:
+    """Send email with both link and OTP verification options"""
+    verification_url = f"{FRONTEND_URL}/verify-email?token={verification_token}"
+    
+    subject = "Verify your MarketMind account - Link or Code"
+    
+    body = f"""
+Hello {username},
+
+Welcome to MarketMind! Please verify your email address to complete your account setup.
+
+You can verify your email using either of these methods:
+
+METHOD 1 - Click the verification link:
+{verification_url}
+
+METHOD 2 - Use the verification code:
+Your verification code is: {otp_code}
+Enter this code at: {FRONTEND_URL}/verify-otp
+
+The verification link will expire in 1 hour.
+The verification code will expire in 10 minutes.
+
+If you didn't create an account with MarketMind, please ignore this email.
+
+Best regards,
+The MarketMind Team
+    """
+    
+    return send_email(to_email, subject, body)
+
 def send_verification_success_email(to_email: str, username: str) -> bool:
     """Send email verification success confirmation"""
     subject = "Email verified successfully - MarketMind"
