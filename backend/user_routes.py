@@ -117,6 +117,13 @@ def get_user_routes():
                 detail="Inactive user"
             )
         
+        # Check if email is verified
+        if not db_user.is_email_verified:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Please verify your email address before logging in. Check your inbox for the verification link."
+            )
+        
         access_token = create_access_token(data={"sub": db_user.email})
         
         return {
