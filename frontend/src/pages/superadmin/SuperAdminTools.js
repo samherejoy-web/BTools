@@ -38,6 +38,7 @@ const SuperAdminTools = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const [showBulkLogoUpload, setShowBulkLogoUpload] = useState(false);
   const [selectedTool, setSelectedTool] = useState(null);
 
   useEffect(() => {
