@@ -18,6 +18,45 @@ def calculate_page_priority(page_type: str) -> str:
     }
     return priority_map.get(page_type, priority_map['default'])
 
+def calculate_content_priority(content_type: str, engagement_metrics: dict) -> str:
+    """Calculate dynamic priority based on content engagement"""
+    base_priority = 0.8
+    
+    # Adjust based on engagement metrics
+    views = engagement_metrics.get('views', 0)
+    likes = engagement_metrics.get('likes', 0) 
+    reviews = engagement_metrics.get('reviews', 0)
+    rating = engagement_metrics.get('rating', 0)
+    
+    # Calculate engagement score
+    engagement_score = 0
+    if views > 1000:
+        engagement_score += 0.1
+    if views > 5000:
+        engagement_score += 0.05
+    
+    if likes > 50:
+        engagement_score += 0.05
+    if likes > 200:
+        engagement_score += 0.05
+        
+    if reviews > 10:
+        engagement_score += 0.05
+    if reviews > 50:
+        engagement_score += 0.05
+        
+    if rating >= 4.5:
+        engagement_score += 0.1
+    elif rating >= 4.0:
+        engagement_score += 0.05
+    
+    # Content type multiplier
+    if content_type == 'tool':
+        base_priority += 0.05  # Tools are slightly more important
+    
+    final_priority = min(0.95, base_priority + engagement_score)  # Cap at 0.95
+    return f"{final_priority:.2f}"
+
 @router.get("/sitemap.xml")
 @router.get("/api/sitemap.xml")
 async def get_sitemap(db: Session = Depends(get_db)):
