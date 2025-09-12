@@ -278,7 +278,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Super Admin Navigation and Functionality"
+    - "Super Admin Routes Quick Verification"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
