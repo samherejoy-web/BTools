@@ -580,7 +580,26 @@ async def download_csv_template(
             "features": "Feature 1;Feature 2;Feature 3",
             "pros": "Pro 1;Pro 2",
             "cons": "Con 1;Con 2",
-            "is_active": "true"
+            "is_active": "true",
+            "domain_website": "example.com",
+            "linkedin_url": "https://linkedin.com/company/example",
+            "founded_year": "2020",
+            "about_section": "Example company focused on innovative solutions",
+            "founders": "John Doe;Jane Smith",
+            "latest_news": "Company raises Series A funding",
+            "latest_feeds": "New feature launch;Product update",
+            "job_openings": "Software Engineer;Product Manager",
+            "revenue": "$10M ARR",
+            "locations": "San Francisco;New York;Remote",
+            "company_size": "50-100 employees",
+            "funding_info": "Series A $5M;Seed $1M",
+            "tech_stack": "React;Node.js;Python;AWS",
+            "integrations": "Slack;Google Workspace;Salesforce",
+            "languages_supported": "English;Spanish;French",
+            "target_audience": "Startups;SMBs;Enterprise",
+            "use_cases": "Project Management;Team Collaboration;Workflow Automation",
+            "alternatives": "Alternative Tool 1;Alternative Tool 2",
+            "local_logo_path": "example-tool.png"
         }
     ]
     
