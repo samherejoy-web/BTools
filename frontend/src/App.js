@@ -288,6 +288,19 @@ function App() {
             } />
           </Routes>
           
+          {/* SEO and Performance Monitoring Components */}
+          <SEOMonitor />
+          <PerformanceMonitor 
+            enableReporting={process.env.NODE_ENV === 'production'} 
+            reportingInterval={30000}
+            onMetricsUpdate={(metric, value, allMetrics) => {
+              // Optional: Custom handling of performance metrics
+              if (process.env.NODE_ENV === 'development') {
+                console.log(`Performance Update - ${metric}: ${value}`, allMetrics);
+              }
+            }}
+          />
+          
           <Toaster position="top-right" />
           </div>
         </Router>
