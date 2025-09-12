@@ -19,6 +19,7 @@ class UserCreate(BaseModel):
     username: str
     password: str
     full_name: Optional[str] = None
+    verification_method: str = "both"  # "link", "otp", or "both"
 
 class UserLogin(BaseModel):
     email: EmailStr
