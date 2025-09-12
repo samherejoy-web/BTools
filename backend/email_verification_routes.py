@@ -49,6 +49,8 @@ def get_email_verification_routes():
         user.is_email_verified = True
         user.email_verification_token = None
         user.email_verification_expires = None
+        user.email_otp_code = None  # Clear OTP as well
+        user.email_otp_expires = None
         user.updated_at = datetime.utcnow()
         
         db.commit()
@@ -56,6 +58,39 @@ def get_email_verification_routes():
         
         return VerifyEmailResponse(
             message="Email verified successfully! You can now log in to your account.",
+            user_id=user.id
+        )
+    
+    @router.post("/api/auth/verify-otp")
+    async def verify_otp(request: VerifyOTPRequest, db: Session = Depends(get_db)):
+        """Verify email using OTP code"""
+        # Find user with this email and valid OTP
+        user = db.query(User).filter(
+            User.email == request.email,
+            User.email_otp_code == request.otp_code,
+            User.email_otp_expires > datetime.utcnow(),
+            User.is_email_verified == False
+        ).first()
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired OTP code"
+            )
+        
+        # Verify the email
+        user.is_email_verified = True
+        user.email_verification_token = None  # Clear token as well
+        user.email_verification_expires = None
+        user.email_otp_code = None
+        user.email_otp_expires = None
+        user.updated_at = datetime.utcnow()
+        
+        db.commit()
+        db.refresh(user)
+        
+        return VerifyOTPResponse(
+            message="Email verified successfully using OTP! You can now log in to your account.",
             user_id=user.id
         )
     
