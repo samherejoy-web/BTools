@@ -46,6 +46,12 @@ const useSEO = ({
   return seoData;
 };
 
+// Helper function to clean HTML from text
+const cleanHtmlFromText = (text) => {
+  if (!text) return text;
+  return text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+};
+
 // Helper function to generate keywords from data
 const generateKeywordsFromData = (data, type) => {
   const keywords = [];
