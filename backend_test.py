@@ -4613,9 +4613,9 @@ class MarketMindAPITester:
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - Email Verification System Testing")
+    print("🚀 Starting MarketMind AI Platform - Tool Enhancement Features Testing")
     print("=" * 80)
-    print("🎯 FOCUS: Testing the new email verification system implementation")
+    print("🎯 FOCUS: Testing the new tool enhancement features implementation")
     print("=" * 80)
     
     tester = MarketMindAPITester()
@@ -4624,14 +4624,23 @@ def main():
     print("\n🔍 BASIC CONNECTIVITY TEST")
     health_success = tester.test_health_check()
     if not health_success:
-        print("❌ Basic connectivity failed - cannot proceed with email verification tests")
+        print("❌ Basic connectivity failed - cannot proceed with tool enhancement tests")
         return 1
     
     print("✅ Basic connectivity successful")
     
-    # Run the enhanced email verification system tests
-    print("\n🔐 ENHANCED EMAIL VERIFICATION SYSTEM TESTING")
-    verification_success = tester.test_enhanced_email_verification_system()
+    # Login as superadmin to test admin features
+    print("\n🔐 AUTHENTICATION TEST")
+    login_success, user_role = tester.test_login("superadmin@marketmind.com", "admin123")
+    if not login_success:
+        print("❌ Failed to login as superadmin - cannot test admin features")
+        return 1
+    
+    print(f"✅ Successfully logged in as: {user_role}")
+    
+    # Run the tool enhancement features tests
+    print("\n🔧 TOOL ENHANCEMENT FEATURES TESTING")
+    enhancement_success = tester.test_tool_enhancement_features()
     
     # Print comprehensive results
     print("\n" + "=" * 80)
@@ -4658,11 +4667,11 @@ def main():
     print("\n" + "=" * 80)
     
     # Return exit code based on results
-    if verification_success:
-        print("🎉 Email verification system testing PASSED!")
+    if enhancement_success:
+        print("🎉 Tool enhancement features testing PASSED!")
         return 0
     else:
-        print("❌ Email verification system testing FAILED!")
+        print("❌ Tool enhancement features testing FAILED!")
         return 1
 
 if __name__ == "__main__":
