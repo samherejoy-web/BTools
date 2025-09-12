@@ -318,6 +318,60 @@ const RegisterPage = () => {
                 )}
               </div>
 
+              {/* Verification Method Selection */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Email Verification Method
+                </Label>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <input
+                      id="both"
+                      name="verificationMethod"
+                      type="radio"
+                      value="both"
+                      checked={formData.verificationMethod === 'both'}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    />
+                    <label htmlFor="both" className="ml-2 block text-sm text-gray-700">
+                      <span className="font-medium">Both Link & Code</span>
+                      <span className="text-gray-500 block text-xs">Get both verification link and 6-digit code (Recommended)</span>
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      id="link"
+                      name="verificationMethod"
+                      type="radio"
+                      value="link"
+                      checked={formData.verificationMethod === 'link'}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    />
+                    <label htmlFor="link" className="ml-2 block text-sm text-gray-700">
+                      <span className="font-medium">Verification Link Only</span>
+                      <span className="text-gray-500 block text-xs">Click link in email to verify</span>
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      id="otp"
+                      name="verificationMethod"
+                      type="radio"
+                      value="otp"
+                      checked={formData.verificationMethod === 'otp'}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    />
+                    <label htmlFor="otp" className="ml-2 block text-sm text-gray-700">
+                      <span className="font-medium">Verification Code Only</span>
+                      <span className="text-gray-500 block text-xs">Enter 6-digit code from email</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center">
                 <input
                   id="terms"
