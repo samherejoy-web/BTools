@@ -14,7 +14,8 @@ const RegisterPage = () => {
     username: '',
     password: '',
     confirmPassword: '',
-    fullName: ''
+    fullName: '',
+    verificationMethod: 'both'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
