@@ -1658,6 +1658,434 @@ class MarketMindAPITester:
         
         return all(results)
 
+    # NEW SEO ENHANCEMENT FEATURES TESTING
+    def test_seo_internal_links_suggestions(self):
+        """Test new SEO internal links suggestions API"""
+        print("\n🔗 SEO INTERNAL LINKS SUGGESTIONS TESTING")
+        print("=" * 60)
+        
+        results = []
+        
+        # Test 1: Basic internal link suggestions
+        test_content = "This is sample content about productivity tools for remote teams and project management software"
+        success, response = self.run_test(
+            "SEO Internal Links - Basic Test",
+            "GET",
+            f"seo/internal-links/suggestions?content={test_content}&limit=5",
+            200,
+            description="Test basic internal link suggestions with sample content"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Response structure valid")
+            
+            # Check response structure
+            expected_keys = ['suggestions', 'total_found', 'keywords_analyzed', 'analysis_timestamp']
+            missing_keys = [key for key in expected_keys if key not in response]
+            
+            if missing_keys:
+                print(f"   ❌ Missing response keys: {missing_keys}")
+                results.append(False)
+            else:
+                print(f"   ✅ All expected response keys present")
+                
+                # Check suggestions structure
+                suggestions = response.get('suggestions', [])
+                print(f"   Found {len(suggestions)} suggestions")
+                print(f"   Total found: {response.get('total_found', 0)}")
+                print(f"   Keywords analyzed: {len(response.get('keywords_analyzed', []))}")
+                
+                if suggestions:
+                    sample_suggestion = suggestions[0]
+                    expected_suggestion_keys = ['url', 'anchor_text', 'relevance_score', 'content_type', 'title', 'excerpt']
+                    missing_suggestion_keys = [key for key in expected_suggestion_keys if key not in sample_suggestion]
+                    
+                    if missing_suggestion_keys:
+                        print(f"   ❌ Missing suggestion keys: {missing_suggestion_keys}")
+                        results.append(False)
+                    else:
+                        print(f"   ✅ Suggestion structure valid")
+                        print(f"   Sample suggestion: {sample_suggestion['title']} (score: {sample_suggestion['relevance_score']})")
+                else:
+                    print(f"   ⚠️ No suggestions returned (may be expected if no matching content)")
+        
+        # Test 2: Different content types
+        success, response = self.run_test(
+            "SEO Internal Links - Tool Content",
+            "GET",
+            f"seo/internal-links/suggestions?content=AI automation tools for business workflows&content_type=tool&limit=3",
+            200,
+            description="Test internal link suggestions for tool-related content"
+        )
+        results.append(success)
+        
+        # Test 3: Blog content type
+        success, response = self.run_test(
+            "SEO Internal Links - Blog Content",
+            "GET",
+            f"seo/internal-links/suggestions?content=Best practices for remote team collaboration and productivity&content_type=blog&limit=8",
+            200,
+            description="Test internal link suggestions for blog content"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_seo_page_audit(self):
+        """Test new SEO page audit API"""
+        print("\n🔍 SEO PAGE AUDIT TESTING")
+        print("=" * 50)
+        
+        results = []
+        
+        # Test 1: Tool page audit
+        success, response = self.run_test(
+            "SEO Page Audit - Tool Page",
+            "POST",
+            "seo/audit/page",
+            200,
+            data={"page_url": "/tools/notion", "page_type": "tool"},
+            description="Test comprehensive SEO audit for a tool page"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Tool page audit response received")
+            
+            # Check response structure
+            expected_keys = ['page_url', 'page_type', 'seo_score', 'issues', 'recommendations', 
+                           'core_web_vitals', 'content_analysis', 'performance_metrics', 'audit_timestamp']
+            missing_keys = [key for key in expected_keys if key not in response]
+            
+            if missing_keys:
+                print(f"   ❌ Missing response keys: {missing_keys}")
+                results.append(False)
+            else:
+                print(f"   ✅ All expected audit keys present")
+                print(f"   SEO Score: {response.get('seo_score', 'N/A')}")
+                print(f"   Issues found: {len(response.get('issues', []))}")
+                print(f"   Recommendations: {len(response.get('recommendations', []))}")
+                
+                # Check Core Web Vitals
+                cwv = response.get('core_web_vitals', {})
+                if cwv:
+                    print(f"   Core Web Vitals: LCP={cwv.get('lcp', {}).get('value', 'N/A')}s, "
+                          f"FID={cwv.get('fid', {}).get('value', 'N/A')}ms, "
+                          f"CLS={cwv.get('cls', {}).get('value', 'N/A')}")
+                
+                # Check content analysis
+                content_analysis = response.get('content_analysis', {})
+                if content_analysis:
+                    print(f"   Content Analysis: {content_analysis.get('word_count', 0)} words, "
+                          f"readability: {content_analysis.get('readability_score', 0)}")
+        
+        # Test 2: Blog page audit
+        success, response = self.run_test(
+            "SEO Page Audit - Blog Page",
+            "POST",
+            "seo/audit/page",
+            200,
+            data={"page_url": "/blogs/productivity-tools-2024", "page_type": "blog"},
+            description="Test comprehensive SEO audit for a blog page"
+        )
+        results.append(success)
+        
+        # Test 3: Invalid page audit (should handle gracefully)
+        success, response = self.run_test(
+            "SEO Page Audit - Invalid Page",
+            "POST",
+            "seo/audit/page",
+            404,
+            data={"page_url": "/nonexistent-page", "page_type": "webpage"},
+            description="Test SEO audit error handling for non-existent page"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_seo_analytics_overview(self):
+        """Test new SEO analytics overview API"""
+        print("\n📊 SEO ANALYTICS OVERVIEW TESTING")
+        print("=" * 50)
+        
+        results = []
+        
+        # Test 1: Default analytics (30 days)
+        success, response = self.run_test(
+            "SEO Analytics - Default Overview",
+            "GET",
+            "seo/analytics/overview",
+            200,
+            description="Test SEO analytics overview with default 30-day period"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Analytics overview response received")
+            
+            # Check response structure
+            expected_keys = ['overview', 'tools', 'blogs', 'issues_summary', 'trends', 'generated_at']
+            missing_keys = [key for key in expected_keys if key not in response]
+            
+            if missing_keys:
+                print(f"   ❌ Missing response keys: {missing_keys}")
+                results.append(False)
+            else:
+                print(f"   ✅ All expected analytics keys present")
+                
+                # Check overview data
+                overview = response.get('overview', {})
+                print(f"   Total pages: {overview.get('total_pages', 0)}")
+                print(f"   Average SEO score: {overview.get('avg_seo_score', 0)}")
+                print(f"   Pages optimized: {overview.get('pages_optimized', 0)}")
+                print(f"   Pages need attention: {overview.get('pages_need_attention', 0)}")
+                
+                # Check tools data
+                tools_data = response.get('tools', {})
+                print(f"   Tools total: {tools_data.get('total', 0)}")
+                print(f"   Tools avg score: {tools_data.get('avg_score', 0)}")
+                
+                # Check blogs data
+                blogs_data = response.get('blogs', {})
+                print(f"   Blogs total: {blogs_data.get('total', 0)}")
+                print(f"   Blogs avg score: {blogs_data.get('avg_score', 0)}")
+                
+                # Check issues summary
+                issues = response.get('issues_summary', {})
+                total_issues = sum(issues.values()) if issues else 0
+                print(f"   Total SEO issues: {total_issues}")
+                if issues:
+                    print(f"   Issues breakdown: Critical={issues.get('critical', 0)}, "
+                          f"High={issues.get('high', 0)}, Medium={issues.get('medium', 0)}, "
+                          f"Low={issues.get('low', 0)}")
+        
+        # Test 2: Custom time period
+        success, response = self.run_test(
+            "SEO Analytics - 7 Days",
+            "GET",
+            "seo/analytics/overview?days=7",
+            200,
+            description="Test SEO analytics overview with 7-day period"
+        )
+        results.append(success)
+        
+        # Test 3: Extended time period
+        success, response = self.run_test(
+            "SEO Analytics - 90 Days",
+            "GET",
+            "seo/analytics/overview?days=90",
+            200,
+            description="Test SEO analytics overview with 90-day period"
+        )
+        results.append(success)
+        
+        return all(results)
+
+    def test_enhanced_sitemap_features(self):
+        """Test enhanced sitemap generation with dynamic priorities and image support"""
+        print("\n🗺️ ENHANCED SITEMAP FEATURES TESTING")
+        print("=" * 50)
+        
+        results = []
+        import time
+        
+        # Test enhanced sitemap generation
+        start_time = time.time()
+        success, response = self.run_test(
+            "Enhanced Sitemap Generation",
+            "GET",
+            "sitemap.xml",
+            200,
+            description="Test enhanced sitemap with dynamic priorities and image support"
+        )
+        generation_time = time.time() - start_time
+        results.append(success)
+        
+        if success and isinstance(response, str):
+            print(f"   ✅ Enhanced sitemap generated in {generation_time:.3f}s")
+            print(f"   Content length: {len(response)} characters")
+            
+            # Check for enhanced XML schema namespaces
+            required_namespaces = [
+                'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+                'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'
+            ]
+            
+            missing_namespaces = []
+            for namespace in required_namespaces:
+                if namespace not in response:
+                    missing_namespaces.append(namespace)
+            
+            if missing_namespaces:
+                print(f"   ❌ Missing XML namespaces: {missing_namespaces}")
+                results.append(False)
+            else:
+                print(f"   ✅ Enhanced XML schema namespaces present")
+            
+            # Check for image elements
+            image_elements = response.count('<image:image>')
+            print(f"   Image elements found: {image_elements}")
+            
+            if image_elements > 0:
+                print(f"   ✅ Image metadata included in sitemap")
+                
+                # Check for image sub-elements
+                image_sub_elements = ['<image:loc>', '<image:title>', '<image:caption>']
+                for element in image_sub_elements:
+                    if element in response:
+                        print(f"   ✅ {element} elements found")
+                    else:
+                        print(f"   ⚠️ {element} elements missing")
+            else:
+                print(f"   ⚠️ No image metadata found (may be expected if no images)")
+            
+            # Check for dynamic priority values (should not all be the same)
+            priority_pattern = r'<priority>([\d.]+)</priority>'
+            import re
+            priorities = re.findall(priority_pattern, response)
+            unique_priorities = set(priorities)
+            
+            print(f"   Priority values found: {len(priorities)}")
+            print(f"   Unique priority values: {len(unique_priorities)}")
+            
+            if len(unique_priorities) > 1:
+                print(f"   ✅ Dynamic priority calculation working")
+                print(f"   Priority range: {min(priorities)} - {max(priorities)}")
+            else:
+                print(f"   ⚠️ All priorities are the same - dynamic calculation may not be working")
+            
+            # Check for smart changefreq values
+            changefreq_pattern = r'<changefreq>(\w+)</changefreq>'
+            changefreqs = re.findall(changefreq_pattern, response)
+            unique_changefreqs = set(changefreqs)
+            
+            print(f"   Change frequency values: {list(unique_changefreqs)}")
+            
+            expected_changefreqs = ['daily', 'weekly', 'monthly', 'yearly']
+            found_changefreqs = [cf for cf in expected_changefreqs if cf in unique_changefreqs]
+            
+            if len(found_changefreqs) >= 2:
+                print(f"   ✅ Smart change frequency calculation working")
+            else:
+                print(f"   ⚠️ Limited change frequency variation")
+        
+        # Performance check for enhanced sitemap
+        if generation_time > 2.0:
+            print(f"   ⚠️ Enhanced sitemap generation slow: {generation_time:.3f}s")
+            results.append(False)
+        else:
+            print(f"   ✅ Enhanced sitemap performance acceptable: {generation_time:.3f}s")
+        
+        return all(results)
+
+    def test_existing_seo_endpoints_compatibility(self):
+        """Test that existing SEO endpoints still work after enhancements"""
+        print("\n🔄 EXISTING SEO ENDPOINTS COMPATIBILITY TESTING")
+        print("=" * 60)
+        
+        results = []
+        
+        # Test existing superadmin SEO overview
+        if self.current_user_role == 'superadmin':
+            success, response = self.run_test(
+                "Existing - Superadmin SEO Overview",
+                "GET",
+                "superadmin/seo/overview",
+                200,
+                description="Test existing superadmin SEO overview endpoint compatibility"
+            )
+            results.append(success)
+            
+            if success:
+                print(f"   ✅ Superadmin SEO overview still working")
+            
+            # Test existing superadmin SEO issues
+            success, response = self.run_test(
+                "Existing - Superadmin SEO Issues",
+                "GET",
+                "superadmin/seo/issues",
+                200,
+                description="Test existing superadmin SEO issues endpoint compatibility"
+            )
+            results.append(success)
+            
+            if success:
+                print(f"   ✅ Superadmin SEO issues still working")
+        else:
+            print(f"   ⚠️ Skipping superadmin tests - insufficient permissions")
+        
+        # Test existing robots.txt
+        success, response = self.run_test(
+            "Existing - Robots.txt",
+            "GET",
+            "robots.txt",
+            200,
+            description="Test existing robots.txt endpoint compatibility"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Robots.txt endpoint still working")
+        
+        return all(results)
+
+    def test_comprehensive_seo_enhancements(self):
+        """Run comprehensive test suite for all new SEO enhancements"""
+        print("\n🚀 COMPREHENSIVE SEO ENHANCEMENTS TESTING")
+        print("=" * 70)
+        
+        all_results = []
+        
+        # Test all new SEO features
+        print(f"\n1️⃣ Testing Internal Links Suggestions...")
+        result1 = self.test_seo_internal_links_suggestions()
+        all_results.append(result1)
+        
+        print(f"\n2️⃣ Testing SEO Page Audit...")
+        result2 = self.test_seo_page_audit()
+        all_results.append(result2)
+        
+        print(f"\n3️⃣ Testing SEO Analytics Overview...")
+        result3 = self.test_seo_analytics_overview()
+        all_results.append(result3)
+        
+        print(f"\n4️⃣ Testing Enhanced Sitemap Features...")
+        result4 = self.test_enhanced_sitemap_features()
+        all_results.append(result4)
+        
+        print(f"\n5️⃣ Testing Existing SEO Endpoints Compatibility...")
+        result5 = self.test_existing_seo_endpoints_compatibility()
+        all_results.append(result5)
+        
+        # Summary
+        passed_tests = sum(all_results)
+        total_tests = len(all_results)
+        
+        print(f"\n📋 SEO ENHANCEMENTS TEST SUMMARY:")
+        print(f"   Tests passed: {passed_tests}/{total_tests}")
+        print(f"   Success rate: {(passed_tests/total_tests)*100:.1f}%")
+        
+        if all(all_results):
+            print(f"   🎉 ALL SEO ENHANCEMENT TESTS PASSED!")
+        else:
+            failed_tests = []
+            test_names = [
+                "Internal Links Suggestions",
+                "SEO Page Audit", 
+                "SEO Analytics Overview",
+                "Enhanced Sitemap Features",
+                "Existing SEO Compatibility"
+            ]
+            
+            for i, result in enumerate(all_results):
+                if not result:
+                    failed_tests.append(test_names[i])
+            
+            print(f"   ❌ Failed tests: {', '.join(failed_tests)}")
+        
+        return all(all_results)
+
     def test_tool_enhancement_features(self):
         """Test the new tool enhancement features implemented"""
         print("\n🔧 TOOL ENHANCEMENT FEATURES TESTING")
