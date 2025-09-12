@@ -151,6 +151,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateUser,
     verifyEmail,
+    verifyOTP,
     resendVerification,
     getVerificationStatus,
     isAuthenticated: !!user,
