@@ -233,6 +233,32 @@ const LoginPage = () => {
               </Button>
             </form>
 
+            {/* Email Verification Resend */}
+            {showResendVerification && (
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div className="text-center">
+                  <p className="text-sm text-yellow-800 mb-3">
+                    Your email address is not verified. Please check your inbox for the verification link.
+                  </p>
+                  <Button
+                    onClick={handleResendVerification}
+                    disabled={resendLoading}
+                    variant="outline"
+                    className="w-full border-yellow-300 text-yellow-700 hover:bg-yellow-100"
+                  >
+                    {resendLoading ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-600 mr-2"></div>
+                        Sending verification email...
+                      </div>
+                    ) : (
+                      'Resend Verification Email'
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Demo Accounts */}
             <div className="mt-6 pt-6 border-t border-gray-100">
               <p className="text-sm text-gray-600 text-center mb-4">
