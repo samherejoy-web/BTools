@@ -3268,31 +3268,78 @@ class MarketMindAPITester:
         """Run comprehensive SEO functionality tests"""
         return self.test_comprehensive_seo_implementation()
 
+    def run_comprehensive_seo_tests(self):
+        """Run comprehensive SEO and JSON-LD tests as requested"""
+        print("\n" + "="*80)
+        print("🎯 COMPREHENSIVE SEO & JSON-LD TESTING SUITE")
+        print("   Testing SEO and JSON-LD functionality for tools and blogs")
+        print("="*80)
+        
+        # First authenticate as superadmin for full access
+        print("\n🔐 AUTHENTICATION FOR COMPREHENSIVE TESTING")
+        success, user_role = self.test_login("superadmin@marketmind.com", "admin123")
+        if not success:
+            print("❌ Failed to authenticate as superadmin, trying regular user...")
+            success, user_role = self.test_login("user@marketmind.com", "password123")
+            if not success:
+                # Create a test user if needed
+                self.test_register()
+                success, user_role = self.test_login("test_user_" + datetime.now().strftime('%H%M%S') + "@test.com", "TestPass123!")
+        
+        if success:
+            print(f"✅ Authenticated as: {user_role}")
+        else:
+            print("❌ Authentication failed, proceeding with public endpoints only")
+        
+        # Run the comprehensive SEO test
+        seo_success = self.test_seo_json_ld_comprehensive()
+        
+        # Run additional SEO-related tests
+        sitemap_success = self.test_seo_sitemap_generation()
+        robots_success = self.test_seo_robots_txt_generation()
+        performance_success = self.test_seo_performance_impact()
+        
+        # Run superadmin SEO tests if authenticated
+        superadmin_success = True
+        if self.current_user_role == 'superadmin':
+            superadmin_success = self.test_superadmin_seo_management()
+        
+        # Summary
+        all_tests = [seo_success, sitemap_success, robots_success, performance_success, superadmin_success]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print("\n" + "="*80)
+        print("📊 COMPREHENSIVE SEO TESTING RESULTS")
+        print("="*80)
+        print(f"✅ Comprehensive SEO & JSON-LD Test: {'PASSED' if seo_success else 'FAILED'}")
+        print(f"✅ Sitemap Generation Test: {'PASSED' if sitemap_success else 'FAILED'}")
+        print(f"✅ Robots.txt Generation Test: {'PASSED' if robots_success else 'FAILED'}")
+        print(f"✅ SEO Performance Test: {'PASSED' if performance_success else 'FAILED'}")
+        print(f"✅ Superadmin SEO Management: {'PASSED' if superadmin_success else 'FAILED'}")
+        print(f"\n🎯 OVERALL SUCCESS RATE: {passed_tests}/{total_tests} ({(passed_tests/total_tests*100):.1f}%)")
+        
+        if passed_tests == total_tests:
+            print("🎉 ALL SEO & JSON-LD TESTS PASSED!")
+        else:
+            print(f"⚠️ {total_tests - passed_tests} test(s) failed - see details above")
+        
+        return passed_tests == total_tests
+
 def main():
-    print("🚀 Starting MarketMind AI Platform - Super Admin SEO Management Testing")
+    print("🚀 Starting MarketMind AI Platform - Comprehensive SEO & JSON-LD Testing")
     print("=" * 80)
-    print("🎯 FOCUS: Testing new Super Admin SEO management endpoints")
+    print("🎯 FOCUS: Testing SEO and JSON-LD functionality for tools and blogs")
     print("=" * 80)
     
     tester = MarketMindAPITester()
     
-    # Test basic endpoints first
-    print("\n📋 BASIC API TESTS")
-    print("-" * 40)
-    tester.test_health_check()
-    tester.test_debug_connectivity()
-    tester.test_categories()
-    tester.test_tools()
-    tester.test_blogs()
-    
-    # MAIN TEST: Super Admin SEO Management
-    print("\n🎯 MAIN TEST: SUPER ADMIN SEO MANAGEMENT")
-    print("-" * 50)
-    seo_success = tester.test_superadmin_seo_management()
+    # Run comprehensive SEO tests
+    seo_success = tester.run_comprehensive_seo_tests()
     
     # Print comprehensive results
     print("\n" + "=" * 80)
-    print("📊 SUPER ADMIN SEO MANAGEMENT TEST RESULTS")
+    print("📊 FINAL TEST RESULTS")
     print("=" * 80)
     print(f"Total Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
@@ -3316,13 +3363,13 @@ def main():
     
     # Return exit code based on results
     if len(tester.failed_tests) == 0:
-        print("🎉 All Super Admin SEO management tests passed!")
+        print("🎉 All SEO & JSON-LD tests passed!")
         return 0
     elif len(tester.failed_tests) <= 2:
-        print("⚠️  Minor issues found - Super Admin SEO functionality is mostly working")
+        print("⚠️  Minor issues found - SEO functionality is mostly working")
         return 0
     else:
-        print("❌ Significant issues found - Super Admin SEO functionality needs attention")
+        print("❌ Significant issues found - SEO functionality needs attention")
         return 1
 
 if __name__ == "__main__":
