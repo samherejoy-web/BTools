@@ -40,7 +40,7 @@ export const generateArticleSchema = (blog) => {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": blog.title || "Blog Post",
-      "description": blog.excerpt || blog.seo_description || "Read this insightful blog post.",
+      "description": (blog.excerpt || blog.seo_description || "Read this insightful blog post.").replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(),
       "image": blog.featured_image || `${baseUrl}/api/images/og-default.jpg`,
       "author": {
         "@type": "Person",
