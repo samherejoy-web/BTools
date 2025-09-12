@@ -117,6 +117,26 @@ def get_tools_routes():
         seo_title: Optional[str]
         seo_description: Optional[str]
         seo_keywords: Optional[str]
+        # New optional fields for enhanced tool information
+        domain_website: Optional[str]
+        linkedin_url: Optional[str]
+        founded_year: Optional[int]
+        about_section: Optional[str]
+        founders: Optional[List[Dict[str, Any]]]
+        latest_news: Optional[str]
+        latest_feeds: Optional[List[Dict[str, Any]]]
+        job_openings: Optional[List[Dict[str, Any]]]
+        revenue: Optional[str]
+        locations: Optional[List[str]]
+        company_size: Optional[str]
+        funding_info: Optional[List[Dict[str, Any]]]
+        tech_stack: Optional[List[str]]
+        integrations: Optional[List[str]]
+        languages_supported: Optional[List[str]]
+        target_audience: Optional[List[str]]
+        use_cases: Optional[List[str]]
+        alternatives: Optional[List[str]]
+        local_logo_path: Optional[str]
     
     class ToolCommentCreate(BaseModel):
         content: str
