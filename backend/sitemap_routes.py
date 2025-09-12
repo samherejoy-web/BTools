@@ -21,15 +21,15 @@ def calculate_page_priority(page_type: str) -> str:
 @router.get("/sitemap.xml")
 @router.get("/api/sitemap.xml")
 async def get_sitemap(db: Session = Depends(get_db)):
-    """Generate sitemap.xml for better SEO indexing"""
+    """Generate advanced sitemap.xml with dynamic priority scoring"""
     
     # Get base URL from environment
     base_url = os.getenv('FRONTEND_URL', 'https://marketmind.com')
     
-    # Get all published blogs
+    # Get all published blogs with engagement metrics
     blogs = db.query(Blog).filter(Blog.status == 'published').all()
     
-    # Get all active tools
+    # Get all active tools with engagement metrics
     tools = db.query(Tool).filter(Tool.is_active).all()
     
     # Get all categories
@@ -38,11 +38,13 @@ async def get_sitemap(db: Session = Depends(get_db)):
     # Get SEO pages
     seo_pages = db.query(SeoPage).all()
     
-    # Build sitemap XML
+    # Build sitemap XML with schema
     sitemap_content = '''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'''
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">'''
     
-    # Add homepage
+    # Add homepage with highest priority
     sitemap_content += f'''
     <url>
         <loc>{base_url}/</loc>
@@ -51,13 +53,16 @@ async def get_sitemap(db: Session = Depends(get_db)):
         <priority>1.0</priority>
     </url>'''
     
-    # Add main pages
+    # Add main pages with calculated priorities
     main_pages = [
-        ('/tools', 'daily', '0.9'),
-        ('/blogs', 'daily', '0.9'),
-        ('/compare', 'weekly', '0.7'),
-        ('/login', 'monthly', '0.5'),
-        ('/register', 'monthly', '0.5')
+        ('/tools', 'daily', calculate_page_priority('tools_listing')),
+        ('/blogs', 'daily', calculate_page_priority('blogs_listing')),
+        ('/compare', 'weekly', calculate_page_priority('compare')),
+        ('/categories', 'weekly', calculate_page_priority('categories')),
+        ('/login', 'monthly', '0.3'),
+        ('/register', 'monthly', '0.3'),
+        ('/about', 'monthly', '0.4'),
+        ('/contact', 'monthly', '0.4')
     ]
     
     for page, changefreq, priority in main_pages:
