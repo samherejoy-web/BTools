@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import JSONLDScript from './JSONLDScript';
 
 const SEOHead = React.memo(({
   title = 'MarketMind - Discover the Best Business Tools',
