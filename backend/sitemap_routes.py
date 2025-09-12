@@ -158,17 +158,57 @@ async def get_sitemap(db: Session = Depends(get_db)):
     </url>'''
         sitemap_content += sitemap_entry
     
-    # Add tools
+    # Add tools with dynamic priority and enhanced metadata
     for tool in tools:
         last_mod = (tool.updated_at.strftime('%Y-%m-%d') if tool.updated_at 
                    else tool.created_at.strftime('%Y-%m-%d'))
-        sitemap_content += f'''
+        
+        # Calculate dynamic priority based on engagement
+        engagement_metrics = {
+            'views': getattr(tool, 'view_count', 0),
+            'likes': getattr(tool, 'like_count', 0),
+            'rating': getattr(tool, 'rating', 0),
+            'reviews': getattr(tool, 'review_count', 0)
+        }
+        priority = calculate_content_priority('tool', engagement_metrics)
+        
+        # Determine change frequency based on activity
+        created_date = tool.created_at
+        days_old = (datetime.now() - created_date).days if created_date else 0
+        
+        if days_old < 30:
+            changefreq = 'weekly'
+        elif days_old < 90:
+            changefreq = 'monthly'
+        else:
+            changefreq = 'yearly'
+        
+        sitemap_entry = f'''
     <url>
         <loc>{base_url}/tools/{tool.slug}</loc>
         <lastmod>{last_mod}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <changefreq>{changefreq}</changefreq>
+        <priority>{priority}</priority>'''
+        
+        # Add logo image if available
+        if hasattr(tool, 'logo_url') and tool.logo_url:
+            sitemap_entry += f'''
+        <image:image>
+            <image:loc>{tool.logo_url}</image:loc>
+            <image:title>{tool.name} Logo</image:title>
+            <image:caption>Logo for {tool.name} - {(tool.short_description or tool.description or "")[:150]}</image:caption>
+        </image:image>'''
+        elif hasattr(tool, 'local_logo_path') and tool.local_logo_path:
+            sitemap_entry += f'''
+        <image:image>
+            <image:loc>{base_url}/api/uploads/logos/{tool.local_logo_path}</image:loc>
+            <image:title>{tool.name} Logo</image:title>
+            <image:caption>Logo for {tool.name} - {(tool.short_description or tool.description or "")[:150]}</image:caption>
+        </image:image>'''
+        
+        sitemap_entry += '''
     </url>'''
+        sitemap_content += sitemap_entry
     
     # Add categories
     for category in categories:
