@@ -139,7 +139,7 @@ export const useToolSEO = (tool) => {
         image: tool.screenshot_url || tool.logo_url || '',
         type: 'product',
         product: true,
-        jsonLd: tool.json_ld || generateProductSchema(tool),
+        jsonLd: (tool.json_ld && Object.keys(tool.json_ld).length > 0) ? tool.json_ld : generateProductSchema(tool),
         categories: Array.isArray(tool.categories) ? tool.categories : [],
         features: Array.isArray(tool.features) ? tool.features : [],
         rating: tool.rating,
