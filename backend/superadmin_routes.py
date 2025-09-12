@@ -482,6 +482,78 @@ async def delete_tool(
     
     return {"message": "Tool deleted successfully"}
 
+@router.post("/api/superadmin/tools/upload-logo")
+async def upload_tool_logo(
+    file: UploadFile = File(...),
+    tool_name: str = None,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Upload logo for a tool"""
+    
+    if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg')):
+        raise HTTPException(status_code=400, detail="File must be an image (PNG, JPG, JPEG, GIF, SVG)")
+    
+    if not tool_name:
+        raise HTTPException(status_code=400, detail="Tool name is required")
+    
+    # Create safe filename based on tool name
+    safe_filename = f"{tool_name.lower().replace(' ', '-').replace('/', '-')}.png"
+    logo_path = f"/app/backend/uploads/logos/{safe_filename}"
+    
+    try:
+        # Save the uploaded file
+        with open(logo_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        return {
+            "message": "Logo uploaded successfully",
+            "filename": safe_filename,
+            "path": logo_path
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save logo: {str(e)}")
+
+@router.post("/api/superadmin/tools/bulk-upload-logos")
+async def bulk_upload_logos(
+    files: List[UploadFile] = File(...),
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Bulk upload logos for tools"""
+    
+    uploaded_files = []
+    errors = []
+    
+    for file in files:
+        try:
+            if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg')):
+                errors.append(f"{file.filename}: Invalid file type. Must be an image.")
+                continue
+            
+            # Use the original filename or generate a safe one
+            safe_filename = file.filename.lower().replace(' ', '-').replace('/', '-')
+            logo_path = f"/app/backend/uploads/logos/{safe_filename}"
+            
+            # Save the uploaded file
+            with open(logo_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            
+            uploaded_files.append({
+                "filename": safe_filename,
+                "path": logo_path
+            })
+            
+        except Exception as e:
+            errors.append(f"{file.filename}: {str(e)}")
+    
+    return {
+        "message": f"Bulk logo upload completed. {len(uploaded_files)} files uploaded.",
+        "uploaded_files": uploaded_files,
+        "errors": errors
+    }
+
 # Bulk Operations
 @router.post("/api/superadmin/tools/bulk-upload")
 async def bulk_upload_tools(
