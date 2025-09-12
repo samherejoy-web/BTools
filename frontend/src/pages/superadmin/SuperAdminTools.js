@@ -473,6 +473,100 @@ const SuperAdminTools = () => {
     );
   };
 
+  const BulkLogoUploadModal = ({ onClose, onUpload }) => {
+    const [files, setFiles] = useState([]);
+    const [dragActive, setDragActive] = useState(false);
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (files && files.length > 0) {
+        onUpload(files);
+      }
+    };
+
+    const handleDrag = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.type === "dragenter" || e.type === "dragover") {
+        setDragActive(true);
+      } else if (e.type === "dragleave") {
+        setDragActive(false);
+      }
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        setFiles(Array.from(e.dataTransfer.files));
+      }
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl p-6 w-full max-w-lg">
+          <h2 className="text-xl font-bold mb-4">Bulk Upload Logos</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Logo Files</label>
+              <div
+                className={`w-full px-4 py-8 border-2 border-dashed rounded-lg text-center transition-colors ${
+                  dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.gif,.svg"
+                  multiple
+                  onChange={(e) => setFiles(Array.from(e.target.files))}
+                  className="hidden"
+                  id="logo-upload"
+                />
+                <label htmlFor="logo-upload" className="cursor-pointer">
+                  <Image className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600">Click to select or drag & drop logo files</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Supports PNG, JPG, JPEG, GIF, SVG formats
+                  </p>
+                </label>
+              </div>
+              {files.length > 0 && (
+                <div className="mt-2">
+                  <p className="text-sm font-medium text-gray-700">Selected files:</p>
+                  <ul className="text-xs text-gray-600 mt-1 max-h-20 overflow-y-auto">
+                    {files.map((file, index) => (
+                      <li key={index} className="truncate">• {file.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="bg-blue-50 p-3 rounded-lg">
+              <h4 className="font-medium text-sm text-gray-900 mb-1">File Naming Convention:</h4>
+              <p className="text-xs text-gray-600">
+                Name your logo files as <code className="bg-white px-1 rounded">company-name.png</code> 
+                (e.g., notion.png, slack.png) for automatic matching with tools.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button type="submit" className="flex-1" disabled={files.length === 0}>
+                Upload {files.length} Logo{files.length !== 1 ? 's' : ''}
+              </Button>
+              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="p-6 max-w-7xl mx-auto">
