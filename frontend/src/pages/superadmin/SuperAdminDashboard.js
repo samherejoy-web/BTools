@@ -25,6 +25,7 @@ import apiClient from '../../utils/apiClient';
 import { formatNumber, formatDate } from '../../utils/formatters';
 
 const SuperAdminDashboard = () => {
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState('30');
