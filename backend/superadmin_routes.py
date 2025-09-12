@@ -569,3 +569,482 @@ async def download_csv_template(
         "template": template_data,
         "headers": list(template_data[0].keys())
     }
+
+# Super Admin SEO Management Features
+class SeoIssueAnalysis(BaseModel):
+    page_id: str
+    page_type: str  # 'tool', 'blog', 'page'
+    page_path: str
+    title: str
+    issues: List[str]
+    severity: str  # 'low', 'medium', 'high', 'critical'
+    recommendations: List[str]
+
+class BulkSeoUpdate(BaseModel):
+    target_type: str  # 'tools', 'blogs', 'pages'
+    target_ids: List[str]
+    seo_data: Dict[str, Any]
+
+@router.get("/api/superadmin/seo/overview")
+async def get_seo_overview(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Get comprehensive SEO overview for Super Admin"""
+    
+    # Get tools SEO status
+    tools = db.query(Tool).all()
+    tools_with_seo = sum(1 for tool in tools if tool.seo_title and tool.seo_description)
+    tools_missing_seo = len(tools) - tools_with_seo
+    
+    # Get blogs SEO status
+    blogs = db.query(Blog).all()
+    blogs_with_seo = sum(1 for blog in blogs if blog.seo_title and blog.seo_description)
+    blogs_missing_seo = len(blogs) - blogs_with_seo
+    
+    # Get SEO pages
+    seo_pages = db.query(SeoPage).all()
+    seo_pages_count = len(seo_pages)
+    
+    # Calculate SEO health score
+    total_items = len(tools) + len(blogs) + seo_pages_count
+    items_with_seo = tools_with_seo + blogs_with_seo + seo_pages_count
+    seo_health_score = (items_with_seo / total_items * 100) if total_items > 0 else 0
+    
+    return {
+        "overview": {
+            "total_pages": total_items,
+            "seo_optimized": items_with_seo,
+            "seo_health_score": round(seo_health_score, 2),
+            "critical_issues": tools_missing_seo + blogs_missing_seo
+        },
+        "tools": {
+            "total": len(tools),
+            "with_seo": tools_with_seo,
+            "missing_seo": tools_missing_seo,
+            "completion_rate": round((tools_with_seo / len(tools) * 100) if tools else 0, 2)
+        },
+        "blogs": {
+            "total": len(blogs),
+            "with_seo": blogs_with_seo,
+            "missing_seo": blogs_missing_seo,
+            "completion_rate": round((blogs_with_seo / len(blogs) * 100) if blogs else 0, 2)
+        },
+        "seo_pages": {
+            "total": seo_pages_count,
+            "with_json_ld": sum(1 for page in seo_pages if page.json_ld),
+            "with_meta_tags": sum(1 for page in seo_pages if page.meta_tags)
+        }
+    }
+
+@router.get("/api/superadmin/seo/issues")
+async def analyze_seo_issues(
+    page_type: Optional[str] = Query(None, description="Filter by page type: tools, blogs, pages"),
+    severity: Optional[str] = Query(None, description="Filter by severity: low, medium, high, critical"),
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Analyze and return SEO issues across the platform"""
+    
+    issues = []
+    
+    # Analyze Tools SEO issues
+    if not page_type or page_type == "tools":
+        tools = db.query(Tool).all()
+        for tool in tools:
+            tool_issues = []
+            tool_recommendations = []
+            issue_severity = "low"
+            
+            # Check for missing SEO title
+            if not tool.seo_title:
+                tool_issues.append("Missing SEO title")
+                tool_recommendations.append("Add a compelling SEO title (50-60 characters)")
+                issue_severity = "high"
+            elif len(tool.seo_title) > 60:
+                tool_issues.append("SEO title too long")
+                tool_recommendations.append("Shorten SEO title to under 60 characters")
+                issue_severity = "medium"
+            
+            # Check for missing SEO description
+            if not tool.seo_description:
+                tool_issues.append("Missing SEO description")
+                tool_recommendations.append("Add SEO description (150-160 characters)")
+                issue_severity = "high"
+            elif len(tool.seo_description) > 160:
+                tool_issues.append("SEO description too long")
+                tool_recommendations.append("Shorten SEO description to under 160 characters")
+                issue_severity = "medium"
+            
+            # Check for missing keywords
+            if not tool.seo_keywords:
+                tool_issues.append("Missing SEO keywords")
+                tool_recommendations.append("Add relevant keywords for better search visibility")
+                if issue_severity == "low":
+                    issue_severity = "medium"
+            
+            # Check for missing JSON-LD
+            if not tool.json_ld:
+                tool_issues.append("Missing structured data (JSON-LD)")
+                tool_recommendations.append("Add Product schema for better search appearance")
+                if issue_severity == "low":
+                    issue_severity = "medium"
+            
+            # Only add if there are issues
+            if tool_issues:
+                issues.append({
+                    "page_id": tool.id,
+                    "page_type": "tool",
+                    "page_path": f"/tools/{tool.slug}",
+                    "title": tool.name,
+                    "issues": tool_issues,
+                    "severity": issue_severity,
+                    "recommendations": tool_recommendations
+                })
+    
+    # Analyze Blogs SEO issues
+    if not page_type or page_type == "blogs":
+        blogs = db.query(Blog).all()
+        for blog in blogs:
+            blog_issues = []
+            blog_recommendations = []
+            issue_severity = "low"
+            
+            # Check for missing SEO title
+            if not blog.seo_title:
+                blog_issues.append("Missing SEO title")
+                blog_recommendations.append("Add a compelling SEO title (50-60 characters)")
+                issue_severity = "high"
+            elif len(blog.seo_title) > 60:
+                blog_issues.append("SEO title too long")
+                blog_recommendations.append("Shorten SEO title to under 60 characters")
+                issue_severity = "medium"
+            
+            # Check for missing SEO description
+            if not blog.seo_description:
+                blog_issues.append("Missing SEO description")
+                blog_recommendations.append("Add SEO description (150-160 characters)")
+                issue_severity = "high"
+            elif len(blog.seo_description) > 160:
+                blog_issues.append("SEO description too long")
+                blog_recommendations.append("Shorten SEO description to under 160 characters")
+                issue_severity = "medium"
+            
+            # Check for missing keywords
+            if not blog.seo_keywords:
+                blog_issues.append("Missing SEO keywords")
+                blog_recommendations.append("Add relevant keywords for better search visibility")
+                if issue_severity == "low":
+                    issue_severity = "medium"
+            
+            # Check for missing JSON-LD
+            if not blog.json_ld:
+                blog_issues.append("Missing structured data (JSON-LD)")
+                blog_recommendations.append("Add Article schema for better search appearance")
+                if issue_severity == "low":
+                    issue_severity = "medium"
+            
+            # Only add if there are issues
+            if blog_issues:
+                issues.append({
+                    "page_id": blog.id,
+                    "page_type": "blog",
+                    "page_path": f"/blogs/{blog.slug}",
+                    "title": blog.title,
+                    "issues": blog_issues,
+                    "severity": issue_severity,
+                    "recommendations": blog_recommendations
+                })
+    
+    # Filter by severity if specified
+    if severity:
+        issues = [issue for issue in issues if issue["severity"] == severity]
+    
+    # Sort by severity (critical -> high -> medium -> low)
+    severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+    issues.sort(key=lambda x: severity_order.get(x["severity"], 4))
+    
+    return {
+        "total_issues": len(issues),
+        "issues": issues,
+        "summary": {
+            "critical": len([i for i in issues if i["severity"] == "critical"]),
+            "high": len([i for i in issues if i["severity"] == "high"]),
+            "medium": len([i for i in issues if i["severity"] == "medium"]),
+            "low": len([i for i in issues if i["severity"] == "low"])
+        }
+    }
+
+@router.post("/api/superadmin/seo/bulk-update")
+async def bulk_update_seo(
+    bulk_update: BulkSeoUpdate,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Bulk update SEO data for multiple items"""
+    
+    updated_count = 0
+    errors = []
+    
+    try:
+        if bulk_update.target_type == "tools":
+            tools = db.query(Tool).filter(Tool.id.in_(bulk_update.target_ids)).all()
+            for tool in tools:
+                try:
+                    for field, value in bulk_update.seo_data.items():
+                        if hasattr(tool, field):
+                            setattr(tool, field, value)
+                    tool.updated_at = datetime.utcnow()
+                    updated_count += 1
+                except Exception as e:
+                    errors.append(f"Tool {tool.id}: {str(e)}")
+        
+        elif bulk_update.target_type == "blogs":
+            blogs = db.query(Blog).filter(Blog.id.in_(bulk_update.target_ids)).all()
+            for blog in blogs:
+                try:
+                    for field, value in bulk_update.seo_data.items():
+                        if hasattr(blog, field):
+                            setattr(blog, field, value)
+                    blog.updated_at = datetime.utcnow()
+                    updated_count += 1
+                except Exception as e:
+                    errors.append(f"Blog {blog.id}: {str(e)}")
+        
+        elif bulk_update.target_type == "pages":
+            seo_pages = db.query(SeoPage).filter(SeoPage.id.in_(bulk_update.target_ids)).all()
+            for page in seo_pages:
+                try:
+                    for field, value in bulk_update.seo_data.items():
+                        if hasattr(page, field):
+                            setattr(page, field, value)
+                    page.updated_at = datetime.utcnow()
+                    updated_count += 1
+                except Exception as e:
+                    errors.append(f"Page {page.id}: {str(e)}")
+        
+        db.commit()
+        
+        return {
+            "message": f"Successfully updated {updated_count} items",
+            "updated_count": updated_count,
+            "errors": errors
+        }
+    
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Bulk update failed: {str(e)}")
+
+@router.get("/api/superadmin/seo/tools/{tool_id}")
+async def get_tool_seo_details(
+    tool_id: str,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Get detailed SEO information for a specific tool"""
+    
+    tool = db.query(Tool).filter(Tool.id == tool_id).first()
+    if not tool:
+        raise HTTPException(status_code=404, detail="Tool not found")
+    
+    # Calculate SEO score
+    seo_score = 0
+    seo_checks = {
+        "has_seo_title": bool(tool.seo_title),
+        "has_seo_description": bool(tool.seo_description),
+        "has_seo_keywords": bool(tool.seo_keywords),
+        "has_json_ld": bool(tool.json_ld),
+        "title_length_ok": bool(tool.seo_title and 40 <= len(tool.seo_title) <= 60),
+        "description_length_ok": bool(tool.seo_description and 120 <= len(tool.seo_description) <= 160)
+    }
+    
+    seo_score = sum(seo_checks.values()) / len(seo_checks) * 100
+    
+    return {
+        "tool": {
+            "id": tool.id,
+            "name": tool.name,
+            "slug": tool.slug,
+            "url": tool.url,
+            "view_count": tool.view_count,
+            "rating": tool.rating,
+            "review_count": tool.review_count
+        },
+        "seo": {
+            "seo_title": tool.seo_title,
+            "seo_description": tool.seo_description,
+            "seo_keywords": tool.seo_keywords,
+            "json_ld": tool.json_ld
+        },
+        "seo_analysis": {
+            "score": round(seo_score, 2),
+            "checks": seo_checks,
+            "title_length": len(tool.seo_title) if tool.seo_title else 0,
+            "description_length": len(tool.seo_description) if tool.seo_description else 0,
+            "keywords_count": len(tool.seo_keywords.split(',')) if tool.seo_keywords else 0
+        }
+    }
+
+@router.get("/api/superadmin/seo/blogs/{blog_id}")
+async def get_blog_seo_details(
+    blog_id: str,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Get detailed SEO information for a specific blog"""
+    
+    blog = db.query(Blog).options(joinedload(Blog.author)).filter(Blog.id == blog_id).first()
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Calculate SEO score
+    seo_score = 0
+    seo_checks = {
+        "has_seo_title": bool(blog.seo_title),
+        "has_seo_description": bool(blog.seo_description),
+        "has_seo_keywords": bool(blog.seo_keywords),
+        "has_json_ld": bool(blog.json_ld),
+        "title_length_ok": bool(blog.seo_title and 40 <= len(blog.seo_title) <= 60),
+        "description_length_ok": bool(blog.seo_description and 120 <= len(blog.seo_description) <= 160)
+    }
+    
+    seo_score = sum(seo_checks.values()) / len(seo_checks) * 100
+    
+    return {
+        "blog": {
+            "id": blog.id,
+            "title": blog.title,
+            "slug": blog.slug,
+            "status": blog.status,
+            "view_count": blog.view_count,
+            "like_count": blog.like_count,
+            "author_name": blog.author.full_name or blog.author.username,
+            "published_at": blog.published_at,
+            "reading_time": blog.reading_time
+        },
+        "seo": {
+            "seo_title": blog.seo_title,
+            "seo_description": blog.seo_description,
+            "seo_keywords": blog.seo_keywords,
+            "json_ld": blog.json_ld
+        },
+        "seo_analysis": {
+            "score": round(seo_score, 2),
+            "checks": seo_checks,
+            "title_length": len(blog.seo_title) if blog.seo_title else 0,
+            "description_length": len(blog.seo_description) if blog.seo_description else 0,
+            "keywords_count": len(blog.seo_keywords.split(',')) if blog.seo_keywords else 0
+        }
+    }
+
+@router.put("/api/superadmin/seo/tools/{tool_id}")
+async def update_tool_seo(
+    tool_id: str,
+    seo_data: Dict[str, Any],
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Update SEO data for a specific tool"""
+    
+    tool = db.query(Tool).filter(Tool.id == tool_id).first()
+    if not tool:
+        raise HTTPException(status_code=404, detail="Tool not found")
+    
+    # Update SEO fields
+    seo_fields = ['seo_title', 'seo_description', 'seo_keywords', 'json_ld']
+    for field in seo_fields:
+        if field in seo_data:
+            setattr(tool, field, seo_data[field])
+    
+    tool.updated_at = datetime.utcnow()
+    db.commit()
+    
+    return {"message": "Tool SEO updated successfully"}
+
+@router.put("/api/superadmin/seo/blogs/{blog_id}")
+async def update_blog_seo(
+    blog_id: str,
+    seo_data: Dict[str, Any],
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Update SEO data for a specific blog"""
+    
+    blog = db.query(Blog).filter(Blog.id == blog_id).first()
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Update SEO fields
+    seo_fields = ['seo_title', 'seo_description', 'seo_keywords', 'json_ld']
+    for field in seo_fields:
+        if field in seo_data:
+            setattr(blog, field, seo_data[field])
+    
+    blog.updated_at = datetime.utcnow()
+    db.commit()
+    
+    return {"message": "Blog SEO updated successfully"}
+
+@router.post("/api/superadmin/seo/generate-templates")
+async def generate_seo_templates(
+    page_type: str = Query(..., description="Type: tools, blogs"),
+    count: int = Query(10, description="Number of items to generate templates for"),
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Generate SEO templates for items missing SEO data"""
+    
+    updated_count = 0
+    
+    if page_type == "tools":
+        tools = db.query(Tool).filter(
+            or_(Tool.seo_title.is_(None), Tool.seo_description.is_(None))
+        ).limit(count).all()
+        
+        for tool in tools:
+            if not tool.seo_title:
+                tool.seo_title = f"{tool.name} - {tool.short_description or 'Professional Tool'}"
+                if len(tool.seo_title) > 60:
+                    tool.seo_title = tool.seo_title[:57] + "..."
+            
+            if not tool.seo_description:
+                tool.seo_description = f"Discover {tool.name}, a {tool.pricing_type} tool for productivity. {tool.short_description}. Read reviews and compare features."
+                if len(tool.seo_description) > 160:
+                    tool.seo_description = tool.seo_description[:157] + "..."
+            
+            if not tool.seo_keywords:
+                categories = [cat.name.lower() for cat in tool.categories] if tool.categories else []
+                tool.seo_keywords = f"{tool.name.lower()}, {tool.pricing_type} tool, {', '.join(categories)}, productivity, business tools"
+            
+            tool.updated_at = datetime.utcnow()
+            updated_count += 1
+    
+    elif page_type == "blogs":
+        blogs = db.query(Blog).filter(
+            or_(Blog.seo_title.is_(None), Blog.seo_description.is_(None))
+        ).limit(count).all()
+        
+        for blog in blogs:
+            if not blog.seo_title:
+                blog.seo_title = blog.title
+                if len(blog.seo_title) > 60:
+                    blog.seo_title = blog.seo_title[:57] + "..."
+            
+            if not blog.seo_description:
+                blog.seo_description = blog.excerpt or f"Read our comprehensive guide about {blog.title}. Expert insights and practical tips for business productivity."
+                if len(blog.seo_description) > 160:
+                    blog.seo_description = blog.seo_description[:157] + "..."
+            
+            if not blog.seo_keywords:
+                tags = blog.tags if blog.tags else []
+                blog.seo_keywords = f"{blog.title.lower()}, {', '.join(tags)}, business guide, productivity tips"
+            
+            blog.updated_at = datetime.utcnow()
+            updated_count += 1
+    
+    db.commit()
+    
+    return {
+        "message": f"Generated SEO templates for {updated_count} {page_type}",
+        "updated_count": updated_count
+    }
