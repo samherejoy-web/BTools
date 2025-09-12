@@ -90,6 +90,27 @@ class Tool(Base):
     seo_keywords = Column(String)
     json_ld = Column(JSON)
     
+    # New optional fields for enhanced tool information
+    domain_website = Column(String)  # Company domain/website
+    linkedin_url = Column(String)  # LinkedIn profile URL
+    founded_year = Column(Integer)  # Year company was founded
+    about_section = Column(Text)  # Detailed about section
+    founders = Column(JSON)  # List of founders with details
+    latest_news = Column(Text)  # Latest news about the tool/company
+    latest_feeds = Column(JSON)  # Latest feeds/updates
+    job_openings = Column(JSON)  # Current job openings
+    revenue = Column(String)  # Revenue information
+    locations = Column(JSON)  # Company locations
+    company_size = Column(String)  # Number of employees
+    funding_info = Column(JSON)  # Funding rounds and amounts
+    tech_stack = Column(JSON)  # Technologies used
+    integrations = Column(JSON)  # Available integrations
+    languages_supported = Column(JSON)  # Supported languages
+    target_audience = Column(JSON)  # Target user groups
+    use_cases = Column(JSON)  # Common use cases
+    alternatives = Column(JSON)  # Alternative tools
+    local_logo_path = Column(String)  # Path to local logo file
+    
     # Relationships
     categories = relationship("Category", secondary=tool_categories, back_populates="tools")
     reviews = relationship("Review", back_populates="tool")
