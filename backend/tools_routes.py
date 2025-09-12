@@ -69,6 +69,26 @@ def get_tools_routes():
         seo_title: Optional[str] = None
         seo_description: Optional[str] = None
         seo_keywords: Optional[str] = None
+        # New optional fields for enhanced tool information
+        domain_website: Optional[str] = None
+        linkedin_url: Optional[str] = None
+        founded_year: Optional[int] = None
+        about_section: Optional[str] = None
+        founders: Optional[List[Dict[str, Any]]] = None
+        latest_news: Optional[str] = None
+        latest_feeds: Optional[List[Dict[str, Any]]] = None
+        job_openings: Optional[List[Dict[str, Any]]] = None
+        revenue: Optional[str] = None
+        locations: Optional[List[str]] = None
+        company_size: Optional[str] = None
+        funding_info: Optional[List[Dict[str, Any]]] = None
+        tech_stack: Optional[List[str]] = None
+        integrations: Optional[List[str]] = None
+        languages_supported: Optional[List[str]] = None
+        target_audience: Optional[List[str]] = None
+        use_cases: Optional[List[str]] = None
+        alternatives: Optional[List[str]] = None
+        local_logo_path: Optional[str] = None
     
     class ToolResponse(BaseModel):
         id: str
