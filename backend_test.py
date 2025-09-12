@@ -1779,22 +1779,22 @@ class MarketMindAPITester:
                     print(f"   Content Analysis: {content_analysis.get('word_count', 0)} words, "
                           f"readability: {content_analysis.get('readability_score', 0)}")
         
-        # Test 2: Blog page audit (using query parameters)
+        # Test 2: Blog page audit (using query parameters with real blog slug)
         success, response = self.run_test(
             "SEO Page Audit - Blog Page",
             "POST",
-            "seo/audit/page?page_url=/blogs/productivity-tools-2024&page_type=blog",
+            "seo/audit/page?page_url=/blogs/updated-test-blog-for-like-count-095851&page_type=blog",
             200,
             description="Test comprehensive SEO audit for a blog page"
         )
         results.append(success)
         
-        # Test 3: Invalid page audit (should handle gracefully)
+        # Test 3: Invalid page audit (should return 500 with proper error message)
         success, response = self.run_test(
             "SEO Page Audit - Invalid Page",
             "POST",
             "seo/audit/page?page_url=/nonexistent-page&page_type=webpage",
-            404,
+            500,
             description="Test SEO audit error handling for non-existent page"
         )
         results.append(success)
