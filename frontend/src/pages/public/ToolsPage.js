@@ -278,21 +278,63 @@ const ToolsPage = () => {
             {filteredTools.map((tool) => (
               <Card key={tool.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md overflow-hidden">
                 <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg group-hover:text-blue-600 transition-colors mb-2">
-                        {tool.name}
-                      </CardTitle>
-                      <Badge className={`${getPricingBadgeColor(tool.pricing_type)} mb-2`}>
-                        {tool.pricing_type}
-                      </Badge>
-                      {tool.is_featured && (
-                        <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white ml-2">
-                          <Zap className="h-3 w-3 mr-1" />
-                          Featured
-                        </Badge>
+                  <div className="flex items-start gap-3 mb-3">
+                    {/* Tool Logo */}
+                    <div className="flex-shrink-0">
+                      {tool.local_logo_path ? (
+                        <img
+                          src={`${process.env.REACT_APP_BACKEND_URL}/api/uploads/logos/${tool.local_logo_path}`}
+                          alt={`${tool.name} logo`}
+                          className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                          onError={(e) => {
+                            e.target.src = tool.logo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=48`;
+                          }}
+                        />
+                      ) : tool.logo_url ? (
+                        <img
+                          src={tool.logo_url}
+                          alt={`${tool.name} logo`}
+                          className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                          onError={(e) => {
+                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=48`;
+                          }}
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg">
+                          {tool.name.charAt(0).toUpperCase()}
+                        </div>
                       )}
                     </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="text-lg group-hover:text-blue-600 transition-colors mb-2 truncate">
+                        {tool.name}
+                      </CardTitle>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        <Badge className={`${getPricingBadgeColor(tool.pricing_type)}`}>
+                          {tool.pricing_type}
+                        </Badge>
+                        {tool.is_featured && (
+                          <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+                            <Zap className="h-3 w-3 mr-1" />
+                            Featured
+                          </Badge>
+                        )}
+                        {tool.founded_year && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            {tool.founded_year}
+                          </Badge>
+                        )}
+                      </div>
+                      {tool.company_size && (
+                        <div className="text-xs text-gray-500 mb-1">
+                          <Users className="h-3 w-3 inline mr-1" />
+                          {tool.company_size}
+                        </div>
+                      )}
+                    </div>
+                    
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-all">
                       <Heart className="h-4 w-4" />
                     </Button>
