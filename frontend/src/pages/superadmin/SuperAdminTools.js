@@ -730,6 +730,13 @@ const SuperAdminTools = () => {
           onUpload={handleBulkUpload}
         />
       )}
+
+      {showBulkLogoUpload && (
+        <BulkLogoUploadModal
+          onClose={() => setShowBulkLogoUpload(false)}
+          onUpload={handleBulkLogoUpload}
+        />
+      )}
     </div>
   );
 };
