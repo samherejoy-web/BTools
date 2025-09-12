@@ -91,7 +91,7 @@ export const useBlogSEO = (blog) => {
     try {
       const seoData = {
         title: blog.seo_title || blog.title || 'Blog Post',
-        description: blog.seo_description || blog.excerpt || 'Read this insightful blog post.',
+        description: cleanHtmlFromText(blog.seo_description || blog.excerpt) || 'Read this insightful blog post.',
         keywords: blog.seo_keywords || (Array.isArray(blog.tags) ? blog.tags.join(', ') : ''),
         canonical: `/blogs/${blog.slug}`,
         image: blog.featured_image || '',
