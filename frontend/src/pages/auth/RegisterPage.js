@@ -115,7 +115,8 @@ const RegisterPage = () => {
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        full_name: formData.fullName
+        full_name: formData.fullName,
+        verification_method: formData.verificationMethod
       });
       
       if (result.success) {
