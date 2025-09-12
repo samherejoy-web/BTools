@@ -114,9 +114,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const resendVerification = async (email) => {
+  const resendVerification = async (email, method = 'both') => {
     try {
-      const response = await apiClient.post('/auth/resend-verification', { email });
+      const response = await apiClient.post('/auth/resend-verification', { 
+        email, 
+        method 
+      });
       toast.success(response.data.message || 'Verification email sent successfully!');
       return { success: true, message: response.data.message };
     } catch (error) {
