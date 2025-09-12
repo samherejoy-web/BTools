@@ -136,6 +136,26 @@ const SuperAdminTools = () => {
     }
   };
 
+  const handleBulkLogoUpload = async (files) => {
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('files', file);
+      });
+
+      await apiClient.post('/superadmin/tools/bulk-upload-logos', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      toast.success('Logos uploaded successfully');
+      setShowBulkLogoUpload(false);
+      fetchTools();
+    } catch (error) {
+      console.error('Error with bulk logo upload:', error);
+      toast.error('Failed to upload logos');
+    }
+  };
+
   const downloadTemplate = async () => {
     try {
       const response = await apiClient.get('/superadmin/tools/csv-template');
