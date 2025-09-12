@@ -12,8 +12,17 @@ import uuid
 
 class ResendVerificationRequest(BaseModel):
     email: EmailStr
+    method: str = "both"  # "link", "otp", or "both"
+
+class VerifyOTPRequest(BaseModel):
+    email: EmailStr
+    otp_code: str
 
 class VerifyEmailResponse(BaseModel):
+    message: str
+    user_id: str
+
+class VerifyOTPResponse(BaseModel):
     message: str
     user_id: str
 
