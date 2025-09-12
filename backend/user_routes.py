@@ -92,12 +92,20 @@ def get_user_routes():
         db.commit()
         db.refresh(db_user)
         
-        # Send verification email
-        email_sent = send_verification_email(
-            db_user.email, 
-            db_user.username or db_user.full_name or "User", 
-            verification_token
-        )
+        # Send verification email based on method
+        username = db_user.username or db_user.full_name or "User"
+        email_sent = False
+        message = ""
+        
+        if user.verification_method == "link":
+            email_sent = send_verification_email(db_user.email, username, verification_token)
+            message = "Registration successful! Please check your email for the verification link."
+        elif user.verification_method == "otp":
+            email_sent = send_otp_verification_email(db_user.email, username, otp_code)
+            message = "Registration successful! Please check your email for the verification code."
+        else:  # "both"
+            email_sent = send_verification_with_both_options(db_user.email, username, verification_token, otp_code)
+            message = "Registration successful! Please check your email - you can verify using either the link or the code."
         
         if not email_sent:
             # If email fails, remove the user and raise error
@@ -109,9 +117,10 @@ def get_user_routes():
             )
         
         return {
-            "message": "Registration successful! Please check your email to verify your account.",
+            "message": message,
             "email": db_user.email,
-            "verification_required": True
+            "verification_required": True,
+            "verification_method": user.verification_method
         }
     
     @router.post("/api/auth/login", response_model=dict)
