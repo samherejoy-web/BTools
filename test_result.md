@@ -278,7 +278,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "SEO and JSON-LD Comprehensive Testing"
+    - "Super Admin Navigation and Functionality"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
