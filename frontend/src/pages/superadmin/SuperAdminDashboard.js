@@ -355,15 +355,24 @@ const SuperAdminDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <Button className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
+            <Button 
+              className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+              onClick={() => navigate('/superadmin/users')}
+            >
               <Users className="h-5 w-5" />
               Manage Users
             </Button>
-            <Button className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800">
+            <Button 
+              className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+              onClick={() => navigate('/superadmin/tools')}
+            >
               <Settings className="h-5 w-5" />
               Manage Tools
             </Button>
-            <Button className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800">
+            <Button 
+              className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
+              onClick={() => navigate('/superadmin/blogs')}
+            >
               <BookOpen className="h-5 w-5" />
               Manage Blogs
             </Button>
@@ -374,7 +383,10 @@ const SuperAdminDashboard = () => {
               <Globe className="h-5 w-5" />
               SEO Management
             </Button>
-            <Button className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800">
+            <Button 
+              className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800"
+              onClick={() => navigate('/superadmin/categories')}
+            >
               <BarChart3 className="h-5 w-5" />
               View Analytics
             </Button>
