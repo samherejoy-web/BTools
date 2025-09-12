@@ -503,6 +503,177 @@ const ToolDetailPage = () => {
                 </Card>
               </TabsContent>
 
+              <TabsContent value="company" className="space-y-6">
+                {/* About Section */}
+                {tool.about_section && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>About the Company</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-700 leading-relaxed">{tool.about_section}</p>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Company Details */}
+                <Card className="border-0 shadow-sm">
+                  <CardHeader>
+                    <CardTitle>Company Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {tool.founded_year && (
+                        <div className="flex items-center gap-3">
+                          <Calendar className="h-5 w-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium text-gray-900">Founded</p>
+                            <p className="text-gray-600">{tool.founded_year}</p>
+                          </div>
+                        </div>
+                      )}
+                      {tool.company_size && (
+                        <div className="flex items-center gap-3">
+                          <Users className="h-5 w-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium text-gray-900">Company Size</p>
+                            <p className="text-gray-600">{tool.company_size}</p>
+                          </div>
+                        </div>
+                      )}
+                      {tool.revenue && (
+                        <div className="flex items-center gap-3">
+                          <DollarSign className="h-5 w-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium text-gray-900">Revenue</p>
+                            <p className="text-gray-600">{tool.revenue}</p>
+                          </div>
+                        </div>
+                      )}
+                      {tool.linkedin_url && (
+                        <div className="flex items-center gap-3">
+                          <ExternalLink className="h-5 w-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium text-gray-900">LinkedIn</p>
+                            <a 
+                              href={tool.linkedin_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              View Profile
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Founders */}
+                {tool.founders && tool.founders.length > 0 && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Founders</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2">
+                        {tool.founders.map((founder, index) => (
+                          <Badge key={index} variant="secondary" className="px-3 py-1">
+                            {founder}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Locations */}
+                {tool.locations && tool.locations.length > 0 && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Locations</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2">
+                        {tool.locations.map((location, index) => (
+                          <Badge key={index} variant="outline" className="px-3 py-1">
+                            📍 {location}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Tech Stack */}
+                {tool.tech_stack && tool.tech_stack.length > 0 && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Technology Stack</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2">
+                        {tool.tech_stack.map((tech, index) => (
+                          <Badge key={index} variant="secondary" className="px-3 py-1">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Integrations */}
+                {tool.integrations && tool.integrations.length > 0 && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Integrations</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {tool.integrations.map((integration, index) => (
+                          <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                            <span className="text-gray-700">{integration}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Latest News */}
+                {tool.latest_news && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Latest News</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-700 leading-relaxed">{tool.latest_news}</p>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Job Openings */}
+                {tool.job_openings && tool.job_openings.length > 0 && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Current Job Openings</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {tool.job_openings.map((job, index) => (
+                          <div key={index} className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span className="text-gray-800 font-medium">{job}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+
               <TabsContent value="reviews" className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold">Reviews & Ratings</h3>
