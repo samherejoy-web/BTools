@@ -108,9 +108,10 @@ const SEOHead = React.memo(({
       
       {/* Structured Data */}
       {generateJsonLd() && (
-        <script type="application/ld+json">
-          {JSON.stringify(generateJsonLd())}
-        </script>
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateJsonLd()) }}
+        />
       )}
     </Helmet>
   );
