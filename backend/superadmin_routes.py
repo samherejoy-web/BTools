@@ -65,6 +65,26 @@ class ToolCreate(BaseModel):
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
     json_ld: Optional[Dict[str, Any]] = None
+    # New optional fields for enhanced tool information
+    domain_website: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    founded_year: Optional[int] = None
+    about_section: Optional[str] = None
+    founders: Optional[List[Dict[str, Any]]] = []
+    latest_news: Optional[str] = None
+    latest_feeds: Optional[List[Dict[str, Any]]] = []
+    job_openings: Optional[List[Dict[str, Any]]] = []
+    revenue: Optional[str] = None
+    locations: Optional[List[str]] = []
+    company_size: Optional[str] = None
+    funding_info: Optional[List[Dict[str, Any]]] = []
+    tech_stack: Optional[List[str]] = []
+    integrations: Optional[List[str]] = []
+    languages_supported: Optional[List[str]] = []
+    target_audience: Optional[List[str]] = []
+    use_cases: Optional[List[str]] = []
+    alternatives: Optional[List[str]] = []
+    local_logo_path: Optional[str] = None
 
 class ToolUpdate(BaseModel):
     name: Optional[str] = None
