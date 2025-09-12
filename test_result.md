@@ -266,7 +266,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "SEO API - Admin SEO Pages"
+    - "SEO and JSON-LD Comprehensive Testing"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
