@@ -10,6 +10,7 @@ const EmailVerificationPendingPage = () => {
   const [resendCount, setResendCount] = useState(0);
   const { resendVerification } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Get email from location state (passed from registration)
   const email = location.state?.email || '';
