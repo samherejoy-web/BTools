@@ -105,6 +105,14 @@ const EmailVerificationPendingPage = () => {
                 Open Gmail
               </Button>
               
+              <Button
+                onClick={() => navigate('/verify-otp', { state: { email } })}
+                variant="outline"
+                className="w-full"
+              >
+                Enter Verification Code Instead
+              </Button>
+              
               <div className="flex space-x-3">
                 <Button
                   onClick={() => window.open('https://outlook.live.com', '_blank')}
