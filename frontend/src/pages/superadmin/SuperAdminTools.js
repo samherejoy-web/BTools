@@ -506,7 +506,15 @@ const SuperAdminTools = () => {
             className="flex items-center gap-2"
           >
             <Upload className="h-4 w-4" />
-            Bulk Upload
+            Bulk Upload CSV
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => setShowBulkLogoUpload(true)}
+            className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100"
+          >
+            <Image className="h-4 w-4" />
+            Upload Logos
           </Button>
           <Button variant="outline" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
