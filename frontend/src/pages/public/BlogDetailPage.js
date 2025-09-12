@@ -45,8 +45,20 @@ const BlogDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
-  // Generate SEO data for the blog - only when blog data is loaded
-  const seoData = useBlogSEO(blog);
+  // Generate SEO data for the blog with advanced features
+  const seoData = useSEO({
+    title: blog?.seo_title || blog?.title || '',
+    description: blog?.seo_description || blog?.excerpt || '',
+    keywords: blog?.seo_keywords || '',
+    image: blog?.featured_image || '',
+    type: 'article',
+    data: {
+      content: blog?.content || '',
+      ...blog
+    },
+    enableAnalytics: true,
+    autoOptimize: true
+  });
 
   useEffect(() => {
     if (blogSlug) {
