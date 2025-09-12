@@ -4,7 +4,10 @@ from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from database import get_db
 from models import User
-from email_service import generate_verification_token, get_verification_expiry, send_verification_email
+from email_service import (
+    generate_verification_token, get_verification_expiry, send_verification_email,
+    generate_otp_code, get_otp_expiry, send_otp_verification_email, send_verification_with_both_options
+)
 import uuid
 
 class ResendVerificationRequest(BaseModel):
