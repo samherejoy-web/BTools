@@ -44,6 +44,9 @@ def get_user_routes():
     
     @router.post("/api/auth/register", response_model=dict)
     async def register(user: UserCreate, db: Session = Depends(get_db)):
+        # Import email service functions
+        from email_service import generate_verification_token, get_verification_expiry, send_verification_email
+        
         # Check if user already exists
         existing_user = db.query(User).filter(
             (User.email == user.email) | (User.username == user.username)
@@ -55,7 +58,10 @@ def get_user_routes():
                 detail="Email or username already registered"
             )
         
-        # Create new user
+        # Generate verification token
+        verification_token = generate_verification_token()
+        
+        # Create new user (not verified initially)
         hashed_password = get_password_hash(user.password)
         db_user = User(
             id=str(uuid.uuid4()),
@@ -63,30 +69,36 @@ def get_user_routes():
             username=user.username,
             hashed_password=hashed_password,
             full_name=user.full_name,
-            role="user"
+            role="user",
+            is_email_verified=False,
+            email_verification_token=verification_token,
+            email_verification_expires=get_verification_expiry()
         )
         
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
         
-        # Create access token
-        access_token = create_access_token(data={"sub": db_user.email})
+        # Send verification email
+        email_sent = send_verification_email(
+            db_user.email, 
+            db_user.username or db_user.full_name or "User", 
+            verification_token
+        )
+        
+        if not email_sent:
+            # If email fails, remove the user and raise error
+            db.delete(db_user)
+            db.commit()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send verification email. Please try again."
+            )
         
         return {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "user": UserResponse(
-                id=db_user.id,
-                email=db_user.email,
-                username=db_user.username,
-                full_name=db_user.full_name,
-                role=db_user.role,
-                is_active=db_user.is_active,
-                created_at=db_user.created_at,
-                profile_image=db_user.profile_image,
-                bio=db_user.bio
-            )
+            "message": "Registration successful! Please check your email to verify your account.",
+            "email": db_user.email,
+            "verification_required": True
         }
     
     @router.post("/api/auth/login", response_model=dict)
