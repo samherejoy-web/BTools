@@ -54,6 +54,14 @@ def get_verification_expiry() -> datetime:
     """Get verification expiry time (1 hour from now)"""
     return datetime.utcnow() + timedelta(hours=1)
 
+def generate_otp_code() -> str:
+    """Generate a 6-digit OTP code"""
+    return str(random.randint(100000, 999999))
+
+def get_otp_expiry() -> datetime:
+    """Get OTP expiry time (10 minutes from now)"""
+    return datetime.utcnow() + timedelta(minutes=10)
+
 def send_verification_email(to_email: str, username: str, verification_token: str) -> bool:
     """Send email verification email"""
     verification_url = f"{FRONTEND_URL}/verify-email?token={verification_token}"
