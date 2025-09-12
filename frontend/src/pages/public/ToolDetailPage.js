@@ -24,7 +24,7 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { CommentsSection } from '../../components/ui/comments';
-import SEOHead from '../../components/SEO/SEOHead';
+import SEOHead from '../../components/SEO/SEOHeadDebug';
 import { useToolSEO } from '../../hooks/useSEO';
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
