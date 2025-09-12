@@ -113,17 +113,50 @@ async def get_sitemap(db: Session = Depends(get_db)):
         <priority>{priority}</priority>
     </url>'''
     
-    # Add blogs
+    # Add blogs with dynamic priority and enhanced metadata
     for blog in blogs:
         last_mod = (blog.updated_at.strftime('%Y-%m-%d') if blog.updated_at 
                    else blog.created_at.strftime('%Y-%m-%d'))
-        sitemap_content += f'''
+        
+        # Calculate dynamic priority based on engagement
+        engagement_metrics = {
+            'views': getattr(blog, 'view_count', 0),
+            'likes': getattr(blog, 'like_count', 0),
+            'rating': getattr(blog, 'rating', 0),
+            'reviews': 0  # Blog comments/reviews if available
+        }
+        priority = calculate_content_priority('blog', engagement_metrics)
+        
+        # Determine change frequency based on recency
+        created_date = blog.created_at
+        days_old = (datetime.now() - created_date).days if created_date else 0
+        
+        if days_old < 7:
+            changefreq = 'daily'
+        elif days_old < 30:
+            changefreq = 'weekly'
+        else:
+            changefreq = 'monthly'
+        
+        sitemap_entry = f'''
     <url>
         <loc>{base_url}/blogs/{blog.slug}</loc>
         <lastmod>{last_mod}</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <changefreq>{changefreq}</changefreq>
+        <priority>{priority}</priority>'''
+        
+        # Add image if available
+        if hasattr(blog, 'featured_image') and blog.featured_image:
+            sitemap_entry += f'''
+        <image:image>
+            <image:loc>{blog.featured_image}</image:loc>
+            <image:title>{blog.title[:100]}</image:title>
+            <image:caption>{(blog.excerpt or blog.seo_description or "")[:200]}</image:caption>
+        </image:image>'''
+        
+        sitemap_entry += '''
     </url>'''
+        sitemap_content += sitemap_entry
     
     # Add tools
     for tool in tools:
