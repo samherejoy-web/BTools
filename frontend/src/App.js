@@ -40,6 +40,7 @@ import SuperAdminUsers from './pages/superadmin/SuperAdminUsers';
 import SuperAdminTools from './pages/superadmin/SuperAdminTools';
 import SuperAdminCategories from './pages/superadmin/SuperAdminCategories';
 import SuperAdminBlogs from './pages/superadmin/SuperAdminBlogs';
+import SuperAdminSEO from './pages/superadmin/SuperAdminSEO';
 
 import './App.css';
 
