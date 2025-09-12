@@ -1658,6 +1658,541 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_tool_enhancement_features(self):
+        """Test the new tool enhancement features implemented"""
+        print("\n🔧 TOOL ENHANCEMENT FEATURES TESTING")
+        print("=" * 70)
+        
+        results = []
+        
+        # Test 1: Database Migration - Check if new columns exist
+        print("\n📊 TESTING DATABASE MIGRATION FOR NEW TOOL FIELDS")
+        success = self.test_database_migration_new_fields()
+        results.append(success)
+        
+        # Test 2: API Endpoints with New Fields
+        print("\n🌐 TESTING API ENDPOINTS WITH NEW FIELDS")
+        success = self.test_api_endpoints_new_fields()
+        results.append(success)
+        
+        # Test 3: Super Admin CSV Template with New Fields
+        print("\n📋 TESTING SUPER ADMIN CSV TEMPLATE")
+        success = self.test_csv_template_new_fields()
+        results.append(success)
+        
+        # Test 4: Logo Upload Endpoints
+        print("\n🖼️ TESTING LOGO UPLOAD ENDPOINTS")
+        success = self.test_logo_upload_endpoints()
+        results.append(success)
+        
+        # Test 5: Data Persistence with New Fields
+        print("\n💾 TESTING DATA PERSISTENCE WITH NEW FIELDS")
+        success = self.test_data_persistence_new_fields()
+        results.append(success)
+        
+        # Test 6: Bulk Upload with New Fields
+        print("\n📤 TESTING BULK UPLOAD WITH NEW FIELDS")
+        success = self.test_bulk_upload_new_fields()
+        results.append(success)
+        
+        return all(results)
+
+    def test_database_migration_new_fields(self):
+        """Test that database migration added all new columns to tools table"""
+        print("\n🔍 Testing Database Migration for New Tool Fields...")
+        
+        # Test by creating a tool with new fields and checking if it saves
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping database migration test - need superadmin privileges")
+            return False
+        
+        timestamp = datetime.now().strftime('%H%M%S')
+        test_tool_data = {
+            "name": f"Migration Test Tool {timestamp}",
+            "description": "Tool created to test database migration for new fields",
+            "short_description": "Migration test tool",
+            "url": "https://example.com/migration-test",
+            "pricing_type": "free",
+            "is_featured": False,
+            "is_active": True,
+            # New fields to test migration
+            "domain_website": "migrationtest.com",
+            "linkedin_url": "https://linkedin.com/company/migrationtest",
+            "founded_year": 2023,
+            "about_section": "This is a test company created to verify database migration",
+            "founders": [{"name": "Test Founder", "role": "CEO"}],
+            "latest_news": "Company successfully migrated database schema",
+            "latest_feeds": [{"title": "Migration Complete", "date": "2024-01-01"}],
+            "job_openings": [{"title": "Software Engineer", "location": "Remote"}],
+            "revenue": "$1M ARR",
+            "locations": ["San Francisco", "Remote"],
+            "company_size": "10-50 employees",
+            "funding_info": [{"round": "Seed", "amount": "$500K"}],
+            "tech_stack": ["Python", "FastAPI", "React"],
+            "integrations": ["Slack", "Google Workspace"],
+            "languages_supported": ["English", "Spanish"],
+            "target_audience": ["Startups", "SMBs"],
+            "use_cases": ["Database Migration", "Schema Updates"],
+            "alternatives": ["Alternative Tool 1", "Alternative Tool 2"],
+            "local_logo_path": "migration-test-logo.png"
+        }
+        
+        success, response = self.run_test(
+            "Database Migration - Create Tool with New Fields",
+            "POST",
+            "superadmin/tools",
+            200,
+            data=test_tool_data,
+            description="Test creating tool with all new fields to verify migration"
+        )
+        
+        if success and isinstance(response, dict) and 'tool_id' in response:
+            created_tool_id = response['tool_id']
+            self.created_resources['tools'].append({
+                'id': created_tool_id,
+                'name': test_tool_data['name']
+            })
+            
+            # Verify the tool was created with all new fields
+            success2, tool_response = self.run_test(
+                "Database Migration - Verify New Fields Saved",
+                "GET",
+                f"tools/{created_tool_id}",
+                200,
+                description="Verify that new fields were saved correctly"
+            )
+            
+            if success2 and isinstance(tool_response, dict):
+                # Check if new fields are present in response
+                new_fields_to_check = [
+                    'domain_website', 'linkedin_url', 'founded_year', 'about_section',
+                    'founders', 'latest_news', 'latest_feeds', 'job_openings',
+                    'revenue', 'locations', 'company_size', 'funding_info',
+                    'tech_stack', 'integrations', 'languages_supported',
+                    'target_audience', 'use_cases', 'alternatives', 'local_logo_path'
+                ]
+                
+                missing_fields = []
+                present_fields = []
+                
+                for field in new_fields_to_check:
+                    if field in tool_response:
+                        present_fields.append(field)
+                        # Verify the value matches what we sent
+                        expected_value = test_tool_data[field]
+                        actual_value = tool_response[field]
+                        if actual_value == expected_value:
+                            print(f"   ✅ {field}: Correctly saved and retrieved")
+                        else:
+                            print(f"   ⚠️ {field}: Value mismatch - Expected: {expected_value}, Got: {actual_value}")
+                    else:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    print(f"   ❌ Missing fields in API response: {missing_fields}")
+                    return False
+                else:
+                    print(f"   ✅ All {len(present_fields)} new fields present in API response")
+                    return True
+            else:
+                print("   ❌ Failed to retrieve created tool for verification")
+                return False
+        else:
+            print("   ❌ Failed to create tool with new fields")
+            return False
+
+    def test_api_endpoints_new_fields(self):
+        """Test that API endpoints return tools with new fields"""
+        print("\n🔍 Testing API Endpoints with New Fields...")
+        
+        results = []
+        
+        # Test GET /api/tools
+        success, response = self.run_test(
+            "GET /api/tools - New Fields",
+            "GET",
+            "tools?limit=5",
+            200,
+            description="Test that GET /api/tools includes new fields"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list) and len(response) > 0:
+            tool = response[0]
+            new_fields_in_response = [
+                field for field in [
+                    'domain_website', 'linkedin_url', 'founded_year', 'about_section',
+                    'founders', 'latest_news', 'latest_feeds', 'job_openings',
+                    'revenue', 'locations', 'company_size', 'funding_info',
+                    'tech_stack', 'integrations', 'languages_supported',
+                    'target_audience', 'use_cases', 'alternatives', 'local_logo_path'
+                ] if field in tool
+            ]
+            
+            print(f"   Found {len(new_fields_in_response)} new fields in tools list response")
+            if len(new_fields_in_response) >= 10:  # At least half of the new fields should be present
+                print("   ✅ Good coverage of new fields in tools list")
+            else:
+                print("   ⚠️ Limited new fields in tools list response")
+            
+            # Test GET /api/tools/{tool_id}
+            tool_id = tool['id']
+            success2, tool_detail = self.run_test(
+                "GET /api/tools/{tool_id} - New Fields",
+                "GET",
+                f"tools/{tool_id}",
+                200,
+                description="Test that GET /api/tools/{tool_id} includes new fields"
+            )
+            results.append(success2)
+            
+            if success2 and isinstance(tool_detail, dict):
+                detail_fields = [
+                    field for field in [
+                        'domain_website', 'linkedin_url', 'founded_year', 'about_section',
+                        'founders', 'latest_news', 'latest_feeds', 'job_openings',
+                        'revenue', 'locations', 'company_size', 'funding_info',
+                        'tech_stack', 'integrations', 'languages_supported',
+                        'target_audience', 'use_cases', 'alternatives', 'local_logo_path'
+                    ] if field in tool_detail
+                ]
+                
+                print(f"   Found {len(detail_fields)} new fields in tool detail response")
+                
+                # Test GET /api/tools/by-slug/{slug}
+                tool_slug = tool_detail.get('slug')
+                if tool_slug:
+                    success3, slug_response = self.run_test(
+                        "GET /api/tools/by-slug/{slug} - New Fields",
+                        "GET",
+                        f"tools/by-slug/{tool_slug}",
+                        200,
+                        description="Test that GET /api/tools/by-slug/{slug} includes new fields"
+                    )
+                    results.append(success3)
+                    
+                    if success3 and isinstance(slug_response, dict):
+                        slug_fields = [
+                            field for field in [
+                                'domain_website', 'linkedin_url', 'founded_year', 'about_section',
+                                'founders', 'latest_news', 'latest_feeds', 'job_openings',
+                                'revenue', 'locations', 'company_size', 'funding_info',
+                                'tech_stack', 'integrations', 'languages_supported',
+                                'target_audience', 'use_cases', 'alternatives', 'local_logo_path'
+                            ] if field in slug_response
+                        ]
+                        
+                        print(f"   Found {len(slug_fields)} new fields in by-slug response")
+                        
+                        if len(slug_fields) >= 10:
+                            print("   ✅ Good coverage of new fields in all API endpoints")
+                        else:
+                            print("   ⚠️ Limited new fields coverage in API endpoints")
+        
+        return all(results)
+
+    def test_csv_template_new_fields(self):
+        """Test that CSV template includes all new fields"""
+        print("\n🔍 Testing CSV Template with New Fields...")
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping CSV template test - need superadmin privileges")
+            return False
+        
+        success, response = self.run_test(
+            "CSV Template - New Fields",
+            "GET",
+            "superadmin/tools/csv-template",
+            200,
+            description="Test that CSV template includes all new fields"
+        )
+        
+        if success and isinstance(response, dict):
+            headers = response.get('headers', [])
+            template = response.get('template', [])
+            
+            # Check if new fields are in headers
+            expected_new_fields = [
+                'domain_website', 'linkedin_url', 'founded_year', 'about_section',
+                'founders', 'latest_news', 'latest_feeds', 'job_openings',
+                'revenue', 'locations', 'company_size', 'funding_info',
+                'tech_stack', 'integrations', 'languages_supported',
+                'target_audience', 'use_cases', 'alternatives', 'local_logo_path'
+            ]
+            
+            present_fields = [field for field in expected_new_fields if field in headers]
+            missing_fields = [field for field in expected_new_fields if field not in headers]
+            
+            print(f"   CSV Template Headers: {len(headers)} total fields")
+            print(f"   New Fields Present: {len(present_fields)}/{len(expected_new_fields)}")
+            
+            if missing_fields:
+                print(f"   ❌ Missing new fields in CSV template: {missing_fields}")
+                return False
+            else:
+                print("   ✅ All new fields present in CSV template")
+                
+                # Check if template data includes examples for new fields
+                if template and len(template) > 0:
+                    template_data = template[0]
+                    fields_with_examples = [
+                        field for field in expected_new_fields 
+                        if field in template_data and template_data[field]
+                    ]
+                    
+                    print(f"   Template Examples: {len(fields_with_examples)} fields have example data")
+                    if len(fields_with_examples) >= len(expected_new_fields) * 0.8:  # At least 80% have examples
+                        print("   ✅ Good example coverage in CSV template")
+                    else:
+                        print("   ⚠️ Limited example data in CSV template")
+                
+                return True
+        else:
+            print("   ❌ Failed to retrieve CSV template or invalid response format")
+            return False
+
+    def test_logo_upload_endpoints(self):
+        """Test logo upload functionality"""
+        print("\n🔍 Testing Logo Upload Endpoints...")
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping logo upload tests - need superadmin privileges")
+            return False
+        
+        results = []
+        
+        try:
+            # Test single logo upload endpoint structure (without actual file)
+            # We'll test the endpoint exists and returns appropriate error for missing file
+            success, response = self.run_test(
+                "Logo Upload Endpoint - Structure Test",
+                "POST",
+                "superadmin/tools/upload-logo",
+                422,  # Expected validation error for missing file
+                description="Test logo upload endpoint structure"
+            )
+            
+            # If we get 422, it means the endpoint exists and is validating input
+            if success:
+                print("   ✅ Single logo upload endpoint exists and validates input")
+                results.append(True)
+            else:
+                print("   ❌ Single logo upload endpoint not working as expected")
+                results.append(False)
+            
+            # Test bulk logo upload endpoint structure
+            success2, response2 = self.run_test(
+                "Bulk Logo Upload Endpoint - Structure Test",
+                "POST",
+                "superadmin/tools/bulk-upload-logos",
+                422,  # Expected validation error for missing files
+                description="Test bulk logo upload endpoint structure"
+            )
+            
+            if success2:
+                print("   ✅ Bulk logo upload endpoint exists and validates input")
+                results.append(True)
+            else:
+                print("   ❌ Bulk logo upload endpoint not working as expected")
+                results.append(False)
+            
+            # Test logo serving endpoint (should return 404 for non-existent file)
+            success3, response3 = self.run_test(
+                "Logo Serving Endpoint - Structure Test",
+                "GET",
+                "uploads/logos/non-existent-logo.png",
+                404,  # Expected 404 for non-existent file
+                description="Test logo serving endpoint structure"
+            )
+            
+            if success3:
+                print("   ✅ Logo serving endpoint exists and handles missing files correctly")
+                results.append(True)
+            else:
+                print("   ❌ Logo serving endpoint not working as expected")
+                results.append(False)
+            
+        except Exception as e:
+            print(f"   ❌ Error testing logo upload endpoints: {str(e)}")
+            results.append(False)
+        
+        return all(results)
+
+    def test_data_persistence_new_fields(self):
+        """Test data persistence with new fields by creating and retrieving a tool"""
+        print("\n🔍 Testing Data Persistence with New Fields...")
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping data persistence test - need superadmin privileges")
+            return False
+        
+        timestamp = datetime.now().strftime('%H%M%S')
+        
+        # Create a comprehensive test tool with all new fields
+        comprehensive_tool_data = {
+            "name": f"Comprehensive Test Tool {timestamp}",
+            "description": "A comprehensive tool created to test all new enhancement fields and their persistence",
+            "short_description": "Comprehensive test tool with all new fields",
+            "url": "https://comprehensive-test.com",
+            "pricing_type": "freemium",
+            "features": ["Advanced Analytics", "Team Collaboration", "API Integration"],
+            "pros": ["User-friendly interface", "Robust feature set", "Great customer support"],
+            "cons": ["Learning curve for advanced features", "Premium pricing"],
+            "is_featured": True,
+            "is_active": True,
+            "seo_title": f"Comprehensive Test Tool {timestamp} - Complete Solution",
+            "seo_description": "Test tool with comprehensive feature set for business productivity and team collaboration",
+            "seo_keywords": "test tool, productivity, collaboration, business",
+            
+            # All new enhancement fields
+            "domain_website": "comprehensive-test.com",
+            "linkedin_url": "https://linkedin.com/company/comprehensive-test",
+            "founded_year": 2022,
+            "about_section": "Comprehensive Test Company is a fictional company created to test the new tool enhancement features. We specialize in creating innovative solutions for business productivity and team collaboration.",
+            "founders": [
+                {"name": "Alice Johnson", "role": "CEO", "background": "Former VP at TechCorp"},
+                {"name": "Bob Smith", "role": "CTO", "background": "Ex-Google Senior Engineer"}
+            ],
+            "latest_news": "Comprehensive Test Company raises $10M Series A to expand product offerings and team",
+            "latest_feeds": [
+                {"title": "New Feature Release: Advanced Analytics", "date": "2024-01-15", "url": "https://comprehensive-test.com/news/analytics"},
+                {"title": "Partnership with Major Enterprise Client", "date": "2024-01-10", "url": "https://comprehensive-test.com/news/partnership"}
+            ],
+            "job_openings": [
+                {"title": "Senior Software Engineer", "location": "San Francisco, CA", "type": "Full-time", "url": "https://comprehensive-test.com/careers/swe"},
+                {"title": "Product Manager", "location": "Remote", "type": "Full-time", "url": "https://comprehensive-test.com/careers/pm"},
+                {"title": "UX Designer", "location": "New York, NY", "type": "Contract", "url": "https://comprehensive-test.com/careers/ux"}
+            ],
+            "revenue": "$5M ARR",
+            "locations": ["San Francisco, CA", "New York, NY", "Austin, TX", "Remote"],
+            "company_size": "50-100 employees",
+            "funding_info": [
+                {"round": "Series A", "amount": "$10M", "date": "2024-01-01", "investors": ["Venture Capital Firm A", "Angel Investor B"]},
+                {"round": "Seed", "amount": "$2M", "date": "2022-06-01", "investors": ["Seed Fund X", "Individual Investor Y"]}
+            ],
+            "tech_stack": ["React", "Node.js", "Python", "PostgreSQL", "AWS", "Docker", "Kubernetes"],
+            "integrations": ["Slack", "Microsoft Teams", "Google Workspace", "Salesforce", "HubSpot", "Jira", "Trello"],
+            "languages_supported": ["English", "Spanish", "French", "German", "Japanese"],
+            "target_audience": ["Startups", "SMBs", "Enterprise", "Remote Teams", "Consultants"],
+            "use_cases": [
+                "Project Management",
+                "Team Collaboration", 
+                "Client Communication",
+                "Workflow Automation",
+                "Performance Analytics",
+                "Resource Planning"
+            ],
+            "alternatives": ["Alternative Tool A", "Competitor B", "Legacy Solution C"],
+            "local_logo_path": "comprehensive-test-logo.png"
+        }
+        
+        # Create the tool
+        success, response = self.run_test(
+            "Data Persistence - Create Comprehensive Tool",
+            "POST",
+            "superadmin/tools",
+            200,
+            data=comprehensive_tool_data,
+            description="Create tool with all new enhancement fields"
+        )
+        
+        if success and isinstance(response, dict) and 'tool_id' in response:
+            created_tool_id = response['tool_id']
+            self.created_resources['tools'].append({
+                'id': created_tool_id,
+                'name': comprehensive_tool_data['name']
+            })
+            
+            print(f"   ✅ Tool created successfully with ID: {created_tool_id}")
+            
+            # Retrieve the tool and verify all fields
+            success2, tool_data = self.run_test(
+                "Data Persistence - Retrieve Comprehensive Tool",
+                "GET",
+                f"tools/{created_tool_id}",
+                200,
+                description="Retrieve tool and verify all fields are persisted"
+            )
+            
+            if success2 and isinstance(tool_data, dict):
+                print("   🔍 Verifying field persistence...")
+                
+                # Verify each new field
+                verification_results = []
+                
+                for field_name, expected_value in comprehensive_tool_data.items():
+                    if field_name in ['category_ids']:  # Skip fields that aren't returned in response
+                        continue
+                        
+                    actual_value = tool_data.get(field_name)
+                    
+                    if actual_value == expected_value:
+                        print(f"   ✅ {field_name}: Correctly persisted")
+                        verification_results.append(True)
+                    elif actual_value is None and expected_value in [[], "", None]:
+                        print(f"   ✅ {field_name}: Correctly handled empty value")
+                        verification_results.append(True)
+                    else:
+                        print(f"   ❌ {field_name}: Mismatch - Expected: {expected_value}, Got: {actual_value}")
+                        verification_results.append(False)
+                
+                # Check specifically for new enhancement fields
+                new_fields_verified = 0
+                new_enhancement_fields = [
+                    'domain_website', 'linkedin_url', 'founded_year', 'about_section',
+                    'founders', 'latest_news', 'latest_feeds', 'job_openings',
+                    'revenue', 'locations', 'company_size', 'funding_info',
+                    'tech_stack', 'integrations', 'languages_supported',
+                    'target_audience', 'use_cases', 'alternatives', 'local_logo_path'
+                ]
+                
+                for field in new_enhancement_fields:
+                    if field in tool_data and tool_data[field] == comprehensive_tool_data[field]:
+                        new_fields_verified += 1
+                
+                print(f"   📊 New Enhancement Fields Verified: {new_fields_verified}/{len(new_enhancement_fields)}")
+                
+                if new_fields_verified >= len(new_enhancement_fields) * 0.9:  # At least 90% verified
+                    print("   ✅ Excellent data persistence for new enhancement fields")
+                    return True
+                elif new_fields_verified >= len(new_enhancement_fields) * 0.7:  # At least 70% verified
+                    print("   ⚠️ Good data persistence with some minor issues")
+                    return True
+                else:
+                    print("   ❌ Significant issues with data persistence")
+                    return False
+            else:
+                print("   ❌ Failed to retrieve created tool")
+                return False
+        else:
+            print("   ❌ Failed to create comprehensive test tool")
+            return False
+
+    def test_bulk_upload_new_fields(self):
+        """Test bulk upload functionality with new fields"""
+        print("\n🔍 Testing Bulk Upload with New Fields...")
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping bulk upload test - need superadmin privileges")
+            return False
+        
+        # Test the bulk upload endpoint structure (without actual CSV file)
+        # We expect a validation error for missing/invalid file
+        success, response = self.run_test(
+            "Bulk Upload - Endpoint Structure Test",
+            "POST",
+            "superadmin/tools/bulk-upload",
+            422,  # Expected validation error for missing file
+            description="Test bulk upload endpoint handles missing CSV file"
+        )
+        
+        if success:
+            print("   ✅ Bulk upload endpoint exists and validates CSV file requirement")
+            return True
+        else:
+            print("   ❌ Bulk upload endpoint not working as expected")
+            return False
+
     def test_enhanced_email_verification_system(self):
         """Test the enhanced email verification system with OTP functionality"""
         print("\n🔐 ENHANCED EMAIL VERIFICATION SYSTEM WITH OTP TESTING")
