@@ -99,7 +99,7 @@ def get_email_verification_routes():
         request: ResendVerificationRequest, 
         db: Session = Depends(get_db)
     ):
-        """Resend verification email"""
+        """Resend verification email with chosen method"""
         # Find user by email
         user = db.query(User).filter(User.email == request.email).first()
         
@@ -115,20 +115,42 @@ def get_email_verification_routes():
                 detail="Email is already verified"
             )
         
-        # Generate new verification token
-        verification_token = generate_verification_token()
-        user.email_verification_token = verification_token
-        user.email_verification_expires = get_verification_expiry()
+        username = user.username or user.full_name or "User"
+        email_sent = False
+        
+        if request.method == "link":
+            # Send only verification link
+            verification_token = generate_verification_token()
+            user.email_verification_token = verification_token
+            user.email_verification_expires = get_verification_expiry()
+            
+            email_sent = send_verification_email(user.email, username, verification_token)
+            message = "Verification link sent successfully. Please check your inbox."
+            
+        elif request.method == "otp":
+            # Send only OTP
+            otp_code = generate_otp_code()
+            user.email_otp_code = otp_code
+            user.email_otp_expires = get_otp_expiry()
+            
+            email_sent = send_otp_verification_email(user.email, username, otp_code)
+            message = "Verification code sent successfully. Please check your inbox."
+            
+        else:  # "both" or default
+            # Send both link and OTP
+            verification_token = generate_verification_token()
+            otp_code = generate_otp_code()
+            
+            user.email_verification_token = verification_token
+            user.email_verification_expires = get_verification_expiry()
+            user.email_otp_code = otp_code
+            user.email_otp_expires = get_otp_expiry()
+            
+            email_sent = send_verification_with_both_options(user.email, username, verification_token, otp_code)
+            message = "Verification email sent with both link and code options. Please check your inbox."
+        
         user.updated_at = datetime.utcnow()
-        
         db.commit()
-        
-        # Send verification email
-        email_sent = send_verification_email(
-            user.email, 
-            user.username or user.full_name or "User", 
-            verification_token
-        )
         
         if not email_sent:
             raise HTTPException(
@@ -137,8 +159,9 @@ def get_email_verification_routes():
             )
         
         return {
-            "message": "Verification email sent successfully. Please check your inbox.",
-            "email": user.email
+            "message": message,
+            "email": user.email,
+            "method": request.method
         }
     
     @router.get("/api/auth/verification-status/{email}")
