@@ -522,7 +522,27 @@ async def bulk_upload_tools(
                 features=row.get('features', '').split(';') if row.get('features') else [],
                 pros=row.get('pros', '').split(';') if row.get('pros') else [],
                 cons=row.get('cons', '').split(';') if row.get('cons') else [],
-                is_active=row.get('is_active', 'true').lower() == 'true'
+                is_active=row.get('is_active', 'true').lower() == 'true',
+                # New optional fields
+                domain_website=row.get('domain_website', ''),
+                linkedin_url=row.get('linkedin_url', ''),
+                founded_year=int(row.get('founded_year', 0)) if row.get('founded_year') and row.get('founded_year').isdigit() else None,
+                about_section=row.get('about_section', ''),
+                founders=row.get('founders', '').split(';') if row.get('founders') else [],
+                latest_news=row.get('latest_news', ''),
+                latest_feeds=row.get('latest_feeds', '').split(';') if row.get('latest_feeds') else [],
+                job_openings=row.get('job_openings', '').split(';') if row.get('job_openings') else [],
+                revenue=row.get('revenue', ''),
+                locations=row.get('locations', '').split(';') if row.get('locations') else [],
+                company_size=row.get('company_size', ''),
+                funding_info=row.get('funding_info', '').split(';') if row.get('funding_info') else [],
+                tech_stack=row.get('tech_stack', '').split(';') if row.get('tech_stack') else [],
+                integrations=row.get('integrations', '').split(';') if row.get('integrations') else [],
+                languages_supported=row.get('languages_supported', '').split(';') if row.get('languages_supported') else [],
+                target_audience=row.get('target_audience', '').split(';') if row.get('target_audience') else [],
+                use_cases=row.get('use_cases', '').split(';') if row.get('use_cases') else [],
+                alternatives=row.get('alternatives', '').split(';') if row.get('alternatives') else [],
+                local_logo_path=row.get('local_logo_path', '')
             )
             
             db.add(db_tool)
