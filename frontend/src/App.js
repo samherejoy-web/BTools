@@ -142,6 +142,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/verify-email" element={<EmailVerificationPage />} />
             <Route path="/verify-email-pending" element={<EmailVerificationPendingPage />} />
+            <Route path="/verify-otp" element={<OTPVerificationPage />} />
             
             {/* User Dashboard Routes */}
             <Route path="/dashboard" element={
