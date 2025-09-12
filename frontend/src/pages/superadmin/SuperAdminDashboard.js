@@ -367,7 +367,7 @@ const SuperAdminDashboard = () => {
             </Button>
             <Button 
               className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800"
-              onClick={() => window.location.href = '/superadmin/seo'}
+              onClick={() => navigate('/superadmin/seo')}
             >
               <Globe className="h-5 w-5" />
               SEO Management
