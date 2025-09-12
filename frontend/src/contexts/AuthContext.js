@@ -87,6 +87,40 @@ export const AuthProvider = ({ children }) => {
     toast.success('Logged out successfully');
   };
 
+  const verifyEmail = async (token) => {
+    try {
+      const response = await apiClient.post(`/auth/verify-email/${token}`);
+      toast.success(response.data.message || 'Email verified successfully!');
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Email verification failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  const resendVerification = async (email) => {
+    try {
+      const response = await apiClient.post('/auth/resend-verification', { email });
+      toast.success(response.data.message || 'Verification email sent successfully!');
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Failed to send verification email';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
+  const getVerificationStatus = async (email) => {
+    try {
+      const response = await apiClient.get(`/auth/verification-status/${email}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'Failed to get verification status';
+      return { success: false, error: message };
+    }
+  };
+
   const updateUser = (userData) => {
     setUser(prev => ({ ...prev, ...userData }));
   };
@@ -98,6 +132,9 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
+    verifyEmail,
+    resendVerification,
+    getVerificationStatus,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin' || user?.role === 'superadmin',
     isSuperAdmin: user?.role === 'superadmin',
