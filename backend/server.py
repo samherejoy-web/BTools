@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request, Response, Depends
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
