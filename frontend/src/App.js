@@ -19,6 +19,8 @@ import CompareToolsPage from './pages/public/CompareToolsPage';
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import EmailVerificationPage from './pages/auth/EmailVerificationPage';
+import EmailVerificationPendingPage from './pages/auth/EmailVerificationPendingPage';
 
 // User Dashboard
 import UserDashboard from './pages/user/UserDashboard';
