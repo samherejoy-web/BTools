@@ -278,7 +278,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Super Admin Routes Quick Verification"
+    - "Email Verification System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
