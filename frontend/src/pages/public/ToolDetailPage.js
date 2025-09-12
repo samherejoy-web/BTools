@@ -271,11 +271,71 @@ const ToolDetailPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex-1">
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">{tool.name}</h1>
+              <div className="flex items-start gap-6 mb-6">
+                {/* Tool Logo */}
+                <div className="flex-shrink-0">
+                  {tool.local_logo_path ? (
+                    <img
+                      src={`${process.env.REACT_APP_BACKEND_URL}/api/uploads/logos/${tool.local_logo_path}`}
+                      alt={`${tool.name} logo`}
+                      className="w-20 h-20 rounded-xl object-cover border border-gray-200 shadow-sm"
+                      onError={(e) => {
+                        e.target.src = tool.logo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=80`;
+                      }}
+                    />
+                  ) : tool.logo_url ? (
+                    <img
+                      src={tool.logo_url}
+                      alt={`${tool.name} logo`}
+                      className="w-20 h-20 rounded-xl object-cover border border-gray-200 shadow-sm"
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff&size=80`;
+                      }}
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl shadow-sm">
+                      {tool.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-4xl font-bold text-gray-900 mb-2">{tool.name}</h1>
+                  {tool.domain_website && (
+                    <p className="text-lg text-blue-600 mb-2">
+                      <Globe className="h-4 w-4 inline mr-1" />
+                      {tool.domain_website}
+                    </p>
+                  )}
                   <p className="text-xl text-gray-600 mb-4">{tool.short_description}</p>
                   
+                  {/* Company Info Row */}
+                  <div className="flex flex-wrap gap-4 mb-4 text-sm">
+                    {tool.founded_year && (
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Calendar className="h-4 w-4" />
+                        <span>Founded {tool.founded_year}</span>
+                      </div>
+                    )}
+                    {tool.company_size && (
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Users className="h-4 w-4" />
+                        <span>{tool.company_size}</span>
+                      </div>
+                    )}
+                    {tool.locations && tool.locations.length > 0 && (
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <span>📍</span>
+                        <span>{tool.locations.slice(0, 2).join(', ')}</span>
+                        {tool.locations.length > 2 && <span> +{tool.locations.length - 2}</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex-1">
                     <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       {renderStars(tool.rating)}
