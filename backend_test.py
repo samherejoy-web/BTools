@@ -3703,24 +3703,25 @@ class MarketMindAPITester:
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - Super Admin Routes Quick Verification")
+    print("🚀 Starting MarketMind AI Platform - Email Verification System Testing")
     print("=" * 80)
-    print("🎯 FOCUS: Quick verification of Super Admin backend API routes")
+    print("🎯 FOCUS: Testing the new email verification system implementation")
     print("=" * 80)
     
     tester = MarketMindAPITester()
     
-    # First authenticate as superadmin
-    print("\n🔐 SUPER ADMIN AUTHENTICATION")
-    success, user_role = tester.test_login("superadmin@marketmind.com", "admin123")
-    if not success:
-        print("❌ Failed to authenticate as superadmin - cannot test super admin routes")
+    # Test basic connectivity first
+    print("\n🔍 BASIC CONNECTIVITY TEST")
+    health_success = tester.test_health_check()
+    if not health_success:
+        print("❌ Basic connectivity failed - cannot proceed with email verification tests")
         return 1
     
-    print(f"✅ Successfully authenticated as: {user_role}")
+    print("✅ Basic connectivity successful")
     
-    # Run the quick verification test
-    verification_success = tester.test_superadmin_quick_verification()
+    # Run the email verification system tests
+    print("\n🔐 EMAIL VERIFICATION SYSTEM TESTING")
+    verification_success = tester.test_email_verification_system()
     
     # Print comprehensive results
     print("\n" + "=" * 80)
@@ -3748,10 +3749,10 @@ def main():
     
     # Return exit code based on results
     if verification_success:
-        print("🎉 Super Admin routes verification PASSED!")
+        print("🎉 Email verification system testing PASSED!")
         return 0
     else:
-        print("❌ Super Admin routes verification FAILED!")
+        print("❌ Email verification system testing FAILED!")
         return 1
 
 if __name__ == "__main__":
