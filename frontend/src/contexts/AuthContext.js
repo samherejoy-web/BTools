@@ -99,6 +99,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifyOTP = async (email, otpCode) => {
+    try {
+      const response = await apiClient.post('/auth/verify-otp', { 
+        email, 
+        otp_code: otpCode 
+      });
+      toast.success(response.data.message || 'Email verified successfully with OTP!');
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      const message = error.response?.data?.detail || 'OTP verification failed';
+      toast.error(message);
+      return { success: false, error: message };
+    }
+  };
+
   const resendVerification = async (email) => {
     try {
       const response = await apiClient.post('/auth/resend-verification', { email });
