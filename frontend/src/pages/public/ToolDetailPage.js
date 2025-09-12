@@ -49,8 +49,20 @@ const ToolDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
-  // Generate SEO data for the tool - only when tool data is loaded
-  const seoData = useToolSEO(tool);
+  // Generate SEO data for the tool with advanced features
+  const seoData = useSEO({
+    title: tool?.seo_title || (tool?.name ? `${tool.name} - Review & Pricing` : ''),
+    description: tool?.seo_description || tool?.short_description || tool?.description || '',
+    keywords: tool?.seo_keywords || '',
+    image: tool?.screenshot_url || tool?.logo_url || '',
+    type: 'product',
+    data: {
+      content: tool?.description || '',
+      ...tool
+    },
+    enableAnalytics: true,
+    autoOptimize: true
+  });
 
   useEffect(() => {
     if (toolSlug) {
