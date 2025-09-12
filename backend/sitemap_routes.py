@@ -7,6 +7,17 @@ import os
 
 router = APIRouter()
 
+def calculate_page_priority(page_type: str) -> str:
+    """Calculate dynamic priority based on page type and engagement"""
+    priority_map = {
+        'tools_listing': '0.9',
+        'blogs_listing': '0.9', 
+        'compare': '0.7',
+        'categories': '0.6',
+        'default': '0.5'
+    }
+    return priority_map.get(page_type, priority_map['default'])
+
 @router.get("/sitemap.xml")
 @router.get("/api/sitemap.xml")
 async def get_sitemap(db: Session = Depends(get_db)):
