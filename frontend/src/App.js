@@ -139,6 +139,8 @@ function App() {
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify-email" element={<EmailVerificationPage />} />
+            <Route path="/verify-email-pending" element={<EmailVerificationPendingPage />} />
             
             {/* User Dashboard Routes */}
             <Route path="/dashboard" element={
