@@ -25,7 +25,7 @@ const SEOHead = React.memo(({
   
   // Generate structured data
   const generateJsonLd = () => {
-    if (jsonLd) return jsonLd;
+    if (jsonLd && typeof jsonLd === 'object' && Object.keys(jsonLd).length > 0) return jsonLd;
     
     const baseSchema = {
       "@context": "https://schema.org",
