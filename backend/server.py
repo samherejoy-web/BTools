@@ -265,6 +265,7 @@ async def cors_preflight(path: str, request: Request):
 app.include_router(superadmin_router, prefix="", tags=["superadmin"])
 app.include_router(admin_router, prefix="", tags=["admin"])
 app.include_router(get_user_routes(), prefix="", tags=["user", "authentication"])
+app.include_router(get_email_verification_routes(), prefix="", tags=["email-verification"])
 app.include_router(get_tools_routes(), prefix="", tags=["tools", "free-tools"])
 app.include_router(blogs_router, prefix="", tags=["blogs"])
 app.include_router(ai_blog_router, prefix="", tags=["ai-blog"])
