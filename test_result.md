@@ -203,7 +203,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Tool Reviews API - POST Reviews (CRITICAL BUG IDENTIFIED)"
     - "SEO API - Admin SEO Pages"
   stuck_tasks: []
   test_all: false
