@@ -46,7 +46,10 @@ def get_user_routes():
     @router.post("/api/auth/register", response_model=dict)
     async def register(user: UserCreate, db: Session = Depends(get_db)):
         # Import email service functions
-        from email_service import generate_verification_token, get_verification_expiry, send_verification_email
+        from email_service import (
+            generate_verification_token, get_verification_expiry, send_verification_email,
+            generate_otp_code, get_otp_expiry, send_otp_verification_email, send_verification_with_both_options
+        )
         
         # Check if user already exists
         existing_user = db.query(User).filter(
@@ -59,8 +62,15 @@ def get_user_routes():
                 detail="Email or username already registered"
             )
         
-        # Generate verification token
-        verification_token = generate_verification_token()
+        # Generate verification credentials based on method
+        verification_token = None
+        otp_code = None
+        
+        if user.verification_method in ["link", "both"]:
+            verification_token = generate_verification_token()
+        
+        if user.verification_method in ["otp", "both"]:
+            otp_code = generate_otp_code()
         
         # Create new user (not verified initially)
         hashed_password = get_password_hash(user.password)
@@ -73,7 +83,9 @@ def get_user_routes():
             role="user",
             is_email_verified=False,
             email_verification_token=verification_token,
-            email_verification_expires=get_verification_expiry()
+            email_verification_expires=get_verification_expiry() if verification_token else None,
+            email_otp_code=otp_code,
+            email_otp_expires=get_otp_expiry() if otp_code else None
         )
         
         db.add(db_user)
