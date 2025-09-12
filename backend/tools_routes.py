@@ -436,7 +436,27 @@ def get_tools_routes():
             categories=[{"id": cat.id, "name": cat.name, "slug": cat.slug} for cat in tool.categories],
             seo_title=tool.seo_title,
             seo_description=tool.seo_description,
-            seo_keywords=tool.seo_keywords
+            seo_keywords=tool.seo_keywords,
+            # New enhancement fields
+            domain_website=tool.domain_website,
+            linkedin_url=tool.linkedin_url,
+            founded_year=tool.founded_year,
+            about_section=tool.about_section,
+            founders=tool.founders,
+            latest_news=tool.latest_news,
+            latest_feeds=tool.latest_feeds,
+            job_openings=tool.job_openings,
+            revenue=tool.revenue,
+            locations=tool.locations,
+            company_size=tool.company_size,
+            funding_info=tool.funding_info,
+            tech_stack=tool.tech_stack,
+            integrations=tool.integrations,
+            languages_supported=tool.languages_supported,
+            target_audience=tool.target_audience,
+            use_cases=tool.use_cases,
+            alternatives=tool.alternatives,
+            local_logo_path=tool.local_logo_path
         )
     
     @router.post("/api/tools/{tool_id}/reviews", response_model=ReviewResponse)
