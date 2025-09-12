@@ -131,9 +131,10 @@ const SEOHeadDebug = React.memo(({
       
       {/* Structured Data */}
       {finalJsonLd && (
-        <script type="application/ld+json">
-          {JSON.stringify(finalJsonLd)}
-        </script>
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(finalJsonLd) }}
+        />
       )}
     </Helmet>
   );
