@@ -5040,6 +5040,48 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def run_comprehensive_seo_enhancement_tests(self):
+        """Run comprehensive test suite for new SEO enhancement features"""
+        print("\n" + "="*80)
+        print("🚀 COMPREHENSIVE SEO ENHANCEMENT FEATURES TESTING")
+        print("="*80)
+        print("Testing all new SEO features implemented in the latest update:")
+        print("• Enhanced SEO Routes (internal links, page audit, analytics)")
+        print("• Enhanced Sitemap Generator (dynamic priorities, image support)")
+        print("• Advanced Schema Generator (JSON-LD)")
+        print("• OpenGraph Image Generator")
+        print("• Existing SEO endpoints compatibility")
+        print("="*80)
+        
+        # First ensure we have authentication for protected endpoints
+        if not self.token:
+            print("\n🔐 Authenticating as superadmin for comprehensive testing...")
+            success, role = self.test_login("superadmin@marketmind.com", "admin123")
+            if not success:
+                print("❌ Failed to authenticate - some tests may be skipped")
+        
+        # Run comprehensive SEO enhancement tests
+        overall_success = self.test_comprehensive_seo_enhancements()
+        
+        print(f"\n" + "="*80)
+        print("📊 FINAL SEO ENHANCEMENT TESTING RESULTS")
+        print("="*80)
+        
+        if overall_success:
+            print("🎉 ALL SEO ENHANCEMENT FEATURES WORKING CORRECTLY!")
+            print("✅ Internal Links Suggestions API - WORKING")
+            print("✅ SEO Page Audit API - WORKING") 
+            print("✅ SEO Analytics Overview API - WORKING")
+            print("✅ Enhanced Sitemap Generation - WORKING")
+            print("✅ Existing SEO Endpoints Compatibility - WORKING")
+            print("\n🚀 The comprehensive SEO enhancements are ready for production!")
+        else:
+            print("❌ SOME SEO ENHANCEMENT FEATURES NEED ATTENTION")
+            print("Please review the detailed test results above for specific issues.")
+        
+        print("="*80)
+        return overall_success
+
 def main():
     print("🚀 Starting MarketMind AI Platform - Tool Enhancement Features Testing")
     print("=" * 80)
