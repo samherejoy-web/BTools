@@ -64,13 +64,16 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await apiClient.post('/auth/register', userData);
       
-      const { access_token, user: newUser } = response.data;
+      // New response format - no auto-login, verification required
+      const { message, email, verification_required } = response.data;
       
-      localStorage.setItem('token', access_token);
-      setUser(newUser);
-      
-      toast.success('Registration successful!');
-      return { success: true, user: newUser };
+      toast.success(message || 'Registration successful! Please check your email to verify your account.');
+      return { 
+        success: true, 
+        verification_required: verification_required || true,
+        email: email,
+        message: message
+      };
     } catch (error) {
       const message = error.response?.data?.detail || 'Registration failed';
       toast.error(message);
