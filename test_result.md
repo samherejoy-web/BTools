@@ -302,7 +302,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Email Verification System"
+    - "Tool Enhancement Features"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
