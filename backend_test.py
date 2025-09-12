@@ -1658,6 +1658,225 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_email_verification_system(self):
+        """Test the complete email verification system"""
+        print("\n🔐 EMAIL VERIFICATION SYSTEM TESTING")
+        print("=" * 60)
+        
+        results = []
+        timestamp = datetime.now().strftime('%H%M%S')
+        test_email = f"verify_test_{timestamp}@example.com"
+        test_username = f"verifyuser_{timestamp}"
+        test_password = "VerifyPass123!"
+        
+        # Test 1: New Registration Flow - should return verification_required: true
+        print("\n1. TESTING NEW REGISTRATION FLOW")
+        success, response = self.run_test(
+            "Registration - Email Verification Required",
+            "POST",
+            "auth/register",
+            200,
+            data={
+                "email": test_email,
+                "username": test_username,
+                "password": test_password,
+                "full_name": "Verify Test User"
+            },
+            description="Test registration returns verification_required instead of access_token"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            # Verify response structure
+            if response.get('verification_required') == True:
+                print(f"   ✅ Registration correctly returns verification_required: true")
+            else:
+                print(f"   ❌ Registration missing verification_required field")
+                results.append(False)
+            
+            if 'access_token' not in response:
+                print(f"   ✅ Registration correctly does NOT return access_token")
+            else:
+                print(f"   ❌ Registration incorrectly returns access_token")
+                results.append(False)
+            
+            if response.get('message') and 'verify' in response.get('message', '').lower():
+                print(f"   ✅ Registration message mentions verification")
+            else:
+                print(f"   ❌ Registration message doesn't mention verification")
+        
+        # Test 2: Login with Unverified Email - should fail
+        print("\n2. TESTING LOGIN WITH UNVERIFIED EMAIL")
+        success, response = self.run_test(
+            "Login - Unverified Email (Should Fail)",
+            "POST",
+            "auth/login",
+            400,  # Should fail with 400
+            data={
+                "email": test_email,
+                "password": test_password
+            },
+            description="Test that unverified users cannot login"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            error_detail = response.get('detail', '')
+            if 'verify' in error_detail.lower() or 'verification' in error_detail.lower():
+                print(f"   ✅ Login correctly blocks unverified user with verification message")
+            else:
+                print(f"   ❌ Login error message doesn't mention verification: {error_detail}")
+        
+        # Test 3: Get Verification Status
+        print("\n3. TESTING VERIFICATION STATUS ENDPOINT")
+        success, response = self.run_test(
+            "Get Verification Status",
+            "GET",
+            f"auth/verification-status/{test_email}",
+            200,
+            description="Test getting verification status for user"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            if response.get('is_verified') == False:
+                print(f"   ✅ Verification status correctly shows is_verified: false")
+            else:
+                print(f"   ❌ Verification status incorrect: {response.get('is_verified')}")
+            
+            if response.get('email') == test_email:
+                print(f"   ✅ Verification status returns correct email")
+            else:
+                print(f"   ❌ Verification status email mismatch")
+        
+        # Test 4: Resend Verification Email
+        print("\n4. TESTING RESEND VERIFICATION EMAIL")
+        success, response = self.run_test(
+            "Resend Verification Email",
+            "POST",
+            "auth/resend-verification",
+            200,
+            data={"email": test_email},
+            description="Test resending verification email for unverified user"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            if 'sent' in response.get('message', '').lower():
+                print(f"   ✅ Resend verification returns success message")
+            else:
+                print(f"   ❌ Resend verification message unclear: {response.get('message')}")
+        
+        # Test 5: Resend Verification for Non-existent User
+        print("\n5. TESTING RESEND VERIFICATION FOR NON-EXISTENT USER")
+        success, response = self.run_test(
+            "Resend Verification - Non-existent User",
+            "POST",
+            "auth/resend-verification",
+            404,  # Should fail with 404
+            data={"email": f"nonexistent_{timestamp}@example.com"},
+            description="Test resend verification with non-existent user"
+        )
+        results.append(success)
+        
+        # Test 6: Email Verification with Invalid Token
+        print("\n6. TESTING EMAIL VERIFICATION WITH INVALID TOKEN")
+        invalid_token = "invalid_token_12345"
+        success, response = self.run_test(
+            "Email Verification - Invalid Token",
+            "POST",
+            f"auth/verify-email/{invalid_token}",
+            400,  # Should fail with 400
+            description="Test email verification with invalid token"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            error_detail = response.get('detail', '')
+            if 'invalid' in error_detail.lower() or 'expired' in error_detail.lower():
+                print(f"   ✅ Invalid token correctly rejected with appropriate message")
+            else:
+                print(f"   ❌ Invalid token error message unclear: {error_detail}")
+        
+        # Test 7: Create another user to test with valid token (simulate verification)
+        print("\n7. TESTING COMPLETE VERIFICATION FLOW")
+        timestamp2 = datetime.now().strftime('%H%M%S') + "2"
+        test_email2 = f"verify_complete_{timestamp2}@example.com"
+        test_username2 = f"verifycomplete_{timestamp2}"
+        
+        # Register second user
+        success, reg_response = self.run_test(
+            "Registration - For Complete Flow Test",
+            "POST",
+            "auth/register",
+            200,
+            data={
+                "email": test_email2,
+                "username": test_username2,
+                "password": test_password,
+                "full_name": "Complete Verify Test User"
+            },
+            description="Register user for complete verification flow test"
+        )
+        results.append(success)
+        
+        # Note: In a real scenario, we would need to extract the verification token from the database
+        # or email to test the actual verification endpoint. For this test, we'll simulate the process.
+        print(f"   📧 In production: Verification email would be sent to {test_email2}")
+        print(f"   📧 User would click verification link with token")
+        print(f"   📧 After verification, user should be able to login")
+        
+        # Test 8: Test Already Verified User Resend (should fail)
+        print("\n8. TESTING RESEND FOR ALREADY VERIFIED USER")
+        # First, let's try with a user that might already be verified (superadmin)
+        success, response = self.run_test(
+            "Resend Verification - Already Verified User",
+            "POST",
+            "auth/resend-verification",
+            400,  # Should fail with 400
+            data={"email": "superadmin@marketmind.com"},
+            description="Test resend verification for already verified user"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            error_detail = response.get('detail', '')
+            if 'already verified' in error_detail.lower():
+                print(f"   ✅ Already verified user correctly rejected")
+            else:
+                print(f"   ❌ Already verified error message unclear: {error_detail}")
+        
+        # Test 9: Test verification status for verified user
+        print("\n9. TESTING VERIFICATION STATUS FOR VERIFIED USER")
+        success, response = self.run_test(
+            "Verification Status - Verified User",
+            "GET",
+            "auth/verification-status/superadmin@marketmind.com",
+            200,
+            description="Test verification status for already verified user"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            if response.get('is_verified') == True:
+                print(f"   ✅ Verified user status correctly shows is_verified: true")
+            else:
+                print(f"   ❌ Verified user status incorrect: {response.get('is_verified')}")
+        
+        # Summary
+        print(f"\n📊 EMAIL VERIFICATION SYSTEM TEST SUMMARY:")
+        print(f"   Total tests: {len(results)}")
+        print(f"   Passed: {sum(results)}")
+        print(f"   Failed: {len(results) - sum(results)}")
+        
+        if all(results):
+            print(f"   ✅ All email verification tests passed!")
+        else:
+            failed_count = len(results) - sum(results)
+            print(f"   ❌ {failed_count} email verification tests failed")
+        
+        return all(results)
+
     def test_seo_json_ld_comprehensive(self):
         """Comprehensive test for SEO and JSON-LD functionality as requested"""
         print("\n🎯 COMPREHENSIVE SEO & JSON-LD TESTING")
