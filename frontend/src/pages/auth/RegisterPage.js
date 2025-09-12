@@ -118,7 +118,14 @@ const RegisterPage = () => {
       });
       
       if (result.success) {
-        navigate('/dashboard', { replace: true });
+        // Navigate to email verification pending page instead of dashboard
+        navigate('/verify-email-pending', { 
+          replace: true,
+          state: {
+            email: result.email || formData.email,
+            message: result.message
+          }
+        });
       }
     } catch (error) {
       toast.error('Registration failed. Please try again.');
