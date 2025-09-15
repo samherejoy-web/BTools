@@ -1829,7 +1829,7 @@ class MarketMindAPITester:
             "SEO Features - No Authentication",
             "POST",
             "seo/internal-links/suggestions",
-            401,  # Should require authentication
+            403,  # FastAPI returns 403 for "Not authenticated"
             data=sample_content,
             description="Test that SEO endpoints require authentication"
         )
