@@ -250,8 +250,7 @@ class SuperAdminProductionTester:
         try:
             response = self.session.get(f"{self.base_url}/api/tools")
             if response.status_code == 200:
-                tools_data = response.json()
-                tools = tools_data.get('tools', [])
+                tools = response.json()
                 logger.info(f"✅ Tools API working - Retrieved {len(tools)} tools")
                 return True
             else:
