@@ -89,7 +89,7 @@ const HomePage = () => {
 
   return (
     <>
-      <SEOMetaTags 
+      <ProductionSEOFix 
         title="MarketMind - Discover the Best Business Tools"
         description="Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews from 10,000+ users."
         keywords="business tools, productivity software, SaaS tools, tool comparison, software reviews, business productivity"
