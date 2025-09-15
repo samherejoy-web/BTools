@@ -13,6 +13,7 @@ import shutil
 import csv
 import io
 import re
+from utils.json_ld_generator import JSONLDGenerator, auto_generate_json_ld_for_existing_content
 
 router = APIRouter()
 
