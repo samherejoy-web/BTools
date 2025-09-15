@@ -4628,9 +4628,9 @@ class MarketMindAPITester:
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - Email Verification System Testing")
+    print("🚀 Starting MarketMind AI Platform - Comprehensive SEO Production Build Testing")
     print("=" * 80)
-    print("🎯 FOCUS: Testing the new email verification system implementation")
+    print("🎯 FOCUS: Testing production-ready SEO functionality comprehensively")
     print("=" * 80)
     
     tester = MarketMindAPITester()
@@ -4639,14 +4639,14 @@ def main():
     print("\n🔍 BASIC CONNECTIVITY TEST")
     health_success = tester.test_health_check()
     if not health_success:
-        print("❌ Basic connectivity failed - cannot proceed with email verification tests")
+        print("❌ Basic connectivity failed - cannot proceed with SEO tests")
         return 1
     
     print("✅ Basic connectivity successful")
     
-    # Run the enhanced email verification system tests
-    print("\n🔐 ENHANCED EMAIL VERIFICATION SYSTEM TESTING")
-    verification_success = tester.test_enhanced_email_verification_system()
+    # Run the comprehensive SEO production build test
+    print("\n🔍 COMPREHENSIVE SEO PRODUCTION BUILD TESTING")
+    seo_success = tester.test_comprehensive_seo_production_build()
     
     # Print comprehensive results
     print("\n" + "=" * 80)
@@ -4673,11 +4673,11 @@ def main():
     print("\n" + "=" * 80)
     
     # Return exit code based on results
-    if verification_success:
-        print("🎉 Email verification system testing PASSED!")
+    if seo_success:
+        print("🎉 Comprehensive SEO production build testing PASSED!")
         return 0
     else:
-        print("❌ Email verification system testing FAILED!")
+        print("❌ Comprehensive SEO production build testing FAILED!")
         return 1
 
 if __name__ == "__main__":
