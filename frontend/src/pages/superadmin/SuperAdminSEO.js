@@ -523,6 +523,45 @@ const SuperAdminSEO = () => {
                 </div>
 
                 <div className="p-6 border border-gray-200 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3">Generate JSON-LD Structured Data</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Generate structured data (JSON-LD) for better search engine visibility and rich snippets.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button
+                      size="sm"
+                      onClick={() => handleGenerateJsonLD('tools')}
+                      disabled={bulkUpdateLoading}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      Tools JSON-LD
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleGenerateJsonLD('blogs')}
+                      disabled={bulkUpdateLoading}
+                    >
+                      <Layout className="h-4 w-4 mr-2" />
+                      Blogs JSON-LD
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleGenerateJsonLD('all')}
+                      disabled={bulkUpdateLoading}
+                      className="border-green-200 text-green-700 hover:bg-green-50"
+                    >
+                      <Zap className="h-4 w-4 mr-2" />
+                      Generate All
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                <div className="p-6 border border-gray-200 rounded-lg">
                   <h3 className="font-semibold text-gray-900 mb-3">Bulk SEO Validation</h3>
                   <p className="text-sm text-gray-600 mb-4">
                     Validate SEO compliance across all content and generate improvement reports.
