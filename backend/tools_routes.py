@@ -198,7 +198,8 @@ def get_tools_routes():
                 categories=[{"id": cat.id, "name": cat.name, "slug": cat.slug} for cat in tool.categories],
                 seo_title=tool.seo_title,
                 seo_description=tool.seo_description,
-                seo_keywords=tool.seo_keywords
+                seo_keywords=tool.seo_keywords,
+                json_ld=tool.json_ld
             ) for tool in tools
         ]
     
