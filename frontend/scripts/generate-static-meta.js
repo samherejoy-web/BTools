@@ -31,7 +31,7 @@ const STATIC_ROUTES = {
 
 // Generate meta tags HTML
 function generateMetaTags(route, routeData) {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://seo-audit-build.preview.emergentagent.com';
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://prod-seo-check.preview.emergentagent.com';
   const currentUrl = `${backendUrl}${route === '/' ? '' : route}`;
   const imageUrl = `${backendUrl}/api/images/og-default.jpg`;
   
