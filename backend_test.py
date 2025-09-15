@@ -4874,9 +4874,10 @@ class MarketMindAPITester:
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - Comprehensive SEO Production Build Testing")
+    print("🚀 Starting MarketMind AI Platform - NEW SEO FEATURES TESTING")
     print("=" * 80)
-    print("🎯 FOCUS: Testing production-ready SEO functionality comprehensively")
+    print("🎯 FOCUS: Testing newly implemented SEO features as requested in review")
+    print("📋 Features: Internal Links, SEO Score Calculator, Page Analysis, Authentication")
     print("=" * 80)
     
     tester = MarketMindAPITester()
@@ -4890,9 +4891,18 @@ def main():
     
     print("✅ Basic connectivity successful")
     
-    # Run the comprehensive SEO production build test
-    print("\n🔍 COMPREHENSIVE SEO PRODUCTION BUILD TESTING")
-    seo_success = tester.test_comprehensive_seo_production_build()
+    # Authenticate as superadmin for testing
+    print("\n🔐 AUTHENTICATION")
+    login_success, user_role = tester.test_login("superadmin@marketmind.com", "admin123")
+    if not login_success:
+        print("❌ Authentication failed - cannot proceed with authenticated SEO tests")
+        return 1
+    
+    print(f"✅ Authenticated as {user_role}")
+    
+    # Run the NEW SEO features comprehensive test
+    print("\n🔍 NEW SEO FEATURES COMPREHENSIVE TESTING")
+    new_seo_success = tester.test_new_seo_features_comprehensive()
     
     # Print comprehensive results
     print("\n" + "=" * 80)
@@ -4919,11 +4929,17 @@ def main():
     print("\n" + "=" * 80)
     
     # Return exit code based on results
-    if seo_success:
-        print("🎉 Comprehensive SEO production build testing PASSED!")
+    if new_seo_success:
+        print("🎉 NEW SEO FEATURES testing PASSED!")
+        print("✅ All requested SEO features are working correctly:")
+        print("   • Internal Linking Suggestions API")
+        print("   • SEO Score Calculator API (Tools & Blogs)")
+        print("   • Page Analysis API")
+        print("   • Authentication and Error Handling")
         return 0
     else:
-        print("❌ Comprehensive SEO production build testing FAILED!")
+        print("❌ NEW SEO FEATURES testing FAILED!")
+        print("⚠️ Some SEO features need attention - see details above")
         return 1
 
 if __name__ == "__main__":
