@@ -97,6 +97,37 @@ const SuperAdminSEO = () => {
     }
   };
 
+  const handleGenerateJsonLD = async (contentType, limit = 100) => {
+    try {
+      setBulkUpdateLoading(true);
+      const response = await apiClient.post('/superadmin/seo/generate-json-ld', null, {
+        params: { content_type: contentType, limit }
+      });
+      
+      const { results } = response.data;
+      const totalUpdated = results.total_updated;
+      
+      if (totalUpdated > 0) {
+        toast.success(`Generated JSON-LD for ${totalUpdated} items (${results.tools_updated} tools, ${results.blogs_updated} blogs)`);
+      } else {
+        toast.info('All items already have JSON-LD data');
+      }
+      
+      if (results.errors && results.errors.length > 0) {
+        console.warn('JSON-LD generation errors:', results.errors);
+        toast.warning(`${results.errors.length} items had errors during generation`);
+      }
+      
+      fetchSeoOverview();
+      fetchSeoIssues();
+    } catch (error) {
+      console.error('Error generating JSON-LD:', error);
+      toast.error('Failed to generate JSON-LD structured data');
+    } finally {
+      setBulkUpdateLoading(false);
+    }
+  };
+
   const handleBulkUpdate = async () => {
     if (selectedItems.length === 0) {
       toast.error('Please select items to update');
