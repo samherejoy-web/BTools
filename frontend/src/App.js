@@ -207,6 +207,15 @@ function App() {
               </ProtectedRoute>
             } />
             
+            {/* SEO Tools Routes */}
+            <Route path="/seo-tools" element={
+              <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
+                <Layout>
+                  <SEOToolsPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
             {/* Admin Routes */}
             <Route path="/admin" element={
               <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
