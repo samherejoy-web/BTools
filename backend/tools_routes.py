@@ -77,6 +77,7 @@ def get_tools_routes():
         seo_title: Optional[str]
         seo_description: Optional[str]
         seo_keywords: Optional[str]
+        json_ld: Optional[dict] = None
     
     class ToolCommentCreate(BaseModel):
         content: str
