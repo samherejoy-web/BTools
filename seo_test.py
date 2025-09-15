@@ -406,7 +406,8 @@ class SEOTester:
         if self.failed_tests:
             print(f"\n❌ FAILED TESTS:")
             for test in self.failed_tests:
-                print(f"   - {test['name']}: {test.get('error', f'Expected {test.get(\"expected\")}, got {test.get(\"actual\")}')}")
+                error_msg = test.get('error', f"Expected {test.get('expected')}, got {test.get('actual')}")
+                print(f"   - {test['name']}: {error_msg}")
         
         if seo_success:
             print(f"\n🎉 SEO endpoints testing PASSED!")
