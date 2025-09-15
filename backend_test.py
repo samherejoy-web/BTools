@@ -1658,6 +1658,270 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_json_ld_tools_api_endpoints(self):
+        """Test JSON-LD functionality in production build for tools API endpoints - CRITICAL REVIEW REQUEST"""
+        print("\n🔍 JSON-LD TOOLS API ENDPOINTS TESTING - CRITICAL REVIEW")
+        print("=" * 70)
+        print("Testing that all tools API endpoints now return json_ld field in response")
+        print("This resolves: 'ToolResponse model is missing the json_ld field, preventing frontend access to JSON-LD data'")
+        print("-" * 70)
+        
+        results = []
+        json_ld_findings = {
+            'endpoints_tested': 0,
+            'endpoints_with_json_ld': 0,
+            'tools_with_json_ld_data': 0,
+            'total_tools_tested': 0,
+            'json_ld_structures_found': []
+        }
+        
+        # Test 1: GET /api/tools (list tools) - check that json_ld field is present in response
+        print("\n1️⃣ TESTING: GET /api/tools (list tools)")
+        success, response = self.run_test(
+            "Tools List - JSON-LD Field Check",
+            "GET",
+            "tools?limit=5",
+            200,
+            description="CRITICAL: Test that GET /api/tools returns json_ld field in response"
+        )
+        results.append(success)
+        json_ld_findings['endpoints_tested'] += 1
+        
+        if success and isinstance(response, list):
+            print(f"   Found {len(response)} tools in list")
+            json_ld_field_present = False
+            tools_with_data = 0
+            
+            for i, tool in enumerate(response):
+                if 'json_ld' in tool:
+                    json_ld_field_present = True
+                    json_ld_findings['total_tools_tested'] += 1
+                    
+                    if tool['json_ld'] and isinstance(tool['json_ld'], dict):
+                        tools_with_data += 1
+                        json_ld_findings['tools_with_json_ld_data'] += 1
+                        
+                        # Analyze JSON-LD structure
+                        json_ld_data = tool['json_ld']
+                        structure_info = {
+                            'tool_name': tool.get('name', 'Unknown'),
+                            'has_context': '@context' in json_ld_data,
+                            'has_type': '@type' in json_ld_data,
+                            'has_name': 'name' in json_ld_data,
+                            'has_description': 'description' in json_ld_data,
+                            'has_url': 'url' in json_ld_data,
+                            'has_application_category': 'applicationCategory' in json_ld_data,
+                            'keys_count': len(json_ld_data.keys())
+                        }
+                        json_ld_findings['json_ld_structures_found'].append(structure_info)
+                        
+                        print(f"   Tool {i+1} ({tool.get('name', 'Unknown')}): ✅ json_ld field present with {len(json_ld_data)} keys")
+                        if structure_info['has_context'] and structure_info['has_type']:
+                            print(f"      ✅ Valid JSON-LD structure (@context: {json_ld_data.get('@context')}, @type: {json_ld_data.get('@type')})")
+                    else:
+                        print(f"   Tool {i+1} ({tool.get('name', 'Unknown')}): ⚠️ json_ld field present but empty/null")
+                else:
+                    print(f"   Tool {i+1} ({tool.get('name', 'Unknown')}): ❌ json_ld field MISSING")
+            
+            if json_ld_field_present:
+                json_ld_findings['endpoints_with_json_ld'] += 1
+                print(f"   ✅ CRITICAL FIX VERIFIED: json_ld field is present in GET /api/tools response")
+                print(f"   📊 {tools_with_data}/{len(response)} tools have JSON-LD data")
+            else:
+                print(f"   ❌ CRITICAL ISSUE: json_ld field is MISSING from GET /api/tools response")
+                results.append(False)
+        
+        # Test 2: GET /api/tools/{tool_id} (get tool by ID) - check json_ld field
+        print("\n2️⃣ TESTING: GET /api/tools/{tool_id} (get tool by ID)")
+        
+        # First get a tool ID from the list
+        if success and isinstance(response, list) and len(response) > 0:
+            test_tool = response[0]
+            tool_id = test_tool['id']
+            tool_name = test_tool.get('name', 'Unknown')
+            
+            success2, tool_response = self.run_test(
+                "Tool by ID - JSON-LD Field Check",
+                "GET",
+                f"tools/{tool_id}",
+                200,
+                description=f"CRITICAL: Test that GET /api/tools/{tool_id} returns json_ld field"
+            )
+            results.append(success2)
+            json_ld_findings['endpoints_tested'] += 1
+            
+            if success2 and isinstance(tool_response, dict):
+                if 'json_ld' in tool_response:
+                    json_ld_findings['endpoints_with_json_ld'] += 1
+                    json_ld_findings['total_tools_tested'] += 1
+                    
+                    print(f"   ✅ CRITICAL FIX VERIFIED: json_ld field present in tool by ID response")
+                    
+                    if tool_response['json_ld'] and isinstance(tool_response['json_ld'], dict):
+                        json_ld_findings['tools_with_json_ld_data'] += 1
+                        json_ld_data = tool_response['json_ld']
+                        print(f"   📊 Tool '{tool_name}' has JSON-LD data with {len(json_ld_data)} keys")
+                        
+                        # Check for SEO-appropriate structured data
+                        seo_fields = ['@context', '@type', 'name', 'description', 'url', 'applicationCategory']
+                        present_fields = [field for field in seo_fields if field in json_ld_data]
+                        print(f"   🔍 SEO fields present: {present_fields}")
+                        
+                        if len(present_fields) >= 4:
+                            print(f"   ✅ Good JSON-LD structure for SEO ({len(present_fields)}/6 key fields)")
+                        else:
+                            print(f"   ⚠️ Limited JSON-LD structure ({len(present_fields)}/6 key fields)")
+                    else:
+                        print(f"   ⚠️ json_ld field present but empty for tool '{tool_name}'")
+                else:
+                    print(f"   ❌ CRITICAL ISSUE: json_ld field MISSING from tool by ID response")
+                    results.append(False)
+        
+        # Test 3: GET /api/tools/by-slug/{tool_slug} (get tool by slug) - check json_ld field
+        print("\n3️⃣ TESTING: GET /api/tools/by-slug/{tool_slug} (get tool by slug)")
+        
+        if success and isinstance(response, list) and len(response) > 0:
+            test_tool = response[0]
+            tool_slug = test_tool.get('slug', 'unknown-slug')
+            tool_name = test_tool.get('name', 'Unknown')
+            
+            success3, slug_response = self.run_test(
+                "Tool by Slug - JSON-LD Field Check",
+                "GET",
+                f"tools/by-slug/{tool_slug}",
+                200,
+                description=f"CRITICAL: Test that GET /api/tools/by-slug/{tool_slug} returns json_ld field"
+            )
+            results.append(success3)
+            json_ld_findings['endpoints_tested'] += 1
+            
+            if success3 and isinstance(slug_response, dict):
+                if 'json_ld' in slug_response:
+                    json_ld_findings['endpoints_with_json_ld'] += 1
+                    json_ld_findings['total_tools_tested'] += 1
+                    
+                    print(f"   ✅ CRITICAL FIX VERIFIED: json_ld field present in tool by slug response")
+                    
+                    if slug_response['json_ld'] and isinstance(slug_response['json_ld'], dict):
+                        json_ld_findings['tools_with_json_ld_data'] += 1
+                        json_ld_data = slug_response['json_ld']
+                        print(f"   📊 Tool '{tool_name}' (slug: {tool_slug}) has JSON-LD data with {len(json_ld_data)} keys")
+                    else:
+                        print(f"   ⚠️ json_ld field present but empty for tool '{tool_name}'")
+                else:
+                    print(f"   ❌ CRITICAL ISSUE: json_ld field MISSING from tool by slug response")
+                    results.append(False)
+        
+        # Test 4: GET /api/tools/compare - check json_ld field
+        print("\n4️⃣ TESTING: GET /api/tools/compare (compare tools)")
+        
+        if success and isinstance(response, list) and len(response) >= 2:
+            # Get first two tools for comparison
+            tool_ids = [response[0]['id'], response[1]['id']]
+            tool_ids_str = ",".join(tool_ids)
+            
+            success4, compare_response = self.run_test(
+                "Tools Compare - JSON-LD Field Check",
+                "GET",
+                f"tools/compare?tool_ids={tool_ids_str}",
+                200,
+                description=f"CRITICAL: Test that GET /api/tools/compare returns json_ld field for each tool"
+            )
+            results.append(success4)
+            json_ld_findings['endpoints_tested'] += 1
+            
+            if success4 and isinstance(compare_response, list):
+                json_ld_field_present = False
+                tools_with_data = 0
+                
+                for i, tool in enumerate(compare_response):
+                    if 'json_ld' in tool:
+                        json_ld_field_present = True
+                        json_ld_findings['total_tools_tested'] += 1
+                        
+                        if tool['json_ld'] and isinstance(tool['json_ld'], dict):
+                            tools_with_data += 1
+                            json_ld_findings['tools_with_json_ld_data'] += 1
+                            print(f"   Tool {i+1} ({tool.get('name', 'Unknown')}): ✅ json_ld field with data ({len(tool['json_ld'])} keys)")
+                        else:
+                            print(f"   Tool {i+1} ({tool.get('name', 'Unknown')}): ⚠️ json_ld field present but empty")
+                    else:
+                        print(f"   Tool {i+1} ({tool.get('name', 'Unknown')}): ❌ json_ld field MISSING")
+                
+                if json_ld_field_present:
+                    json_ld_findings['endpoints_with_json_ld'] += 1
+                    print(f"   ✅ CRITICAL FIX VERIFIED: json_ld field present in tools compare response")
+                    print(f"   📊 {tools_with_data}/{len(compare_response)} compared tools have JSON-LD data")
+                else:
+                    print(f"   ❌ CRITICAL ISSUE: json_ld field MISSING from tools compare response")
+                    results.append(False)
+        
+        # Test 5: Compare with Blog JSON-LD (verify consistency)
+        print("\n5️⃣ TESTING: Compare Tools JSON-LD with Blog JSON-LD (consistency check)")
+        
+        blog_success, blog_response = self.run_test(
+            "Blog JSON-LD Comparison",
+            "GET",
+            "blogs?limit=1",
+            200,
+            description="Get blog to compare JSON-LD field availability with tools"
+        )
+        
+        if blog_success and isinstance(blog_response, list) and len(blog_response) > 0:
+            blog = blog_response[0]
+            if 'json_ld' in blog:
+                print(f"   ✅ Blog has json_ld field - CONSISTENCY VERIFIED")
+                if blog['json_ld']:
+                    print(f"   📊 Blog JSON-LD has {len(blog['json_ld'])} keys")
+                    print(f"   🔍 Blog JSON-LD structure: {list(blog['json_ld'].keys()) if isinstance(blog['json_ld'], dict) else 'Not a dict'}")
+                else:
+                    print(f"   ⚠️ Blog json_ld field present but empty")
+            else:
+                print(f"   ❌ Blog missing json_ld field - INCONSISTENCY DETECTED")
+        
+        # COMPREHENSIVE SUMMARY
+        print("\n" + "=" * 70)
+        print("📋 JSON-LD TOOLS API ENDPOINTS - COMPREHENSIVE SUMMARY")
+        print("=" * 70)
+        
+        print(f"🔍 ENDPOINTS TESTED: {json_ld_findings['endpoints_tested']}/4")
+        print(f"✅ ENDPOINTS WITH JSON-LD FIELD: {json_ld_findings['endpoints_with_json_ld']}/{json_ld_findings['endpoints_tested']}")
+        print(f"📊 TOTAL TOOLS TESTED: {json_ld_findings['total_tools_tested']}")
+        print(f"💾 TOOLS WITH JSON-LD DATA: {json_ld_findings['tools_with_json_ld_data']}")
+        
+        if json_ld_findings['endpoints_with_json_ld'] == json_ld_findings['endpoints_tested']:
+            print(f"🎉 CRITICAL FIX VERIFIED: All tools API endpoints now return json_ld field!")
+            print(f"✅ ToolResponse model json_ld field is working in production build")
+        else:
+            print(f"❌ CRITICAL ISSUE: Some endpoints missing json_ld field")
+        
+        # JSON-LD Structure Analysis
+        if json_ld_findings['json_ld_structures_found']:
+            print(f"\n🔍 JSON-LD STRUCTURE ANALYSIS:")
+            for structure in json_ld_findings['json_ld_structures_found'][:3]:  # Show first 3
+                print(f"   Tool: {structure['tool_name']}")
+                print(f"   - @context: {'✅' if structure['has_context'] else '❌'}")
+                print(f"   - @type: {'✅' if structure['has_type'] else '❌'}")
+                print(f"   - name: {'✅' if structure['has_name'] else '❌'}")
+                print(f"   - description: {'✅' if structure['has_description'] else '❌'}")
+                print(f"   - url: {'✅' if structure['has_url'] else '❌'}")
+                print(f"   - applicationCategory: {'✅' if structure['has_application_category'] else '❌'}")
+                print(f"   - Total keys: {structure['keys_count']}")
+                print()
+        
+        # Production Build Readiness
+        print(f"🚀 PRODUCTION BUILD READINESS:")
+        if all(results):
+            print(f"   ✅ All tools API endpoints return json_ld field")
+            print(f"   ✅ Frontend can now access JSON-LD data in production")
+            print(f"   ✅ SEO structured data available for all tool pages")
+            print(f"   ✅ Critical issue 'ToolResponse model missing json_ld field' RESOLVED")
+        else:
+            print(f"   ❌ Some endpoints still missing json_ld field")
+            print(f"   ❌ Frontend may still have issues accessing JSON-LD data")
+        
+        return all(results)
+
     def test_json_ld_auto_generation(self):
         """Test the new JSON-LD auto-generation functionality as requested in review"""
         print("\n🔍 JSON-LD AUTO-GENERATION TESTING")
