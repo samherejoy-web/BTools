@@ -1901,6 +1901,313 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_comprehensive_seo_production_build(self):
+        """Comprehensive SEO testing for production build as requested in review"""
+        print("\n🔍 COMPREHENSIVE SEO PRODUCTION BUILD TESTING")
+        print("=" * 70)
+        
+        results = []
+        
+        # 1. SITEMAP GENERATION TEST
+        print("\n1️⃣ SITEMAP GENERATION TEST")
+        print("-" * 40)
+        
+        success, sitemap_response = self.run_test(
+            "GET /api/sitemap.xml",
+            "GET",
+            "sitemap.xml",
+            200,
+            description="Test sitemap generation with all active tools, published blogs, and main pages"
+        )
+        results.append(success)
+        
+        if success and isinstance(sitemap_response, str):
+            # Verify XML structure
+            if sitemap_response.startswith('<?xml'):
+                print("   ✅ Valid XML format")
+                
+                # Count URLs
+                url_count = sitemap_response.count('<url>')
+                print(f"   Total URLs in sitemap: {url_count}")
+                
+                # Check for required elements
+                required_elements = ['<changefreq>', '<priority>', '<lastmod>']
+                for element in required_elements:
+                    if element in sitemap_response:
+                        print(f"   ✅ {element} present")
+                    else:
+                        print(f"   ❌ {element} missing")
+                        results.append(False)
+                
+                # Check for main pages
+                main_pages = ['/tools', '/blogs', '/compare']
+                for page in main_pages:
+                    if page in sitemap_response:
+                        print(f"   ✅ Main page {page} included")
+                    else:
+                        print(f"   ❌ Main page {page} missing")
+                
+                # Count specific content types
+                tool_urls = sitemap_response.count('/tools/')
+                blog_urls = sitemap_response.count('/blogs/')
+                print(f"   Tool URLs: {tool_urls}")
+                print(f"   Blog URLs: {blog_urls}")
+                
+            else:
+                print("   ❌ Invalid XML format")
+                results.append(False)
+        
+        # 2. ROBOTS.TXT TEST
+        print("\n2️⃣ ROBOTS.TXT TEST")
+        print("-" * 40)
+        
+        success, robots_response = self.run_test(
+            "GET /api/robots.txt",
+            "GET",
+            "robots.txt",
+            200,
+            description="Test robots.txt generation with proper disallow rules and sitemap reference"
+        )
+        results.append(success)
+        
+        if success and isinstance(robots_response, str):
+            # Check required directives
+            required_directives = [
+                'User-agent: *',
+                'Disallow: /admin/',
+                'Disallow: /superadmin/',
+                'Sitemap:'
+            ]
+            
+            for directive in required_directives:
+                if directive in robots_response:
+                    print(f"   ✅ {directive} present")
+                else:
+                    print(f"   ❌ {directive} missing")
+                    results.append(False)
+            
+            # Check sitemap reference
+            if 'sitemap.xml' in robots_response.lower():
+                print("   ✅ Sitemap reference correct")
+            else:
+                print("   ❌ Sitemap reference missing or incorrect")
+                results.append(False)
+        
+        # 3. SEO DATA BACKEND VERIFICATION - POPULAR TOOLS
+        print("\n3️⃣ SEO DATA BACKEND VERIFICATION - POPULAR TOOLS")
+        print("-" * 40)
+        
+        popular_tools = ['notion', 'figma', 'slack']
+        
+        for tool_slug in popular_tools:
+            print(f"\n   Testing tool: {tool_slug}")
+            success, tool_response = self.run_test(
+                f"GET /api/tools/{tool_slug}",
+                "GET",
+                f"tools/by-slug/{tool_slug}",
+                200,
+                description=f"Test SEO data for {tool_slug}"
+            )
+            
+            if success and isinstance(tool_response, dict):
+                # Check SEO fields
+                seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+                seo_complete = True
+                
+                for field in seo_fields:
+                    if tool_response.get(field):
+                        print(f"     ✅ {field}: Present")
+                    else:
+                        print(f"     ❌ {field}: Missing")
+                        seo_complete = False
+                
+                if seo_complete:
+                    print(f"     ✅ {tool_slug} has complete SEO data")
+                    results.append(True)
+                else:
+                    print(f"     ❌ {tool_slug} missing SEO fields")
+                    results.append(False)
+            else:
+                print(f"     ❌ Failed to retrieve {tool_slug}")
+                results.append(False)
+        
+        # 4. SEO DATA BACKEND VERIFICATION - PUBLISHED BLOGS
+        print("\n4️⃣ SEO DATA BACKEND VERIFICATION - PUBLISHED BLOGS")
+        print("-" * 40)
+        
+        # Get published blogs
+        success, blogs_response = self.run_test(
+            "GET Published Blogs",
+            "GET",
+            "blogs?status=published&limit=3",
+            200,
+            description="Get published blogs for SEO verification"
+        )
+        
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            for blog in blogs_response[:3]:
+                blog_slug = blog.get('slug')
+                if blog_slug:
+                    print(f"\n   Testing blog: {blog_slug}")
+                    success, blog_response = self.run_test(
+                        f"GET /api/blogs/{blog_slug}",
+                        "GET",
+                        f"blogs/by-slug/{blog_slug}",
+                        200,
+                        description=f"Test SEO data for blog {blog_slug}"
+                    )
+                    
+                    if success and isinstance(blog_response, dict):
+                        # Check SEO fields
+                        seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+                        seo_complete = True
+                        
+                        for field in seo_fields:
+                            if blog_response.get(field):
+                                print(f"     ✅ {field}: Present")
+                            else:
+                                print(f"     ❌ {field}: Missing")
+                                seo_complete = False
+                        
+                        if seo_complete:
+                            print(f"     ✅ {blog_slug} has complete SEO data")
+                            results.append(True)
+                        else:
+                            print(f"     ❌ {blog_slug} missing SEO fields")
+                            results.append(False)
+                    else:
+                        print(f"     ❌ Failed to retrieve blog {blog_slug}")
+                        results.append(False)
+        else:
+            print("   ❌ No published blogs found for testing")
+            results.append(False)
+        
+        # 5. SUPER ADMIN SEO ROUTES TEST
+        print("\n5️⃣ SUPER ADMIN SEO ROUTES TEST")
+        print("-" * 40)
+        
+        # First authenticate as superadmin
+        if not self.token or self.current_user_role != 'superadmin':
+            print("   Authenticating as superadmin...")
+            login_success, role = self.test_login("superadmin@marketmind.com", "admin123")
+            if not login_success or role != 'superadmin':
+                print("   ❌ Failed to authenticate as superadmin")
+                results.append(False)
+                return all(results)
+        
+        # Test SEO overview
+        success, overview_response = self.run_test(
+            "GET /api/superadmin/seo/overview",
+            "GET",
+            "superadmin/seo/overview",
+            200,
+            description="Test superadmin SEO overview with authentication"
+        )
+        results.append(success)
+        
+        if success and isinstance(overview_response, dict):
+            print(f"   ✅ SEO Health Score: {overview_response.get('overview', {}).get('seo_health_score', 'N/A')}%")
+            print(f"   Total Pages: {overview_response.get('overview', {}).get('total_pages', 'N/A')}")
+            print(f"   SEO Optimized: {overview_response.get('overview', {}).get('seo_optimized', 'N/A')}")
+        
+        # Test SEO issues
+        success, issues_response = self.run_test(
+            "GET /api/superadmin/seo/issues",
+            "GET",
+            "superadmin/seo/issues",
+            200,
+            description="Test superadmin SEO issues analysis"
+        )
+        results.append(success)
+        
+        if success and isinstance(issues_response, dict):
+            total_issues = issues_response.get('total_issues', 0)
+            print(f"   Total SEO Issues: {total_issues}")
+            summary = issues_response.get('summary', {})
+            print(f"   Critical: {summary.get('critical', 0)}, High: {summary.get('high', 0)}, Medium: {summary.get('medium', 0)}, Low: {summary.get('low', 0)}")
+        
+        # Test specific tool SEO details
+        success, tools_response = self.run_test(
+            "GET Tools for SEO Testing",
+            "GET",
+            "tools?limit=1",
+            200,
+            description="Get a tool for SEO details testing"
+        )
+        
+        if success and isinstance(tools_response, list) and len(tools_response) > 0:
+            tool_id = tools_response[0]['id']
+            success, tool_seo_response = self.run_test(
+                f"GET /api/superadmin/seo/tools/{tool_id}",
+                "GET",
+                f"superadmin/seo/tools/{tool_id}",
+                200,
+                description="Test superadmin tool SEO details"
+            )
+            results.append(success)
+            
+            if success and isinstance(tool_seo_response, dict):
+                seo_score = tool_seo_response.get('seo_analysis', {}).get('score', 0)
+                print(f"   Tool SEO Score: {seo_score}%")
+        
+        # Test specific blog SEO details
+        success, blogs_response = self.run_test(
+            "GET Blogs for SEO Testing",
+            "GET",
+            "blogs?limit=1",
+            200,
+            description="Get a blog for SEO details testing"
+        )
+        
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            blog_id = blogs_response[0]['id']
+            success, blog_seo_response = self.run_test(
+                f"GET /api/superadmin/seo/blogs/{blog_id}",
+                "GET",
+                f"superadmin/seo/blogs/{blog_id}",
+                200,
+                description="Test superadmin blog SEO details"
+            )
+            results.append(success)
+            
+            if success and isinstance(blog_seo_response, dict):
+                seo_score = blog_seo_response.get('seo_analysis', {}).get('score', 0)
+                print(f"   Blog SEO Score: {seo_score}%")
+        
+        # 6. SEO TEMPLATE GENERATION TEST
+        print("\n6️⃣ SEO TEMPLATE GENERATION TEST")
+        print("-" * 40)
+        
+        # Test tools template generation
+        success, tools_template_response = self.run_test(
+            "POST /api/superadmin/seo/generate-templates (tools)",
+            "POST",
+            "superadmin/seo/generate-templates?page_type=tools&count=5",
+            200,
+            description="Test SEO template generation for tools"
+        )
+        results.append(success)
+        
+        if success and isinstance(tools_template_response, dict):
+            updated_count = tools_template_response.get('updated_count', 0)
+            print(f"   ✅ Generated SEO templates for {updated_count} tools")
+        
+        # Test blogs template generation
+        success, blogs_template_response = self.run_test(
+            "POST /api/superadmin/seo/generate-templates (blogs)",
+            "POST",
+            "superadmin/seo/generate-templates?page_type=blogs&count=3",
+            200,
+            description="Test SEO template generation for blogs"
+        )
+        results.append(success)
+        
+        if success and isinstance(blogs_template_response, dict):
+            updated_count = blogs_template_response.get('updated_count', 0)
+            print(f"   ✅ Generated SEO templates for {updated_count} blogs")
+        
+        return all(results)
+
     def test_enhanced_email_verification_system(self):
         """Test the enhanced email verification system with OTP functionality"""
         print("\n🔐 ENHANCED EMAIL VERIFICATION SYSTEM WITH OTP TESTING")
