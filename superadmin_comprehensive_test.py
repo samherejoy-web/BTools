@@ -346,9 +346,8 @@ class SuperAdminTester:
         success_tools, response_tools = self.run_test(
             "SEO Template Generation - Tools",
             "POST",
-            "superadmin/seo/generate-templates",
+            "superadmin/seo/generate-templates?page_type=tools&count=5",
             200,
-            data={"page_type": "tools", "count": 5},
             description="POST /api/superadmin/seo/generate-templates - test for tools"
         )
         results.append(success_tools)
@@ -361,9 +360,8 @@ class SuperAdminTester:
         success_blogs, response_blogs = self.run_test(
             "SEO Template Generation - Blogs",
             "POST",
-            "superadmin/seo/generate-templates",
+            "superadmin/seo/generate-templates?page_type=blogs&count=5",
             200,
-            data={"page_type": "blogs", "count": 5},
             description="POST /api/superadmin/seo/generate-templates - test for blogs"
         )
         results.append(success_blogs)
