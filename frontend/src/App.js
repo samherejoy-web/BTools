@@ -45,6 +45,9 @@ import SuperAdminCategories from './pages/superadmin/SuperAdminCategories';
 import SuperAdminBlogs from './pages/superadmin/SuperAdminBlogs';
 import SuperAdminSEO from './pages/superadmin/SuperAdminSEO';
 
+// SEO Tools
+import SEOToolsPage from './pages/seo/SEOToolsPage';
+
 import './App.css';
 
 // Protected Route Component
