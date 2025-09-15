@@ -33,15 +33,15 @@ class SuperAdminProductionTester:
         logger.info("🔐 Attempting superadmin login...")
         
         login_data = {
-            "username": self.superadmin_credentials["email"],
+            "email": self.superadmin_credentials["email"],
             "password": self.superadmin_credentials["password"]
         }
         
         try:
             response = self.session.post(
                 f"{self.base_url}/api/auth/login",
-                data=login_data,
-                headers={"Content-Type": "application/x-www-form-urlencoded"}
+                json=login_data,
+                headers={"Content-Type": "application/json"}
             )
             
             if response.status_code == 200:
