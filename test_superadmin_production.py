@@ -267,8 +267,7 @@ class SuperAdminProductionTester:
         try:
             response = self.session.get(f"{self.base_url}/api/blogs")
             if response.status_code == 200:
-                blogs_data = response.json()
-                blogs = blogs_data.get('blogs', [])
+                blogs = response.json()
                 logger.info(f"✅ Blogs API working - Retrieved {len(blogs)} blogs")
                 return True
             else:
