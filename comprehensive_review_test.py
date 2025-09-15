@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 
 class ComprehensiveReviewTester:
-    def __init__(self, base_url="https://jsonld-tools-fix.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://jsonld-production.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
