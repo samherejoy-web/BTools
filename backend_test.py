@@ -1658,6 +1658,252 @@ class MarketMindAPITester:
         
         return all(results)
 
+    def test_new_seo_features_comprehensive(self):
+        """Test NEW SEO features as requested in review - Internal Links, SEO Score, Page Analysis"""
+        print("\n🔍 NEW SEO FEATURES COMPREHENSIVE TESTING")
+        print("=" * 60)
+        
+        if not self.token:
+            print("❌ Skipping new SEO features tests - no authentication token")
+            return False
+        
+        results = []
+        
+        # Test 1: Internal Linking Suggestions API
+        print("\n1️⃣ Testing POST /api/seo/internal-links/suggestions")
+        sample_content = {
+            "content": "Remote work has revolutionized how we approach productivity. Tools like Notion help teams organize their workflows, while Slack facilitates communication. Project management becomes easier with dedicated software, and design tools like Figma enable collaborative creativity. These productivity tools are essential for modern remote teams.",
+            "title": "Best Productivity Tools for Remote Work in 2024",
+            "content_type": "blog",
+            "existing_links": []
+        }
+        
+        success, response = self.run_test(
+            "Internal Link Suggestions - Default Parameters",
+            "POST",
+            "seo/internal-links/suggestions",
+            200,
+            data=sample_content,
+            description="Test internal link suggestions with sample productivity content"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            print(f"   ✅ Found {len(response)} internal link suggestions")
+            for i, suggestion in enumerate(response[:3]):
+                print(f"   - Suggestion {i+1}: {suggestion.get('target_title', 'Unknown')} ({suggestion.get('target_type', 'Unknown')}) - Relevance: {suggestion.get('relevance_score', 0):.2f}")
+            
+            # Verify suggestion structure
+            if response and all(key in response[0] for key in ['target_url', 'target_title', 'target_type', 'anchor_text', 'relevance_score']):
+                print(f"   ✅ Suggestion structure is correct")
+            else:
+                print(f"   ❌ Suggestion structure missing required fields")
+                results.append(False)
+        
+        # Test 2: Internal Link Suggestions with Parameters
+        success, response = self.run_test(
+            "Internal Link Suggestions - Custom Parameters",
+            "POST",
+            "seo/internal-links/suggestions?max_suggestions=5&min_relevance=0.5",
+            200,
+            data=sample_content,
+            description="Test internal link suggestions with custom parameters"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            print(f"   ✅ Found {len(response)} suggestions with custom parameters (max 5, min relevance 0.5)")
+            if len(response) <= 5:
+                print(f"   ✅ Respects max_suggestions parameter")
+            else:
+                print(f"   ❌ Exceeds max_suggestions parameter")
+                results.append(False)
+        
+        # Test 3: SEO Score Calculator for Tool
+        print("\n2️⃣ Testing GET /api/seo/score/tool/{tool_id}")
+        test_tool_id = "f1ceb535-8f03-463f-bda6-79bc4949bd0b"  # Updated Test Tool 074703
+        
+        success, response = self.run_test(
+            "SEO Score Calculator - Tool",
+            "GET",
+            f"seo/score/tool/{test_tool_id}",
+            200,
+            description=f"Test SEO score calculation for tool {test_tool_id}"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            required_fields = ['overall_score', 'title_score', 'description_score', 'keywords_score', 'content_score', 'internal_links_score', 'recommendations']
+            missing_fields = [field for field in required_fields if field not in response]
+            
+            if not missing_fields:
+                print(f"   ✅ SEO score breakdown structure is complete")
+                print(f"   - Overall Score: {response.get('overall_score', 0)}/100")
+                print(f"   - Title Score: {response.get('title_score', 0)}/100")
+                print(f"   - Description Score: {response.get('description_score', 0)}/100")
+                print(f"   - Keywords Score: {response.get('keywords_score', 0)}/100")
+                print(f"   - Content Score: {response.get('content_score', 0)}/100")
+                print(f"   - Internal Links Score: {response.get('internal_links_score', 0)}/100")
+                print(f"   - Recommendations: {len(response.get('recommendations', []))} items")
+                
+                # Verify recommendations are provided
+                if response.get('recommendations') and len(response['recommendations']) > 0:
+                    print(f"   ✅ Recommendations provided:")
+                    for rec in response['recommendations'][:3]:
+                        print(f"     • {rec}")
+                else:
+                    print(f"   ⚠️ No recommendations provided")
+            else:
+                print(f"   ❌ Missing required fields: {missing_fields}")
+                results.append(False)
+        
+        # Test 4: SEO Score Calculator for Blog
+        print("\n3️⃣ Testing GET /api/seo/score/blog/{blog_id}")
+        test_blog_id = "e0353e91-295c-4b05-a397-2a8c3e93d090"  # Updated Test Blog for Like Count 095851
+        
+        success, response = self.run_test(
+            "SEO Score Calculator - Blog",
+            "GET",
+            f"seo/score/blog/{test_blog_id}",
+            200,
+            description=f"Test SEO score calculation for blog {test_blog_id}"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Blog SEO score breakdown received")
+            print(f"   - Overall Score: {response.get('overall_score', 0)}/100")
+            print(f"   - Title Score: {response.get('title_score', 0)}/100")
+            print(f"   - Description Score: {response.get('description_score', 0)}/100")
+            print(f"   - Keywords Score: {response.get('keywords_score', 0)}/100")
+            print(f"   - Content Score: {response.get('content_score', 0)}/100")
+            print(f"   - Internal Links Score: {response.get('internal_links_score', 0)}/100")
+            
+            if response.get('recommendations'):
+                print(f"   ✅ Blog recommendations provided: {len(response['recommendations'])} items")
+        
+        # Test 5: Page Analysis API - Tool URL
+        print("\n4️⃣ Testing GET /api/seo/analyze-page - Tool URL")
+        tool_url = "/tools/updated-test-tool-074703"
+        
+        success, response = self.run_test(
+            "Page Analysis - Tool URL",
+            "GET",
+            f"seo/analyze-page?url={tool_url}",
+            200,
+            description=f"Test page analysis for tool URL: {tool_url}"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Tool page analysis completed")
+            if 'overall_score' in response:
+                print(f"   - Analysis Score: {response.get('overall_score', 0)}/100")
+            else:
+                print(f"   - Analysis returned: {list(response.keys())}")
+        
+        # Test 6: Page Analysis API - Blog URL
+        print("\n5️⃣ Testing GET /api/seo/analyze-page - Blog URL")
+        blog_url = "/blogs/updated-test-blog-for-like-count-095851"
+        
+        success, response = self.run_test(
+            "Page Analysis - Blog URL",
+            "GET",
+            f"seo/analyze-page?url={blog_url}",
+            200,
+            description=f"Test page analysis for blog URL: {blog_url}"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Blog page analysis completed")
+            if 'overall_score' in response:
+                print(f"   - Analysis Score: {response.get('overall_score', 0)}/100")
+        
+        # Test 7: Authentication Testing - Unauthenticated Request
+        print("\n6️⃣ Testing Authentication Requirements")
+        temp_token = self.token
+        self.token = None  # Remove token temporarily
+        
+        success, response = self.run_test(
+            "SEO Features - No Authentication",
+            "POST",
+            "seo/internal-links/suggestions",
+            401,  # Should require authentication
+            data=sample_content,
+            description="Test that SEO endpoints require authentication"
+        )
+        results.append(success)
+        
+        self.token = temp_token  # Restore token
+        
+        if success:
+            print(f"   ✅ Authentication properly required for SEO endpoints")
+        
+        # Test 8: Error Handling - Invalid Content ID
+        print("\n7️⃣ Testing Error Handling")
+        invalid_tool_id = "invalid-tool-id-12345"
+        
+        success, response = self.run_test(
+            "SEO Score - Invalid Tool ID",
+            "GET",
+            f"seo/score/tool/{invalid_tool_id}",
+            404,  # Should return not found
+            description="Test error handling for invalid tool ID"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Proper error handling for invalid content IDs")
+        
+        # Test 9: Parameter Validation
+        print("\n8️⃣ Testing Parameter Validation")
+        invalid_content = {
+            "content": "",  # Empty content
+            "title": "",    # Empty title
+            "content_type": "invalid_type"  # Invalid type
+        }
+        
+        success, response = self.run_test(
+            "Internal Links - Invalid Parameters",
+            "POST",
+            "seo/internal-links/suggestions",
+            200,  # Should handle gracefully and return empty array
+            data=invalid_content,
+            description="Test parameter validation with invalid/empty content"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            if len(response) == 0:
+                print(f"   ✅ Properly handles empty content (returns empty suggestions)")
+            else:
+                print(f"   ⚠️ Unexpected suggestions for empty content: {len(response)}")
+        
+        # Test 10: Different Content Types
+        print("\n9️⃣ Testing Different Content Types")
+        tool_content = {
+            "content": "This is a project management tool that helps teams collaborate effectively. It includes features for task tracking, team communication, and workflow automation.",
+            "title": "Advanced Project Management Tool",
+            "content_type": "tool_description",
+            "existing_links": []
+        }
+        
+        success, response = self.run_test(
+            "Internal Links - Tool Content Type",
+            "POST",
+            "seo/internal-links/suggestions",
+            200,
+            data=tool_content,
+            description="Test internal link suggestions for tool content type"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            print(f"   ✅ Tool content type processed: {len(response)} suggestions")
+        
+        return all(results)
+
     def test_seo_endpoints_comprehensive(self):
         """Test SEO-related backend endpoints as requested in review"""
         print("\n🔍 COMPREHENSIVE SEO ENDPOINTS TESTING")
