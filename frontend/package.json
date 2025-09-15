@@ -68,9 +68,11 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build && node scripts/generate-static-meta.js",
+    "build": "yarn build:base && yarn generate-meta && yarn prerender",
     "build:base": "craco build",
     "generate-meta": "node scripts/generate-static-meta.js",
+    "prerender": "node scripts/prerender-dynamic-routes.js",
+    "build:seo": "yarn build",
     "test": "craco test"
   },
   "browserslist": {
