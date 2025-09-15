@@ -1049,3 +1049,95 @@ async def generate_seo_templates(
         "message": f"Generated SEO templates for {updated_count} {page_type}",
         "updated_count": updated_count
     }
+
+@router.post("/api/superadmin/seo/generate-json-ld")
+async def generate_json_ld_data(
+    content_type: str = Query(..., description="Type: tools, blogs, or all"),
+    limit: int = Query(100, description="Maximum number of items to process"),
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Auto-generate JSON-LD structured data for tools and blogs"""
+    
+    try:
+        updated_count = {"tools": 0, "blogs": 0, "errors": []}
+        
+        if content_type in ["tools", "all"]:
+            # Generate JSON-LD for tools
+            tools = db.query(Tool).options(joinedload(Tool.categories)).filter(
+                or_(Tool.json_ld.is_(None), Tool.json_ld == {})
+            ).limit(limit).all()
+            
+            for tool in tools:
+                try:
+                    tool_data = {
+                        'name': tool.name,
+                        'description': tool.description,
+                        'url': tool.url,
+                        'pricing_type': tool.pricing_type,
+                        'rating': tool.rating,
+                        'review_count': tool.review_count,
+                        'created_at': tool.created_at,
+                        'updated_at': tool.updated_at,
+                        'logo_url': tool.logo_url,
+                        'screenshot_url': tool.screenshot_url,
+                        'features': tool.features or [],
+                        'categories': [{'name': cat.name} for cat in tool.categories] if tool.categories else []
+                    }
+                    
+                    tool.json_ld = JSONLDGenerator.generate_tool_json_ld(tool_data)
+                    tool.updated_at = datetime.utcnow()
+                    updated_count["tools"] += 1
+                    
+                except Exception as e:
+                    updated_count["errors"].append(f"Tool {tool.name}: {str(e)}")
+        
+        if content_type in ["blogs", "all"]:
+            # Generate JSON-LD for blogs
+            blogs = db.query(Blog).options(joinedload(Blog.author), joinedload(Blog.comments)).filter(
+                or_(Blog.json_ld.is_(None), Blog.json_ld == {})
+            ).limit(limit).all()
+            
+            for blog in blogs:
+                try:
+                    blog_data = {
+                        'title': blog.title,
+                        'slug': blog.slug,
+                        'excerpt': blog.excerpt,
+                        'content': blog.content,
+                        'published_at': blog.published_at,
+                        'created_at': blog.created_at,
+                        'updated_at': blog.updated_at,
+                        'featured_image': blog.featured_image,
+                        'tags': blog.tags or [],
+                        'like_count': blog.like_count,
+                        'comment_count': len(blog.comments) if blog.comments else 0,
+                        'author_name': blog.author.full_name if blog.author else 'MarketMind Team'
+                    }
+                    
+                    blog.json_ld = JSONLDGenerator.generate_blog_json_ld(blog_data)
+                    blog.updated_at = datetime.utcnow()
+                    updated_count["blogs"] += 1
+                    
+                except Exception as e:
+                    updated_count["errors"].append(f"Blog {blog.title}: {str(e)}")
+        
+        # Commit all changes
+        db.commit()
+        
+        return {
+            "message": f"JSON-LD generation completed successfully",
+            "results": {
+                "tools_updated": updated_count["tools"],
+                "blogs_updated": updated_count["blogs"],
+                "total_updated": updated_count["tools"] + updated_count["blogs"],
+                "errors": updated_count["errors"]
+            }
+        }
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to generate JSON-LD data: {str(e)}"
+        )
