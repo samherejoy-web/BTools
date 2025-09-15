@@ -5867,7 +5867,22 @@ if __name__ == "__main__":
         success = tester.test_review_request_specific_tests()
         
         # Print final summary
-        tester.print_test_summary()
+        print(f"\n📊 FINAL TEST RESULTS")
+        print("=" * 60)
+        print(f"Total Tests Run: {tester.tests_run}")
+        print(f"Tests Passed: {tester.tests_passed}")
+        print(f"Tests Failed: {len(tester.failed_tests)}")
+        if tester.tests_run > 0:
+            print(f"Success Rate: {(tester.tests_passed/tester.tests_run)*100:.1f}%")
+        
+        if tester.failed_tests:
+            print(f"\n❌ Failed Tests Details:")
+            for test in tester.failed_tests:
+                print(f"   - {test['name']}")
+                if 'expected' in test:
+                    print(f"     Expected: {test['expected']}, Got: {test['actual']}")
+                if 'error' in test:
+                    print(f"     Error: {test['error']}")
         
         if success:
             print("\n🎉 ALL REVIEW REQUEST TESTS PASSED!")
@@ -5875,5 +5890,3 @@ if __name__ == "__main__":
             print("\n❌ SOME REVIEW REQUEST TESTS FAILED!")
     else:
         print("❌ Could not authenticate - cannot run tests")
-    
-    sys.exit(main())
