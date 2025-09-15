@@ -92,8 +92,11 @@ const DashboardLayout = ({ children }) => (
 );
 
 function App() {
+  // Create helmet context for better SSR support and production optimization
+  const helmetContext = {};
+  
   return (
-    <HelmetProvider>
+    <HelmetProvider context={helmetContext}>
       <AuthProvider>
         <Router>
           <div className="App">
