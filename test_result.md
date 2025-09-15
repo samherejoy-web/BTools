@@ -341,7 +341,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Email Verification System"
+    - "JSON-LD Tools API Endpoints - Production Build Testing"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
