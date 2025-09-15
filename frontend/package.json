@@ -68,7 +68,9 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "craco build && node scripts/generate-static-meta.js",
+    "build:base": "craco build",
+    "generate-meta": "node scripts/generate-static-meta.js",
     "test": "craco test"
   },
   "browserslist": {
