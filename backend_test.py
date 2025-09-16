@@ -812,6 +812,467 @@ class MarketMindAPITester:
         
         return all(results)
 
+    # SUPERADMIN DASHBOARD ANALYTICS TESTING - REVIEW REQUEST
+    def test_superadmin_dashboard_analytics(self):
+        """Test SuperAdmin Dashboard Analytics endpoint - REVIEW REQUEST"""
+        print("\n🔍 SUPERADMIN DASHBOARD ANALYTICS TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping superadmin analytics test - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test 1: Basic Analytics Endpoint
+        print("\n📊 TEST 1: BASIC ANALYTICS ENDPOINT")
+        success, response = self.run_test(
+            "SuperAdmin Dashboard Analytics",
+            "GET",
+            "superadmin/dashboard/analytics",
+            200,
+            description="Test GET /api/superadmin/dashboard/analytics endpoint"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Analytics endpoint accessible")
+            
+            # Verify all required sections are present
+            required_sections = [
+                'overview', 'recent_activity', 'performance', 
+                'content_status', 'user_insights', 'top_content', 'system_health'
+            ]
+            
+            missing_sections = []
+            for section in required_sections:
+                if section in response:
+                    print(f"   ✅ {section}: Present")
+                else:
+                    missing_sections.append(section)
+                    print(f"   ❌ {section}: Missing")
+            
+            if missing_sections:
+                print(f"   ❌ Missing sections: {missing_sections}")
+                results.append(False)
+            else:
+                print(f"   ✅ All {len(required_sections)} required sections present")
+                results.append(True)
+            
+            # Test 2: Verify Real Data vs Mock Data
+            print("\n📊 TEST 2: REAL DATA VERIFICATION")
+            overview = response.get('overview', {})
+            
+            # Check if data looks real (non-zero counts)
+            total_users = overview.get('total_users', 0)
+            total_tools = overview.get('total_tools', 0)
+            total_blogs = overview.get('total_blogs', 0)
+            total_reviews = overview.get('total_reviews', 0)
+            
+            print(f"   Database Counts:")
+            print(f"   - Users: {total_users}")
+            print(f"   - Tools: {total_tools}")
+            print(f"   - Blogs: {total_blogs}")
+            print(f"   - Reviews: {total_reviews}")
+            
+            if total_users > 0 and total_tools > 0:
+                print(f"   ✅ Real data detected (non-zero counts)")
+                results.append(True)
+            else:
+                print(f"   ⚠️ Data appears to be empty or mock")
+                results.append(False)
+            
+            # Test 3: Growth Calculations
+            print("\n📊 TEST 3: GROWTH CALCULATIONS")
+            monthly_growth = overview.get('monthly_growth', {})
+            
+            growth_metrics = ['users', 'tools', 'blogs', 'reviews']
+            valid_growth = True
+            
+            for metric in growth_metrics:
+                growth_value = monthly_growth.get(metric, 'N/A')
+                if isinstance(growth_value, (int, float)):
+                    print(f"   ✅ {metric} growth: {growth_value}%")
+                else:
+                    print(f"   ❌ {metric} growth: Invalid ({growth_value})")
+                    valid_growth = False
+            
+            results.append(valid_growth)
+            
+            # Test 4: Recent Activity
+            print("\n📊 TEST 4: RECENT ACTIVITY VERIFICATION")
+            recent_activity = response.get('recent_activity', {})
+            
+            activity_metrics = ['new_users_today', 'new_tools_today', 'new_blogs_today', 'new_reviews_today']
+            for metric in activity_metrics:
+                value = recent_activity.get(metric, 'N/A')
+                if isinstance(value, int) and value >= 0:
+                    print(f"   ✅ {metric}: {value}")
+                else:
+                    print(f"   ❌ {metric}: Invalid ({value})")
+            
+            # Check top categories
+            top_categories = recent_activity.get('top_categories', [])
+            if isinstance(top_categories, list) and len(top_categories) > 0:
+                print(f"   ✅ Top categories: {len(top_categories)} found")
+                for cat in top_categories[:3]:
+                    if isinstance(cat, dict) and 'name' in cat and 'tools' in cat:
+                        print(f"      - {cat['name']}: {cat['tools']} tools")
+                results.append(True)
+            else:
+                print(f"   ❌ Top categories: Empty or invalid")
+                results.append(False)
+            
+            # Test 5: System Health Metrics
+            print("\n📊 TEST 5: SYSTEM HEALTH METRICS")
+            system_health = response.get('system_health', {})
+            
+            health_metrics = [
+                'total_content_items', 'active_content_percentage', 
+                'user_engagement_score', 'content_quality_score'
+            ]
+            
+            valid_health = True
+            for metric in health_metrics:
+                value = system_health.get(metric, 'N/A')
+                if isinstance(value, (int, float)) and value >= 0:
+                    print(f"   ✅ {metric}: {value}")
+                else:
+                    print(f"   ❌ {metric}: Invalid ({value})")
+                    valid_health = False
+            
+            results.append(valid_health)
+        
+        # Test 6: Different Timeframes
+        print("\n📊 TEST 6: DIFFERENT TIMEFRAMES")
+        timeframes = [7, 30, 90]
+        
+        for timeframe in timeframes:
+            success, response = self.run_test(
+                f"Analytics - {timeframe} days",
+                "GET",
+                f"superadmin/dashboard/analytics?timeframe={timeframe}",
+                200,
+                description=f"Test analytics with {timeframe} day timeframe"
+            )
+            results.append(success)
+            
+            if success:
+                print(f"   ✅ {timeframe}-day timeframe working")
+            else:
+                print(f"   ❌ {timeframe}-day timeframe failed")
+        
+        # Test 7: Authentication Requirement
+        print("\n📊 TEST 7: AUTHENTICATION REQUIREMENT")
+        # Temporarily remove token to test authentication
+        original_token = self.token
+        self.token = None
+        
+        success, response = self.run_test(
+            "Analytics - No Auth",
+            "GET",
+            "superadmin/dashboard/analytics",
+            403,  # Should be forbidden without auth
+            description="Test analytics endpoint requires authentication"
+        )
+        results.append(success)
+        
+        # Restore token
+        self.token = original_token
+        
+        if success:
+            print(f"   ✅ Authentication requirement working")
+        else:
+            print(f"   ❌ Authentication requirement failed")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 SUPERADMIN DASHBOARD ANALYTICS SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL ANALYTICS TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some analytics tests failed")
+        
+        return all(results)
+
+    # BLOG PUBLISHING FLOW TESTING - REVIEW REQUEST
+    def test_blog_publishing_flow(self):
+        """Test complete blog creation and publishing workflow - REVIEW REQUEST"""
+        print("\n🔍 BLOG PUBLISHING FLOW TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        if not self.token:
+            print("❌ Skipping blog publishing test - no authentication token")
+            return False
+        
+        results = []
+        timestamp = datetime.now().strftime('%H%M%S')
+        
+        # Test 1: Create Blog (Should be Draft by Default)
+        print("\n📝 TEST 1: CREATE BLOG (DRAFT BY DEFAULT)")
+        blog_data = {
+            "title": f"Test Blog Publishing Flow {timestamp}",
+            "content": f"<h1>Test Blog Content</h1><p>This is a test blog post created at {timestamp} to test the complete publishing workflow.</p><p>This content tests the blog creation and publishing functionality with proper SEO data and JSON-LD structured data.</p>",
+            "excerpt": "Test blog post for publishing workflow testing",
+            "tags": ["test", "publishing", "workflow", "automation"],
+            "seo_title": f"Test Blog Publishing Flow {timestamp} - SEO Title",
+            "seo_description": "SEO description for test blog post publishing workflow",
+            "seo_keywords": "test, blog, publishing, workflow, automation",
+            "json_ld": {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": f"Test Blog Publishing Flow {timestamp}",
+                "author": {
+                    "@type": "Person",
+                    "name": "Test User"
+                },
+                "datePublished": datetime.now().isoformat(),
+                "description": "Test blog post for publishing workflow"
+            }
+        }
+        
+        success, response = self.run_test(
+            "Create Blog (Draft)",
+            "POST",
+            "user/blogs",
+            200,
+            data=blog_data,
+            description="Create new blog via POST /api/user/blogs (should be draft by default)"
+        )
+        results.append(success)
+        
+        created_blog_id = None
+        if success and isinstance(response, dict) and 'id' in response:
+            created_blog_id = response['id']
+            blog_status = response.get('status', 'unknown')
+            
+            print(f"   ✅ Blog created successfully")
+            print(f"   Blog ID: {created_blog_id}")
+            print(f"   Status: {blog_status}")
+            
+            # Verify it's draft by default
+            if blog_status == "draft":
+                print(f"   ✅ Blog created as draft (correct default)")
+                results.append(True)
+            else:
+                print(f"   ❌ Blog status is '{blog_status}', expected 'draft'")
+                results.append(False)
+            
+            # Store for cleanup
+            self.created_resources['blogs'].append({
+                'id': created_blog_id,
+                'title': blog_data['title']
+            })
+        else:
+            print(f"   ❌ Failed to create blog")
+            results.append(False)
+        
+        if not created_blog_id:
+            print("❌ Cannot continue testing - blog creation failed")
+            return False
+        
+        # Test 2: Verify Blog is Not in Public Blogs (Draft Status)
+        print("\n📝 TEST 2: VERIFY DRAFT NOT IN PUBLIC BLOGS")
+        success, public_blogs = self.run_test(
+            "Get Public Blogs",
+            "GET",
+            "blogs",
+            200,
+            description="Test GET /api/blogs (should only show published blogs)"
+        )
+        results.append(success)
+        
+        if success and isinstance(public_blogs, list):
+            # Check if our draft blog appears in public blogs
+            draft_found_in_public = any(
+                blog.get('id') == created_blog_id for blog in public_blogs
+            )
+            
+            if not draft_found_in_public:
+                print(f"   ✅ Draft blog correctly NOT in public blogs list")
+                results.append(True)
+            else:
+                print(f"   ❌ Draft blog incorrectly appears in public blogs")
+                results.append(False)
+            
+            # Show published blogs count
+            published_count = len(public_blogs)
+            print(f"   Public blogs count: {published_count}")
+        else:
+            print(f"   ❌ Failed to get public blogs")
+            results.append(False)
+        
+        # Test 3: Publish the Blog
+        print("\n📝 TEST 3: PUBLISH THE BLOG")
+        success, response = self.run_test(
+            "Publish Blog",
+            "POST",
+            f"user/blogs/{created_blog_id}/publish",
+            200,
+            description=f"Publish blog via POST /api/user/blogs/{created_blog_id}/publish"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Blog published successfully")
+        else:
+            print(f"   ❌ Failed to publish blog")
+        
+        # Test 4: Verify Blog Status Changed to Published
+        print("\n📝 TEST 4: VERIFY PUBLISHED STATUS")
+        success, blog_details = self.run_test(
+            "Get Published Blog Details",
+            "GET",
+            f"user/blogs/{created_blog_id}",
+            200,
+            description="Verify blog status changed to published"
+        )
+        results.append(success)
+        
+        if success and isinstance(blog_details, dict):
+            blog_status = blog_details.get('status', 'unknown')
+            published_at = blog_details.get('published_at')
+            
+            print(f"   Blog status: {blog_status}")
+            print(f"   Published at: {published_at}")
+            
+            if blog_status == "published":
+                print(f"   ✅ Blog status correctly changed to 'published'")
+                results.append(True)
+            else:
+                print(f"   ❌ Blog status is '{blog_status}', expected 'published'")
+                results.append(False)
+            
+            if published_at:
+                print(f"   ✅ Published timestamp set")
+                results.append(True)
+            else:
+                print(f"   ❌ Published timestamp missing")
+                results.append(False)
+        else:
+            print(f"   ❌ Failed to get blog details")
+            results.append(False)
+        
+        # Test 5: Verify Blog Now Appears in Public Blogs
+        print("\n📝 TEST 5: VERIFY PUBLISHED BLOG IN PUBLIC BLOGS")
+        success, public_blogs_after = self.run_test(
+            "Get Public Blogs After Publishing",
+            "GET",
+            "blogs",
+            200,
+            description="Verify published blog now appears in GET /api/blogs"
+        )
+        results.append(success)
+        
+        if success and isinstance(public_blogs_after, list):
+            # Check if our published blog appears in public blogs
+            published_found = any(
+                blog.get('id') == created_blog_id for blog in public_blogs_after
+            )
+            
+            if published_found:
+                print(f"   ✅ Published blog correctly appears in public blogs")
+                results.append(True)
+                
+                # Find and verify the blog details
+                published_blog = next(
+                    (blog for blog in public_blogs_after if blog.get('id') == created_blog_id), 
+                    None
+                )
+                
+                if published_blog:
+                    print(f"   Blog title: {published_blog.get('title', 'N/A')}")
+                    print(f"   Blog status: {published_blog.get('status', 'N/A')}")
+                    print(f"   Published at: {published_blog.get('published_at', 'N/A')}")
+                    
+                    if published_blog.get('status') == 'published':
+                        print(f"   ✅ Blog has correct published status in public API")
+                        results.append(True)
+                    else:
+                        print(f"   ❌ Blog status incorrect in public API")
+                        results.append(False)
+            else:
+                print(f"   ❌ Published blog does not appear in public blogs")
+                results.append(False)
+        else:
+            print(f"   ❌ Failed to get public blogs after publishing")
+            results.append(False)
+        
+        # Test 6: Test Published Blogs Filter
+        print("\n📝 TEST 6: TEST PUBLISHED BLOGS FILTER")
+        success, published_only = self.run_test(
+            "Get Published Blogs Only",
+            "GET",
+            "blogs?status=published",
+            200,
+            description="Test GET /api/blogs?status=published filter"
+        )
+        results.append(success)
+        
+        if success and isinstance(published_only, list):
+            # Verify all returned blogs are published
+            all_published = all(
+                blog.get('status') == 'published' for blog in published_only
+            )
+            
+            if all_published:
+                print(f"   ✅ All {len(published_only)} blogs have published status")
+                results.append(True)
+            else:
+                print(f"   ❌ Some blogs in published filter are not published")
+                results.append(False)
+            
+            # Verify our blog is in the list
+            our_blog_in_published = any(
+                blog.get('id') == created_blog_id for blog in published_only
+            )
+            
+            if our_blog_in_published:
+                print(f"   ✅ Our published blog appears in published filter")
+                results.append(True)
+            else:
+                print(f"   ❌ Our published blog missing from published filter")
+                results.append(False)
+        else:
+            print(f"   ❌ Failed to get published blogs filter")
+            results.append(False)
+        
+        # Test 7: Edge Case - Try to Publish Already Published Blog
+        print("\n📝 TEST 7: EDGE CASE - REPUBLISH ALREADY PUBLISHED BLOG")
+        success, response = self.run_test(
+            "Republish Already Published Blog",
+            "POST",
+            f"user/blogs/{created_blog_id}/publish",
+            200,  # Should still work (idempotent)
+            description="Test publishing already published blog (should be idempotent)"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Republishing works (idempotent operation)")
+        else:
+            print(f"   ❌ Republishing failed")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 BLOG PUBLISHING FLOW SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL BLOG PUBLISHING TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some blog publishing tests failed")
+        
+        return all(results)
+
     # ADMIN TESTS
     def test_admin_dashboard(self):
         """Test admin dashboard"""
