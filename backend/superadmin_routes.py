@@ -1196,3 +1196,209 @@ async def generate_json_ld_data(
             status_code=500, 
             detail=f"Failed to generate JSON-LD data: {str(e)}"
         )
+
+# SuperAdmin Dashboard Analytics Endpoint
+@router.get("/api/superadmin/dashboard/analytics")
+async def get_dashboard_analytics(
+    timeframe: int = Query(30, description="Timeframe in days for recent analytics"),
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Get comprehensive real-time analytics for SuperAdmin Dashboard"""
+    
+    try:
+        from datetime import datetime, timedelta
+        from sqlalchemy import func, and_
+        
+        # Calculate date range for recent activity
+        cutoff_date = datetime.utcnow() - timedelta(days=timeframe)
+        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        # Basic Counts
+        total_users = db.query(User).count()
+        total_tools = db.query(Tool).count()
+        total_blogs = db.query(Blog).count()
+        total_reviews = db.query(Review).count()
+        total_categories = db.query(Category).count()
+        
+        # Recent Activity (Today)
+        new_users_today = db.query(User).filter(User.created_at >= today_start).count()
+        new_tools_today = db.query(Tool).filter(Tool.created_at >= today_start).count()
+        new_blogs_today = db.query(Blog).filter(Blog.created_at >= today_start).count()
+        new_reviews_today = db.query(Review).filter(Review.created_at >= today_start).count()
+        
+        # Calculate growth percentages (compare current period vs previous period)
+        previous_period_start = cutoff_date - timedelta(days=timeframe)
+        
+        # Previous period counts
+        users_prev_period = db.query(User).filter(
+            User.created_at >= previous_period_start,
+            User.created_at < cutoff_date
+        ).count()
+        tools_prev_period = db.query(Tool).filter(
+            Tool.created_at >= previous_period_start,
+            Tool.created_at < cutoff_date
+        ).count()
+        blogs_prev_period = db.query(Blog).filter(
+            Blog.created_at >= previous_period_start,
+            Blog.created_at < cutoff_date
+        ).count()
+        reviews_prev_period = db.query(Review).filter(
+            Review.created_at >= previous_period_start,
+            Review.created_at < cutoff_date
+        ).count()
+        
+        # Current period counts
+        users_current_period = db.query(User).filter(User.created_at >= cutoff_date).count()
+        tools_current_period = db.query(Tool).filter(Tool.created_at >= cutoff_date).count()
+        blogs_current_period = db.query(Blog).filter(Blog.created_at >= cutoff_date).count()
+        reviews_current_period = db.query(Review).filter(Review.created_at >= cutoff_date).count()
+        
+        # Calculate growth percentages
+        def calculate_growth(current, previous):
+            if previous == 0:
+                return 100.0 if current > 0 else 0.0
+            return ((current - previous) / previous) * 100
+        
+        users_growth = calculate_growth(users_current_period, users_prev_period)
+        tools_growth = calculate_growth(tools_current_period, tools_prev_period)
+        blogs_growth = calculate_growth(blogs_current_period, blogs_prev_period)
+        reviews_growth = calculate_growth(reviews_current_period, reviews_prev_period)
+        
+        # Top Categories with Tool Counts and Growth
+        categories_data = db.query(
+            Category.name,
+            func.count(tool_categories.c.tool_id).label('tool_count')
+        ).outerjoin(tool_categories).group_by(Category.id, Category.name).order_by(
+            func.count(tool_categories.c.tool_id).desc()
+        ).limit(5).all()
+        
+        top_categories = []
+        for cat_name, tool_count in categories_data:
+            # Calculate growth for this category (simplified)
+            recent_tools = db.query(Tool).join(tool_categories).join(Category).filter(
+                Category.name == cat_name,
+                Tool.created_at >= cutoff_date
+            ).count()
+            prev_tools = db.query(Tool).join(tool_categories).join(Category).filter(
+                Category.name == cat_name,
+                Tool.created_at >= previous_period_start,
+                Tool.created_at < cutoff_date
+            ).count()
+            growth = calculate_growth(recent_tools, prev_tools)
+            
+            top_categories.append({
+                "name": cat_name,
+                "tools": tool_count,
+                "growth": round(growth, 1)
+            })
+        
+        # Performance Metrics
+        total_views = db.query(func.sum(Tool.view_count + Blog.view_count)).scalar() or 0
+        
+        # Average ratings
+        avg_tool_rating = db.query(func.avg(Tool.rating)).scalar() or 0.0
+        
+        # Content status breakdown
+        published_blogs = db.query(Blog).filter(Blog.status == "published").count()
+        draft_blogs = db.query(Blog).filter(Blog.status == "draft").count()
+        featured_tools = db.query(Tool).filter(Tool.is_featured == True).count()
+        active_tools = db.query(Tool).filter(Tool.is_active == True).count()
+        
+        # User role distribution
+        user_roles = db.query(
+            User.role,
+            func.count(User.id).label('count')
+        ).group_by(User.role).all()
+        
+        role_distribution = {role: count for role, count in user_roles}
+        
+        # Most Viewed Content
+        top_tools = db.query(Tool.name, Tool.view_count, Tool.rating).order_by(
+            Tool.view_count.desc()
+        ).limit(5).all()
+        
+        top_blogs = db.query(Blog.title, Blog.view_count, Blog.like_count).filter(
+            Blog.status == "published"
+        ).order_by(Blog.view_count.desc()).limit(5).all()
+        
+        # System Health Metrics
+        verified_users = db.query(User).filter(User.is_email_verified == True).count()
+        unverified_users = total_users - verified_users
+        inactive_tools = total_tools - active_tools
+        
+        # Recent High-Value Activity
+        recent_high_rated_reviews = db.query(Review).filter(
+            Review.created_at >= cutoff_date,
+            Review.rating >= 4
+        ).count()
+        
+        return {
+            "overview": {
+                "total_users": total_users,
+                "total_tools": total_tools,
+                "total_blogs": total_blogs,
+                "total_reviews": total_reviews,
+                "total_categories": total_categories,
+                "monthly_growth": {
+                    "users": round(users_growth, 1),
+                    "tools": round(tools_growth, 1),
+                    "blogs": round(blogs_growth, 1),
+                    "reviews": round(reviews_growth, 1)
+                }
+            },
+            "recent_activity": {
+                "new_users_today": new_users_today,
+                "new_tools_today": new_tools_today,
+                "new_blogs_today": new_blogs_today,
+                "new_reviews_today": new_reviews_today,
+                "top_categories": top_categories
+            },
+            "performance": {
+                "total_views": total_views,
+                "avg_rating": round(avg_tool_rating, 1),
+                "featured_tools": featured_tools,
+                "published_blogs": published_blogs,
+                "recent_high_rated_reviews": recent_high_rated_reviews
+            },
+            "content_status": {
+                "active_tools": active_tools,
+                "inactive_tools": inactive_tools,
+                "published_blogs": published_blogs,
+                "draft_blogs": draft_blogs,
+                "featured_tools": featured_tools
+            },
+            "user_insights": {
+                "role_distribution": role_distribution,
+                "verified_users": verified_users,
+                "unverified_users": unverified_users,
+                "verification_rate": round((verified_users / total_users * 100) if total_users > 0 else 0, 1)
+            },
+            "top_content": {
+                "most_viewed_tools": [
+                    {"name": name, "views": views, "rating": rating} 
+                    for name, views, rating in top_tools
+                ],
+                "most_viewed_blogs": [
+                    {"title": title, "views": views, "likes": likes} 
+                    for title, views, likes in top_blogs
+                ]
+            },
+            "system_health": {
+                "total_content_items": total_tools + total_blogs,
+                "active_content_percentage": round(
+                    ((active_tools + published_blogs) / (total_tools + total_blogs) * 100) 
+                    if (total_tools + total_blogs) > 0 else 0, 1
+                ),
+                "user_engagement_score": round(
+                    (total_reviews + total_views/1000) / total_users if total_users > 0 else 0, 1
+                ),
+                "content_quality_score": round(avg_tool_rating * 20, 1)  # Convert to 100-point scale
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to fetch dashboard analytics: {str(e)}"
+        )
