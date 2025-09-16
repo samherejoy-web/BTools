@@ -78,6 +78,15 @@ def get_tools_routes():
         seo_description: Optional[str]
         seo_keywords: Optional[str]
         json_ld: Optional[dict] = None
+        # New company-related fields
+        linkedin_url: Optional[str] = None
+        company_funding: Optional[Dict[str, Any]] = None
+        company_news: Optional[str] = None
+        company_location: Optional[str] = None
+        company_founders: Optional[List[Dict[str, str]]] = None
+        about: Optional[str] = None
+        started_on: Optional[str] = None
+        logo_thumbnail_url: Optional[str] = None
     
     class ToolCommentCreate(BaseModel):
         content: str
