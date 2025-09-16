@@ -324,7 +324,16 @@ def get_tools_routes():
             seo_title=tool.seo_title,
             seo_description=tool.seo_description,
             seo_keywords=tool.seo_keywords,
-            json_ld=tool.json_ld
+            json_ld=tool.json_ld,
+            # New company-related fields
+            linkedin_url=tool.linkedin_url,
+            company_funding=tool.company_funding,
+            company_news=tool.company_news,
+            company_location=tool.company_location,
+            company_founders=tool.company_founders,
+            about=tool.about,
+            started_on=tool.started_on,
+            logo_thumbnail_url=tool.logo_thumbnail_url
         )
     
     @router.get("/api/tools/by-slug/{tool_slug}", response_model=ToolResponse)
