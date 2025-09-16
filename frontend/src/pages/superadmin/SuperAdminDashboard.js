@@ -277,6 +277,63 @@ const SuperAdminDashboard = () => {
         })}
       </div>
 
+      {/* System Health Metrics */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900">System Health & Insights</h2>
+          <Badge className="bg-green-100 text-green-800">
+            Real-time Data
+          </Badge>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {systemHealthCards.map((metric, index) => {
+            const Icon = metric.icon;
+            const getTrendColor = (trend) => {
+              switch(trend) {
+                case 'good': return 'text-green-600';
+                case 'warning': return 'text-yellow-600';
+                case 'ok': return 'text-blue-600';
+                default: return 'text-gray-600';
+              }
+            };
+            const getTrendBg = (trend) => {
+              switch(trend) {
+                case 'good': return 'bg-green-50 border-green-200';
+                case 'warning': return 'bg-yellow-50 border-yellow-200';
+                case 'ok': return 'bg-blue-50 border-blue-200';
+                default: return 'bg-gray-50 border-gray-200';
+              }
+            };
+            
+            return (
+              <Card key={index} className={`border-0 shadow-sm hover:shadow-md transition-all duration-300 ${getTrendBg(metric.trend)}`}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600 mb-1">{metric.title}</p>
+                      <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+                      <div className="flex items-center mt-1">
+                        <div className={`w-2 h-2 rounded-full mr-2 ${
+                          metric.trend === 'good' ? 'bg-green-500' : 
+                          metric.trend === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                        }`}></div>
+                        <span className={`text-xs font-medium ${getTrendColor(metric.trend)}`}>
+                          {metric.trend === 'good' ? 'Excellent' : 
+                           metric.trend === 'warning' ? 'Needs Attention' : 'Good'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={`h-10 w-10 ${metric.color} rounded-lg flex items-center justify-center`}>
+                      <Icon className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Charts and Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Categories */}
