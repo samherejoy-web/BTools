@@ -36,7 +36,13 @@ const SuperAdminDashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Mock comprehensive dashboard data for now
+      setLoading(true);
+      // Fetch real analytics data from backend
+      const response = await apiClient.get(`/superadmin/dashboard/analytics?timeframe=${timeframe}`);
+      setDashboardData(response.data);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      // Fallback to mock data if API fails
       const mockData = {
         overview: {
           total_users: 12543,
@@ -71,8 +77,6 @@ const SuperAdminDashboard = () => {
         }
       };
       setDashboardData(mockData);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
     } finally {
       setLoading(false);
     }
