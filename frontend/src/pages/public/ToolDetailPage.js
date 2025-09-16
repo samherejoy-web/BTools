@@ -426,9 +426,63 @@ const ToolDetailPage = () => {
                     <CardTitle>About {tool.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 leading-relaxed">{tool.description}</p>
+                    <p className="text-gray-700 leading-relaxed">
+                      {tool.about || tool.description}
+                    </p>
                   </CardContent>
                 </Card>
+
+                {/* Company Information */}
+                {(tool.company_founders || tool.company_funding || tool.company_news) && (
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader>
+                      <CardTitle>Company Information</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {tool.company_founders && tool.company_founders.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2">Founders</h4>
+                          <div className="flex flex-wrap gap-3">
+                            {tool.company_founders.map((founder, index) => (
+                              <div key={index} className="bg-gray-50 px-3 py-2 rounded-lg">
+                                <div className="font-medium text-gray-900">{founder.name}</div>
+                                <div className="text-sm text-gray-600">{founder.role}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {tool.company_funding && (
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2">Funding</h4>
+                          <div className="bg-blue-50 px-4 py-3 rounded-lg">
+                            <div className="flex items-center gap-4 text-sm">
+                              {tool.company_funding.amount && (
+                                <span><strong>Amount:</strong> {tool.company_funding.amount}</span>
+                              )}
+                              {tool.company_funding.round && (
+                                <span><strong>Round:</strong> {tool.company_funding.round}</span>
+                              )}
+                              {tool.company_funding.date && (
+                                <span><strong>Date:</strong> {tool.company_funding.date}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {tool.company_news && (
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2">Recent News</h4>
+                          <p className="text-gray-700 bg-yellow-50 px-4 py-3 rounded-lg">
+                            {tool.company_news}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
 
                 {tool.pros?.length > 0 && (
                   <Card className="border-0 shadow-sm">
