@@ -418,6 +418,95 @@ const SuperAdminTools = () => {
               </div>
             </div>
 
+            {/* Company Information Section */}
+            <div className="lg:col-span-2 pt-4 border-t">
+              <h3 className="text-lg font-semibold mb-4">Company Information</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Company Location</label>
+                  <input
+                    type="text"
+                    value={formData.company_location}
+                    onChange={(e) => setFormData({...formData, company_location: e.target.value})}
+                    placeholder="e.g., San Francisco, CA"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Founded Date</label>
+                  <input
+                    type="text"
+                    value={formData.started_on}
+                    onChange={(e) => setFormData({...formData, started_on: e.target.value})}
+                    placeholder="e.g., 2020-01-01"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">LinkedIn URL</label>
+                  <input
+                    type="url"
+                    value={formData.linkedin_url}
+                    onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
+                    placeholder="https://linkedin.com/company/..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Logo Thumbnail URL (Google Drive)</label>
+                  <input
+                    type="url"
+                    value={formData.logo_thumbnail_url}
+                    onChange={(e) => setFormData({...formData, logo_thumbnail_url: e.target.value})}
+                    placeholder="https://drive.google.com/uc?id=..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">About Company</label>
+                  <textarea
+                    value={formData.about}
+                    onChange={(e) => setFormData({...formData, about: e.target.value})}
+                    rows={3}
+                    placeholder="Detailed company description..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Company News</label>
+                  <textarea
+                    value={formData.company_news}
+                    onChange={(e) => setFormData({...formData, company_news: e.target.value})}
+                    rows={2}
+                    placeholder="Recent news about the company..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Company Funding (JSON)</label>
+                  <textarea
+                    value={formData.company_funding}
+                    onChange={(e) => setFormData({...formData, company_funding: e.target.value})}
+                    rows={3}
+                    placeholder='{"amount": "10M", "round": "Series A", "date": "2023-01-01"}'
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Enter valid JSON format</p>
+                </div>
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Company Founders (JSON)</label>
+                  <textarea
+                    value={formData.company_founders}
+                    onChange={(e) => setFormData({...formData, company_founders: e.target.value})}
+                    rows={3}
+                    placeholder='[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]'
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Enter valid JSON array format</p>
+                </div>
+              </div>
+            </div>
+
             {/* Form Actions */}
             <div className="lg:col-span-2 flex gap-3 pt-6 border-t">
               <Button type="submit" className="flex-1">
