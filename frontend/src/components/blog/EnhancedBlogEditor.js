@@ -5,6 +5,7 @@ import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import CodeBlock from '@tiptap/extension-code-block';
 import Typography from '@tiptap/extension-typography';
+import Placeholder from '@tiptap/extension-placeholder';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -32,7 +33,11 @@ import {
   X,
   Plus,
   Maximize2,
-  Minimize2
+  Minimize2,
+  BookOpen,
+  Sparkles,
+  Type,
+  Focus
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -40,6 +45,8 @@ import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
+import ContextualToolbar from './ContextualToolbar';
+import '../../../styles/medium-typography.css';
 
 const EnhancedBlogEditor = ({ 
   initialContent = '', 
