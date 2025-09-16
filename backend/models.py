@@ -90,6 +90,16 @@ class Tool(Base):
     seo_keywords = Column(String)
     json_ld = Column(JSON)
     
+    # New company-related fields
+    linkedin_url = Column(String)
+    company_funding = Column(JSON)  # {"amount": "10M", "round": "Series A", "date": "2023-01-01"}
+    company_news = Column(Text)
+    company_location = Column(String)
+    company_founders = Column(JSON)  # [{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]
+    about = Column(Text)
+    started_on = Column(String)  # Founded date
+    logo_thumbnail_url = Column(String)  # Google Drive thumbnail URL
+    
     # Relationships
     categories = relationship("Category", secondary=tool_categories, back_populates="tools")
     reviews = relationship("Review", back_populates="tool")
