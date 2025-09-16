@@ -368,7 +368,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "SuperAdmin Dashboard Analytics and Blog Publishing - REVIEW REQUEST"
+    - "Blog Medium-Style Enhancements - REVIEW REQUEST"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
