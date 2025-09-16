@@ -17,7 +17,7 @@ except ImportError:
     Image = None
 
 class ImageUploadTester:
-    def __init__(self, base_url="https://seo-audit-crawl.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://medium-clone-3.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0

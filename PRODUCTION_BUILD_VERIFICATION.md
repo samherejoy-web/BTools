@@ -44,7 +44,7 @@
 <meta name="keywords" content="business tools, productivity software..." />
 <meta property="og:title" content="MarketMind - Discover..." />
 <meta property="og:description" content="Find, compare, and choose..." />
-<link rel="canonical" href="https://seo-audit-crawl.preview.emergentagent.com" />
+<link rel="canonical" href="https://medium-clone-3.preview.emergentagent.com" />
 ```
 
 ### **JSON-LD Structured Data Validated**:
