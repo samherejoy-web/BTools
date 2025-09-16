@@ -273,8 +273,51 @@ const ToolDetailPage = () => {
             <div className="lg:col-span-2">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex-1">
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">{tool.name}</h1>
-                  <p className="text-xl text-gray-600 mb-4">{tool.short_description}</p>
+                  <div className="flex items-start gap-4 mb-4">
+                    {/* Company Logo Thumbnail */}
+                    {tool.logo_thumbnail_url && (
+                      <div className="flex-shrink-0">
+                        <img 
+                          src={tool.logo_thumbnail_url} 
+                          alt={`${tool.name} logo`}
+                          className="w-16 h-16 rounded-lg object-cover border border-gray-200"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="flex-1">
+                      <h1 className="text-4xl font-bold text-gray-900 mb-2">{tool.name}</h1>
+                      <p className="text-xl text-gray-600 mb-2">{tool.short_description}</p>
+                      
+                      {/* Company Info */}
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-2">
+                        {tool.company_location && (
+                          <span className="flex items-center gap-1">
+                            📍 {tool.company_location}
+                          </span>
+                        )}
+                        {tool.started_on && (
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            Founded {tool.started_on}
+                          </span>
+                        )}
+                        {tool.linkedin_url && (
+                          <a 
+                            href={tool.linkedin_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:text-blue-600 transition-colors"
+                          >
+                            💼 LinkedIn
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                   
                     <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-2">
