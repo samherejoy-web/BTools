@@ -126,6 +126,14 @@ const EnhancedBlogEditor = ({
       const newContent = editor.getHTML();
       setContent(newContent);
       
+      // Update writing stats
+      const text = newContent.replace(/<[^>]*>/g, '');
+      const words = text.split(/\s+/).filter(word => word.length > 0).length;
+      const characters = text.length;
+      const readingTime = Math.ceil(words / 200);
+      
+      setWritingStats({ words, characters, readingTime });
+      
       // Auto-save functionality
       if (autoSaveTimer) {
         clearTimeout(autoSaveTimer);
@@ -141,7 +149,7 @@ const EnhancedBlogEditor = ({
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none focus:outline-none min-h-[400px] p-6',
+        class: `medium-article prose prose-lg max-w-none focus:outline-none min-h-[400px] p-6 ${isFocusMode ? 'p-12' : ''}`,
       },
     },
   });
