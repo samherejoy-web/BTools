@@ -46,7 +46,7 @@ import { Separator } from '../ui/separator';
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import ContextualToolbar from './ContextualToolbar';
-import '../../../styles/medium-typography.css';
+import '../../styles/medium-typography.css';
 
 const EnhancedBlogEditor = ({ 
   initialContent = '', 
