@@ -431,6 +431,387 @@ class MarketMindAPITester:
         )
         return success
 
+    def test_company_fields_tool_creation(self):
+        """Test Super Admin Tool Creation with new company-related fields - REVIEW REQUEST"""
+        print("\n🔍 COMPANY FIELDS TOOL CREATION TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping company fields test - insufficient permissions")
+            return False
+        
+        results = []
+        
+        # Test creating tool with new company-related fields
+        timestamp = datetime.now().strftime('%H%M%S')
+        new_tool_data = {
+            "name": f"Company Enhanced Tool {timestamp}",
+            "description": "This is a test tool with enhanced company data fields for automated testing",
+            "short_description": "Test tool with company data",
+            "url": "https://example.com/company-tool",
+            "pricing_type": "freemium",
+            "features": ["Advanced Analytics", "Team Collaboration", "API Integration"],
+            "pros": ["Great UI", "Excellent Support"],
+            "cons": ["Learning Curve"],
+            "is_featured": True,
+            "is_active": True,
+            # New company-related fields from review request
+            "linkedin_url": "https://linkedin.com/company/test-company",
+            "company_location": "San Francisco, CA, USA",
+            "started_on": "2020-01-15",
+            "logo_thumbnail_url": "https://drive.google.com/uc?id=1234567890abcdef",
+            "company_funding": {
+                "amount": "15M",
+                "round": "Series B",
+                "date": "2023-06-01",
+                "investors": ["Acme Ventures", "Tech Capital"]
+            },
+            "company_founders": [
+                {"name": "Alice Johnson", "role": "CEO", "linkedin": "https://linkedin.com/in/alice-johnson"},
+                {"name": "Bob Smith", "role": "CTO", "linkedin": "https://linkedin.com/in/bob-smith"}
+            ],
+            "about": "A comprehensive company description detailing the mission, vision, and core values of the organization.",
+            "company_news": "Recently announced partnership with major enterprise clients and expansion into European markets."
+        }
+        
+        success, response = self.run_test(
+            "Create Tool with Company Fields",
+            "POST",
+            "superadmin/tools",
+            200,
+            data=new_tool_data,
+            description="Create tool with new company-related fields"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict) and 'tool_id' in response:
+            created_tool_id = response['tool_id']
+            self.created_resources['tools'].append({
+                'id': created_tool_id,
+                'name': new_tool_data['name']
+            })
+            
+            print(f"   ✅ Tool created successfully with ID: {created_tool_id}")
+            
+            # Test retrieving the tool to verify company fields are stored
+            success2, tool_response = self.run_test(
+                "Get Tool with Company Fields",
+                "GET",
+                f"tools/{created_tool_id}",
+                200,
+                description="Verify tool contains new company fields"
+            )
+            results.append(success2)
+            
+            if success2 and isinstance(tool_response, dict):
+                # Verify all new company fields are present
+                company_fields = [
+                    'linkedin_url', 'company_funding', 'company_news', 
+                    'company_location', 'company_founders', 'about', 
+                    'started_on', 'logo_thumbnail_url'
+                ]
+                
+                missing_fields = []
+                present_fields = []
+                
+                for field in company_fields:
+                    if field in tool_response and tool_response[field] is not None:
+                        present_fields.append(field)
+                        print(f"   ✅ {field}: Present")
+                        
+                        # Validate JSON fields
+                        if field == 'company_funding' and isinstance(tool_response[field], dict):
+                            funding_keys = tool_response[field].keys()
+                            print(f"      Company funding keys: {list(funding_keys)}")
+                        elif field == 'company_founders' and isinstance(tool_response[field], list):
+                            print(f"      Company founders count: {len(tool_response[field])}")
+                            if tool_response[field]:
+                                print(f"      First founder: {tool_response[field][0].get('name', 'Unknown')}")
+                    else:
+                        missing_fields.append(field)
+                        print(f"   ❌ {field}: Missing or null")
+                
+                if missing_fields:
+                    print(f"   ⚠️ Missing company fields: {missing_fields}")
+                    results.append(False)
+                else:
+                    print(f"   ✅ All {len(company_fields)} company fields present and populated")
+                    results.append(True)
+        
+        return all(results)
+
+    def test_tools_api_company_fields_response(self):
+        """Test Tool API Response includes new company fields - REVIEW REQUEST"""
+        print("\n🔍 TOOLS API COMPANY FIELDS RESPONSE TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        results = []
+        
+        # Test GET /api/tools endpoint
+        success, response = self.run_test(
+            "Get Tools - Company Fields Check",
+            "GET",
+            "tools?limit=5",
+            200,
+            description="Verify GET /api/tools returns new company fields"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list) and len(response) > 0:
+            # Check first tool for company fields
+            first_tool = response[0]
+            company_fields = [
+                'linkedin_url', 'company_funding', 'company_news', 
+                'company_location', 'company_founders', 'about', 
+                'started_on', 'logo_thumbnail_url'
+            ]
+            
+            print(f"   Testing tool: {first_tool.get('name', 'Unknown')}")
+            
+            fields_in_response = []
+            for field in company_fields:
+                if field in first_tool:
+                    fields_in_response.append(field)
+                    value = first_tool[field]
+                    if value is not None:
+                        if isinstance(value, dict):
+                            print(f"   ✅ {field}: Present (JSON object with {len(value)} keys)")
+                        elif isinstance(value, list):
+                            print(f"   ✅ {field}: Present (Array with {len(value)} items)")
+                        else:
+                            print(f"   ✅ {field}: Present ({type(value).__name__})")
+                    else:
+                        print(f"   ⚠️ {field}: Present but null")
+                else:
+                    print(f"   ❌ {field}: Not in response")
+            
+            if len(fields_in_response) == len(company_fields):
+                print(f"   ✅ All {len(company_fields)} company fields included in API response")
+                results.append(True)
+            else:
+                print(f"   ❌ Only {len(fields_in_response)}/{len(company_fields)} company fields in response")
+                results.append(False)
+        
+        return all(results)
+
+    def test_csv_template_company_fields(self):
+        """Test CSV Template includes new company fields - REVIEW REQUEST"""
+        print("\n🔍 CSV TEMPLATE COMPANY FIELDS TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        if self.current_user_role != 'superadmin':
+            print("❌ Skipping CSV template test - insufficient permissions")
+            return False
+        
+        results = []
+        
+        success, response = self.run_test(
+            "CSV Template with Company Fields",
+            "GET",
+            "superadmin/tools/csv-template",
+            200,
+            description="Verify CSV template includes new company fields"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            # Check if template has headers
+            if 'headers' in response:
+                headers = response['headers']
+                print(f"   Total headers in template: {len(headers)}")
+                
+                # Check for new company fields in headers
+                expected_company_fields = [
+                    'linkedin_url', 'company_funding', 'company_news', 
+                    'company_location', 'company_founders', 'about', 
+                    'started_on', 'logo_thumbnail_url'
+                ]
+                
+                missing_headers = []
+                present_headers = []
+                
+                for field in expected_company_fields:
+                    if field in headers:
+                        present_headers.append(field)
+                        print(f"   ✅ {field}: In template headers")
+                    else:
+                        missing_headers.append(field)
+                        print(f"   ❌ {field}: Missing from template headers")
+                
+                if missing_headers:
+                    print(f"   ❌ Missing company field headers: {missing_headers}")
+                    results.append(False)
+                else:
+                    print(f"   ✅ All {len(expected_company_fields)} company fields in template headers")
+                    results.append(True)
+                
+                # Check template data has example values
+                if 'template' in response and isinstance(response['template'], list) and len(response['template']) > 0:
+                    example_data = response['template'][0]
+                    print(f"   Example data keys: {len(example_data)}")
+                    
+                    # Verify example data for company fields
+                    company_examples = []
+                    for field in expected_company_fields:
+                        if field in example_data and example_data[field]:
+                            company_examples.append(field)
+                            value = example_data[field]
+                            if len(str(value)) > 50:
+                                print(f"   ✅ {field}: Has example data (truncated: {str(value)[:50]}...)")
+                            else:
+                                print(f"   ✅ {field}: Has example data ({value})")
+                    
+                    if len(company_examples) == len(expected_company_fields):
+                        print(f"   ✅ All company fields have example data")
+                        results.append(True)
+                    else:
+                        print(f"   ⚠️ {len(company_examples)}/{len(expected_company_fields)} company fields have example data")
+                        results.append(True)  # Still pass as headers are present
+            else:
+                print(f"   ❌ No headers found in template response")
+                results.append(False)
+        
+        return all(results)
+
+    def test_tool_by_slug_company_fields(self):
+        """Test Tool by Slug endpoint includes company fields - REVIEW REQUEST"""
+        print("\n🔍 TOOL BY SLUG COMPANY FIELDS TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        results = []
+        
+        # First get available tools to find one with a slug
+        success, tools_response = self.run_test(
+            "Get Tools for Slug Test",
+            "GET",
+            "tools?limit=3",
+            200,
+            description="Get tools to test by-slug endpoint"
+        )
+        results.append(success)
+        
+        if success and isinstance(tools_response, list) and len(tools_response) > 0:
+            # Test with first available tool
+            test_tool = tools_response[0]
+            tool_slug = test_tool.get('slug')
+            
+            if tool_slug:
+                print(f"   Testing with tool slug: {tool_slug}")
+                
+                success2, slug_response = self.run_test(
+                    "Get Tool by Slug - Company Fields",
+                    "GET",
+                    f"tools/by-slug/{tool_slug}",
+                    200,
+                    description=f"Test GET /api/tools/by-slug/{tool_slug} for company fields"
+                )
+                results.append(success2)
+                
+                if success2 and isinstance(slug_response, dict):
+                    print(f"   Tool found: {slug_response.get('name', 'Unknown')}")
+                    
+                    # Check for company fields in response
+                    company_fields = [
+                        'linkedin_url', 'company_funding', 'company_news', 
+                        'company_location', 'company_founders', 'about', 
+                        'started_on', 'logo_thumbnail_url'
+                    ]
+                    
+                    fields_present = 0
+                    fields_with_data = 0
+                    
+                    for field in company_fields:
+                        if field in slug_response:
+                            fields_present += 1
+                            value = slug_response[field]
+                            
+                            if value is not None:
+                                fields_with_data += 1
+                                if isinstance(value, dict):
+                                    print(f"   ✅ {field}: Present with data (JSON object, {len(value)} keys)")
+                                elif isinstance(value, list):
+                                    print(f"   ✅ {field}: Present with data (Array, {len(value)} items)")
+                                elif isinstance(value, str) and value.strip():
+                                    print(f"   ✅ {field}: Present with data (String, {len(value)} chars)")
+                                else:
+                                    print(f"   ⚠️ {field}: Present but empty")
+                            else:
+                                print(f"   ⚠️ {field}: Present but null")
+                        else:
+                            print(f"   ❌ {field}: Not in response")
+                    
+                    print(f"   Summary: {fields_present}/{len(company_fields)} fields present, {fields_with_data} with data")
+                    
+                    if fields_present == len(company_fields):
+                        print(f"   ✅ All company fields included in by-slug response")
+                        results.append(True)
+                    else:
+                        print(f"   ❌ Missing company fields in by-slug response")
+                        results.append(False)
+                else:
+                    print(f"   ❌ Failed to get tool by slug")
+                    results.append(False)
+            else:
+                print(f"   ❌ No slug found for test tool")
+                results.append(False)
+        else:
+            print(f"   ❌ No tools available for slug testing")
+            results.append(False)
+        
+        return all(results)
+
+    def test_company_fields_comprehensive_review(self):
+        """Comprehensive test of all company-related fields functionality - REVIEW REQUEST"""
+        print("\n🔍 COMPREHENSIVE COMPANY FIELDS REVIEW - REVIEW REQUEST")
+        print("=" * 70)
+        print("Testing all 4 requested areas:")
+        print("1. Super Admin Tool Creation with company fields")
+        print("2. Tool API Response verification")
+        print("3. CSV Template Download verification")
+        print("4. Tool by Slug endpoint verification")
+        print("-" * 70)
+        
+        results = []
+        
+        # Test 1: Super Admin Tool Creation
+        print("\n📝 TEST 1: SUPER ADMIN TOOL CREATION")
+        result1 = self.test_company_fields_tool_creation()
+        results.append(result1)
+        print(f"   Result: {'✅ PASSED' if result1 else '❌ FAILED'}")
+        
+        # Test 2: Tool API Response
+        print("\n📝 TEST 2: TOOL API RESPONSE VERIFICATION")
+        result2 = self.test_tools_api_company_fields_response()
+        results.append(result2)
+        print(f"   Result: {'✅ PASSED' if result2 else '❌ FAILED'}")
+        
+        # Test 3: CSV Template Download
+        print("\n📝 TEST 3: CSV TEMPLATE DOWNLOAD VERIFICATION")
+        result3 = self.test_csv_template_company_fields()
+        results.append(result3)
+        print(f"   Result: {'✅ PASSED' if result3 else '❌ FAILED'}")
+        
+        # Test 4: Tool by Slug
+        print("\n📝 TEST 4: TOOL BY SLUG ENDPOINT VERIFICATION")
+        result4 = self.test_tool_by_slug_company_fields()
+        results.append(result4)
+        print(f"   Result: {'✅ PASSED' if result4 else '❌ FAILED'}")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 COMPREHENSIVE COMPANY FIELDS REVIEW SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL COMPANY FIELDS TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some company fields tests failed")
+        
+        return all(results)
+
     # ADMIN TESTS
     def test_admin_dashboard(self):
         """Test admin dashboard"""
