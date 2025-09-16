@@ -75,6 +75,18 @@ const BlogDetailPage = () => {
     }
   }, [blogSlug]);
 
+  // Calculate reading stats when blog content changes
+  useEffect(() => {
+    if (blog?.content) {
+      const text = blog.content.replace(/<[^>]*>/g, ''); // Strip HTML tags
+      const words = text.split(/\s+/).filter(word => word.length > 0).length;
+      const time = Math.ceil(words / 200); // 200 words per minute
+      
+      setWordCount(words);
+      setReadingTime(time);
+    }
+  }, [blog?.content]);
+
   const fetchBlogDetails = async () => {
     try {
       setLoading(true);
