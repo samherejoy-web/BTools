@@ -81,6 +81,11 @@ const EnhancedBlogEditor = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [autoSaveTimer, setAutoSaveTimer] = useState(null);
   
+  // Medium-style states
+  const [isFocusMode, setIsFocusMode] = useState(false);
+  const [showToolbar, setShowToolbar] = useState(true);
+  const [writingStats, setWritingStats] = useState({ words: 0, characters: 0, readingTime: 0 });
+  
   // TipTap editor configuration
   const editor = useEditor({
     extensions: [
