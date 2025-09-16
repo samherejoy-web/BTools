@@ -235,15 +235,14 @@ const EnhancedBlogEditor = ({
     setTags(prev => prev.filter(tag => tag !== tagToRemove));
   }, []);
 
-  // Content statistics
+  // Content statistics - Update to use the new writingStats
   const stats = useMemo(() => {
-    const text = content.replace(/<[^>]*>/g, ''); // Strip HTML tags
-    const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
-    const charCount = text.length;
-    const readingTime = Math.ceil(wordCount / 200);
-    
-    return { wordCount, charCount, readingTime };
-  }, [content]);
+    return {
+      wordCount: writingStats.words,
+      charCount: writingStats.characters,
+      readingTime: writingStats.readingTime
+    };
+  }, [writingStats]);
 
   // Convert HTML to Markdown (simplified)
   const htmlToMarkdown = (html) => {
