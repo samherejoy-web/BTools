@@ -97,7 +97,7 @@ const EnhancedBlogEditor = ({
       Image.configure({
         allowBase64: false,
         HTMLAttributes: {
-          class: 'rounded-lg max-w-full h-auto',
+          class: 'rounded-lg max-w-full h-auto my-4',
         },
       }),
       Link.configure({
@@ -108,10 +108,18 @@ const EnhancedBlogEditor = ({
       }),
       CodeBlock.configure({
         HTMLAttributes: {
-          class: 'bg-gray-100 rounded-md p-4 font-mono text-sm',
+          class: 'bg-gray-100 rounded-md p-4 font-mono text-sm my-4',
         },
       }),
       Typography,
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          if (node.type.name === 'heading') {
+            return 'What\'s the title?';
+          }
+          return 'Tell your story...';
+        },
+      }),
     ],
     content: initialContent,
     onUpdate: ({ editor }) => {
