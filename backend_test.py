@@ -8928,8 +8928,47 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
         print("🚀 Starting Comprehensive MarketMindAI API Testing")
         print("=" * 60)
         
-        # For the review request, focus on blog Medium-style enhancements
-        return self.test_blog_medium_style_enhancements()
+        # Basic API tests first
+        print("\n📋 BASIC API TESTS")
+        print("-" * 50)
+        self.test_health_check()
+        
+        # Authentication - try to login as a user to test blog functionality
+        print("\n🔐 AUTHENTICATION FOR BLOG TESTING")
+        print("-" * 50)
+        
+        # Try different user accounts
+        user_accounts = [
+            ("superadmin@marketmind.com", "admin123", "superadmin"),
+            ("admin@marketmind.com", "admin123", "admin"),
+            ("user@marketmind.com", "user123", "user")
+        ]
+        
+        authenticated = False
+        for email, password, expected_role in user_accounts:
+            success, role = self.test_login(email, password)
+            if success and role:
+                print(f"✅ Successfully authenticated as {role}")
+                authenticated = True
+                break
+        
+        if not authenticated:
+            # Try to register a new user for testing
+            print("🔄 No existing users found, creating test user...")
+            self.test_register()
+            # Try to login with a generic user account
+            success, role = self.test_login("test_user@test.com", "TestPass123!")
+            if success:
+                authenticated = True
+        
+        if authenticated:
+            # Run the Medium-style blog enhancement tests
+            print("\n🎯 BLOG MEDIUM-STYLE ENHANCEMENTS TESTING")
+            print("=" * 70)
+            return self.test_blog_medium_style_enhancements()
+        else:
+            print("❌ Could not authenticate - skipping blog tests")
+            return False
 
 if __name__ == "__main__":
     tester = MarketMindAPITester()
