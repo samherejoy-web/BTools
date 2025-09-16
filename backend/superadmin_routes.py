@@ -607,7 +607,16 @@ async def download_csv_template(
             "features": "Feature 1;Feature 2;Feature 3",
             "pros": "Pro 1;Pro 2",
             "cons": "Con 1;Con 2",
-            "is_active": "true"
+            "is_active": "true",
+            # New company-related fields
+            "linkedin_url": "https://linkedin.com/company/example-tool",
+            "company_funding": '{"amount": "10M", "round": "Series A", "date": "2023-01-01"}',
+            "company_news": "Recent news about the company",
+            "company_location": "San Francisco, CA",
+            "company_founders": '[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]',
+            "about": "Detailed information about the company",
+            "started_on": "2020-01-01",
+            "logo_thumbnail_url": "https://drive.google.com/uc?id=example-file-id"
         }
     ]
     
