@@ -8972,5 +8972,30 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
 
 if __name__ == "__main__":
     tester = MarketMindAPITester()
-    tester.run_comprehensive_tests()
-    tester.print_test_summary()
+    success = tester.run_comprehensive_tests()
+    
+    # Print final summary
+    print(f"\n" + "="*80)
+    print(f"🏁 TESTING COMPLETED")
+    print(f"="*80)
+    print(f"Total tests run: {tester.tests_run}")
+    print(f"Tests passed: {tester.tests_passed}")
+    print(f"Tests failed: {len(tester.failed_tests)}")
+    
+    if tester.tests_run > 0:
+        success_rate = (tester.tests_passed / tester.tests_run) * 100
+        print(f"Success rate: {success_rate:.1f}%")
+    
+    if tester.failed_tests:
+        print(f"\n❌ FAILED TESTS:")
+        for i, failed_test in enumerate(tester.failed_tests[:10], 1):
+            print(f"   {i}. {failed_test.get('name', 'Unknown test')}")
+            if 'error' in failed_test:
+                print(f"      Error: {failed_test['error']}")
+            elif 'expected' in failed_test and 'actual' in failed_test:
+                print(f"      Expected: {failed_test['expected']}, Got: {failed_test['actual']}")
+    
+    if success:
+        print(f"\n🎉 ALL BLOG MEDIUM-STYLE ENHANCEMENT TESTS PASSED!")
+    else:
+        print(f"\n⚠️ Some tests failed - check details above")
