@@ -93,34 +93,18 @@ const BlogDetailPage = () => {
 
   const fetchBlogDetails = async () => {
     try {
-      console.log('🔍 Starting blog fetch for slug:', blogSlug);
       setLoading(true);
-      
-      console.log('📞 Making API call to:', `/blogs/by-slug/${blogSlug}`);
       const response = await apiClient.get(`/blogs/by-slug/${blogSlug}`);
-      
-      console.log('✅ API response received:', response.status);
-      console.log('📝 Blog data:', response.data?.title, response.data?.id);
-      
       setBlog(response.data);
       setLikesCount(response.data.like_count || 0);
       
-      console.log('📊 State updated, incrementing view count...');
       // Increment view count
       await apiClient.post(`/blogs/${blogSlug}/view`);
-      console.log('✅ View count incremented');
-      
     } catch (error) {
-      console.error('❌ Error fetching blog details:', error);
-      console.error('Error details:', {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data
-      });
+      console.error('Error fetching blog details:', error);
       toast.error('Blog not found');
       navigate('/blogs');
     } finally {
-      console.log('🏁 Setting loading to false');
       setLoading(false);
     }
   };
