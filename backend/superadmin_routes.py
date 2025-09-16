@@ -66,6 +66,15 @@ class ToolCreate(BaseModel):
     seo_description: Optional[str] = None
     seo_keywords: Optional[str] = None
     json_ld: Optional[Dict[str, Any]] = None
+    # New company-related fields
+    linkedin_url: Optional[str] = None
+    company_funding: Optional[Dict[str, Any]] = None
+    company_news: Optional[str] = None
+    company_location: Optional[str] = None
+    company_founders: Optional[List[Dict[str, str]]] = None
+    about: Optional[str] = None
+    started_on: Optional[str] = None
+    logo_thumbnail_url: Optional[str] = None
 
 class ToolUpdate(BaseModel):
     name: Optional[str] = None
