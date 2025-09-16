@@ -56,6 +56,13 @@ const BlogDetailPage = () => {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
+  
+  // New Medium-style states
+  const [isImmersiveMode, setIsImmersiveMode] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [relatedBlogsLoading, setRelatedBlogsLoading] = useState(false);
+  const [readingTime, setReadingTime] = useState(0);
+  const [wordCount, setWordCount] = useState(0);
 
   // Generate SEO data for the blog - only when blog data is loaded
   const seoData = useBlogSEO(blog);
