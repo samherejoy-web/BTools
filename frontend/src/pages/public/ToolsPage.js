@@ -337,6 +337,13 @@ const ToolsPage = () => {
                       <span>{formatNumber(tool.like_count || 0)}</span>
                     </div>
                   </div>
+                  
+                  {/* Company Location */}
+                  {tool.company_location && (
+                    <div className="text-sm text-gray-500 mb-4">
+                      📍 {tool.company_location}
+                    </div>
+                  )}
                 </CardHeader>
 
                 <CardContent className="pt-0">
