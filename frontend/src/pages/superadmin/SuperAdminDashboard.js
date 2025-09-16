@@ -521,8 +521,8 @@ const SuperAdminDashboard = () => {
         </Card>
       </div>
 
-        {/* Recent Activity */}
-        <Card className="border-0 shadow-sm">
+      {/* Recent Activity */}
+      <Card className="border-0 shadow-sm">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <Activity className="h-5 w-5" />
