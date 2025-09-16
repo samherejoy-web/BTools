@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 class SuperAdminTester:
-    def __init__(self, base_url="https://company-data-enhance.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://superadmin-enhance.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
