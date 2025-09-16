@@ -17,7 +17,12 @@ import {
   Copy,
   Facebook,
   Twitter,
-  Linkedin
+  Linkedin,
+  BookOpen,
+  Settings,
+  Maximize,
+  SidebarClose,
+  SidebarOpen
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -30,6 +35,13 @@ import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
 import { useAuth } from '../../contexts/AuthContext';
+
+// Import new Medium-style components
+import ReadingProgressBar from '../../components/blog/ReadingProgressBar';
+import FloatingActionButtons from '../../components/blog/FloatingActionButtons';
+import ImmersiveReader from '../../components/blog/ImmersiveReader';
+import EnhancedAuthorCard from '../../components/blog/EnhancedAuthorCard';
+import '../../styles/medium-typography.css';
 
 const BlogDetailPage = () => {
   const { blogSlug } = useParams();
