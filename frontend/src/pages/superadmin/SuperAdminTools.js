@@ -200,11 +200,26 @@ const SuperAdminTools = () => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
+      
+      // Helper function to parse JSON fields safely
+      const parseJsonField = (field) => {
+        if (!field || field.trim() === '') return null;
+        try {
+          return JSON.parse(field);
+        } catch (e) {
+          console.warn(`Invalid JSON in field: ${field}`);
+          return null;
+        }
+      };
+      
       const submitData = {
         ...formData,
         features: formData.features ? formData.features.split(',').map(f => f.trim()) : [],
         pros: formData.pros ? formData.pros.split(',').map(p => p.trim()) : [],
-        cons: formData.cons ? formData.cons.split(',').map(c => c.trim()) : []
+        cons: formData.cons ? formData.cons.split(',').map(c => c.trim()) : [],
+        // Parse JSON fields
+        company_funding: parseJsonField(formData.company_funding),
+        company_founders: parseJsonField(formData.company_founders)
       };
       onSubmit(submitData);
     };
