@@ -538,6 +538,16 @@ async def bulk_upload_tools(
                 slug = f"{generate_slug(row['name'])}-{counter}"
                 counter += 1
             
+            # Helper function to parse JSON fields safely
+            def parse_json_field(field_value):
+                if not field_value:
+                    return None
+                try:
+                    import json
+                    return json.loads(field_value)
+                except (json.JSONDecodeError, TypeError):
+                    return None
+            
             db_tool = Tool(
                 id=str(uuid.uuid4()),
                 name=row['name'],
@@ -550,7 +560,16 @@ async def bulk_upload_tools(
                 features=row.get('features', '').split(';') if row.get('features') else [],
                 pros=row.get('pros', '').split(';') if row.get('pros') else [],
                 cons=row.get('cons', '').split(';') if row.get('cons') else [],
-                is_active=row.get('is_active', 'true').lower() == 'true'
+                is_active=row.get('is_active', 'true').lower() == 'true',
+                # New company-related fields
+                linkedin_url=row.get('linkedin_url', ''),
+                company_funding=parse_json_field(row.get('company_funding')),
+                company_news=row.get('company_news', ''),
+                company_location=row.get('company_location', ''),
+                company_founders=parse_json_field(row.get('company_founders')),
+                about=row.get('about', ''),
+                started_on=row.get('started_on', ''),
+                logo_thumbnail_url=row.get('logo_thumbnail_url', '')
             )
             
             db.add(db_tool)
