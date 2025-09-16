@@ -3,7 +3,7 @@ const path = require('path');
 const axios = require('axios');
 
 // Configuration
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://jsonld-production.preview.emergentagent.com';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://company-data-enhance.preview.emergentagent.com';
 const BUILD_DIR = path.join(__dirname, '../build');
 
 // Fetch data from backend API
