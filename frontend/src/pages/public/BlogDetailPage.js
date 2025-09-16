@@ -68,14 +68,10 @@ const BlogDetailPage = () => {
   const seoData = useBlogSEO(blog);
 
   useEffect(() => {
-    console.log('🚀 BlogDetailPage useEffect triggered with blogSlug:', blogSlug);
     if (blogSlug) {
-      console.log('🔍 blogSlug exists, fetching data...');
       fetchBlogDetails();
       fetchRelatedBlogs();
       fetchComments();
-    } else {
-      console.log('❌ No blogSlug provided');
     }
   }, [blogSlug]);
 
