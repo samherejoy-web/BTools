@@ -7385,6 +7385,63 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
         
         return all(results)
 
+    def test_review_request_comprehensive(self):
+        """Test SuperAdmin Dashboard Analytics and Blog Publishing - REVIEW REQUEST"""
+        print("\n🔍 COMPREHENSIVE REVIEW REQUEST TESTING")
+        print("=" * 70)
+        print("Testing SuperAdmin Dashboard Analytics and Blog Publishing Flow")
+        print("1. SuperAdmin Dashboard Analytics endpoint testing")
+        print("2. Blog Publishing workflow testing")
+        print("3. Data verification (real vs mock)")
+        print("4. Authentication and role-based access testing")
+        print("-" * 70)
+        
+        results = []
+        
+        # Ensure we're logged in as superadmin
+        if self.current_user_role != 'superadmin':
+            print("\n👑 SUPERADMIN LOGIN FOR REVIEW REQUEST")
+            superadmin_success, superadmin_role = self.test_login("superadmin@marketmind.com", "admin123")
+            
+            if not superadmin_success or superadmin_role != "superadmin":
+                print("❌ Cannot proceed - SuperAdmin login failed")
+                return False
+        
+        # Test 1: SuperAdmin Dashboard Analytics
+        print("\n📊 TEST 1: SUPERADMIN DASHBOARD ANALYTICS")
+        result1 = self.test_superadmin_dashboard_analytics()
+        results.append(result1)
+        print(f"   Result: {'✅ PASSED' if result1 else '❌ FAILED'}")
+        
+        # Test 2: Blog Publishing Flow
+        print("\n📝 TEST 2: BLOG PUBLISHING FLOW")
+        result2 = self.test_blog_publishing_flow()
+        results.append(result2)
+        print(f"   Result: {'✅ PASSED' if result2 else '❌ FAILED'}")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 COMPREHENSIVE REVIEW REQUEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL REVIEW REQUEST TESTS PASSED!")
+            print(f"   ✅ SuperAdmin Dashboard Analytics: Working with real data")
+            print(f"   ✅ Blog Publishing Flow: Complete workflow functional")
+            print(f"   ✅ Authentication: Role-based access control working")
+            print(f"   ✅ Data Verification: Real database data confirmed")
+        else:
+            print(f"   ⚠️ Some review request tests failed")
+            if not result1:
+                print(f"   ❌ SuperAdmin Dashboard Analytics: Issues detected")
+            if not result2:
+                print(f"   ❌ Blog Publishing Flow: Issues detected")
+        
+        return all(results)
+
 if __name__ == "__main__":
     tester = MarketMindAPITester()
     
@@ -7406,8 +7463,8 @@ if __name__ == "__main__":
     if login_success:
         print(f"✅ Authenticated as {user_role}")
         
-        # Run the specific tests requested
-        success = tester.test_review_request_specific_tests()
+        # Run the comprehensive review request tests
+        success = tester.test_review_request_comprehensive()
         
         # Print final summary
         print(f"\n📊 FINAL TEST RESULTS")
