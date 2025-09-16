@@ -367,6 +367,160 @@ const SuperAdminDashboard = () => {
           </CardContent>
         </Card>
 
+        {/* Top Performing Content */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Top Performing Content
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Most Viewed Tools */}
+              {dashboardData.top_content?.most_viewed_tools?.slice(0, 3).map((tool, index) => (
+                <div key={`tool-${index}`} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Settings className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{tool.name}</p>
+                      <p className="text-sm text-gray-600">{formatNumber(tool.views)} views • {tool.rating}/5 rating</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-blue-100 text-blue-800">Tool</Badge>
+                </div>
+              ))}
+              {/* Most Viewed Blogs */}
+              {dashboardData.top_content?.most_viewed_blogs?.slice(0, 2).map((blog, index) => (
+                <div key={`blog-${index}`} className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <BookOpen className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{blog.title?.substring(0, 30)}...</p>
+                      <p className="text-sm text-gray-600">{formatNumber(blog.views)} views • {blog.likes} likes</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-purple-100 text-purple-800">Blog</Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Advanced Analytics Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* User Role Distribution */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              User Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {dashboardData.user_insights?.role_distribution && Object.entries(dashboardData.user_insights.role_distribution).map(([role, count]) => (
+                <div key={role} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      role === 'superadmin' ? 'bg-red-500' : 
+                      role === 'admin' ? 'bg-orange-500' : 'bg-blue-500'
+                    }`}></div>
+                    <span className="text-sm font-medium capitalize">{role}s</span>
+                  </div>
+                  <span className="text-sm font-bold">{count}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Content Status Overview */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              Content Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span className="text-sm font-medium">Active Tools</span>
+                </div>
+                <span className="text-sm font-bold">{dashboardData.content_status?.active_tools || 0}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span className="text-sm font-medium">Inactive Tools</span>
+                </div>
+                <span className="text-sm font-bold">{dashboardData.content_status?.inactive_tools || 0}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                  <span className="text-sm font-medium">Published Blogs</span>
+                </div>
+                <span className="text-sm font-bold">{dashboardData.content_status?.published_blogs || 0}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <span className="text-sm font-medium">Draft Blogs</span>
+                </div>
+                <span className="text-sm font-bold">{dashboardData.content_status?.draft_blogs || 0}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick System Stats */}
+        <Card className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="h-5 w-5" />
+              Quick Stats
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Featured Tools</span>
+                <Badge className="bg-green-100 text-green-800">
+                  {dashboardData.content_status?.featured_tools || 0}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">High-Rated Reviews</span>
+                <Badge className="bg-yellow-100 text-yellow-800">
+                  {dashboardData.performance?.recent_high_rated_reviews || 0}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Verified Users</span>
+                <Badge className="bg-blue-100 text-blue-800">
+                  {dashboardData.user_insights?.verified_users || 0}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Total Categories</span>
+                <Badge className="bg-purple-100 text-purple-800">
+                  {overview.total_categories || 0}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
         {/* Recent Activity */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="pb-4">
