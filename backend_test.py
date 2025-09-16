@@ -9464,9 +9464,9 @@ if __name__ == "__main__":
         print("🔄 No existing users found, creating test user...")
         tester.test_register()
     
-    # Run the blog enhancement tests
+    # Run the specific blog retrieval by slug tests
     if authenticated or tester.token:
-        success = tester.test_blog_medium_style_enhancements()
+        success = tester.test_blog_retrieval_by_slug_specific_review()
     else:
         print("❌ Could not authenticate - cannot run blog tests")
         success = False
