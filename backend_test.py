@@ -8972,7 +8972,39 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
 
 if __name__ == "__main__":
     tester = MarketMindAPITester()
-    success = tester.run_comprehensive_tests()
+    
+    # Basic setup
+    print("🚀 Starting Blog Medium-Style Enhancement Testing")
+    print("=" * 60)
+    
+    # Test health check first
+    tester.test_health_check()
+    
+    # Try to authenticate
+    authenticated = False
+    user_accounts = [
+        ("superadmin@marketmind.com", "admin123", "superadmin"),
+        ("admin@marketmind.com", "admin123", "admin"),
+        ("user@marketmind.com", "user123", "user")
+    ]
+    
+    for email, password, expected_role in user_accounts:
+        success, role = tester.test_login(email, password)
+        if success and role:
+            print(f"✅ Successfully authenticated as {role}")
+            authenticated = True
+            break
+    
+    if not authenticated:
+        print("🔄 No existing users found, creating test user...")
+        tester.test_register()
+    
+    # Run the blog enhancement tests
+    if authenticated or tester.token:
+        success = tester.test_blog_medium_style_enhancements()
+    else:
+        print("❌ Could not authenticate - cannot run blog tests")
+        success = False
     
     # Print final summary
     print(f"\n" + "="*80)
