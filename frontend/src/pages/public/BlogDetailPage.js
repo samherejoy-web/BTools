@@ -249,299 +249,460 @@ const BlogDetailPage = () => {
     <>
       {/* Always render SEO data, even if blog is null */}
       <SEOHead {...seoData} />
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto px-4 py-8">
-        {/* Back Navigation */}
-        <div className="mb-6">
-          <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-        </div>
+      
+      {/* Reading Progress Bar */}
+      <ReadingProgressBar target=".medium-article" />
+      
+      {/* Floating Action Buttons */}
+      {blog && (
+        <FloatingActionButtons
+          blog={blog}
+          isLiked={isLiked}
+          isBookmarked={isBookmarked}
+          likesCount={likesCount}
+          commentsCount={comments.length}
+          onToggleLike={handleToggleLike}
+          onToggleBookmark={handleToggleBookmark}
+        />
+      )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            <article className="bg-white rounded-xl shadow-sm overflow-hidden">
-              {/* Article Header */}
-              <div className="p-8 border-b border-gray-100">
-                <div className="mb-6">
-                  <div className="flex flex-wrap items-center gap-3 mb-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      <span className="font-medium text-gray-700">{blog.author_name || 'Anonymous'}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{formatDate(blog.published_at || blog.created_at)}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{blog.reading_time || 5} min read</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      <span>{formatNumber(blog.view_count || 0)} views</span>
-                    </div>
-                    {blog.is_ai_generated && (
-                      <Badge className="bg-purple-100 text-purple-800">
-                        <Brain className="h-3 w-3 mr-1" />
-                        AI Generated
-                      </Badge>
-                    )}
-                  </div>
+      {/* Immersive Reader */}
+      <ImmersiveReader 
+        isActive={isImmersiveMode} 
+        onToggle={() => setIsImmersiveMode(false)}
+      >
+        {blog && (
+          <article className="medium-article">
+            <header className="mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                {blog.title}
+              </h1>
+              
+              {blog.excerpt && (
+                <p className="lead text-gray-600 mb-8">
+                  {blog.excerpt}
+                </p>
+              )}
 
-                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                    {blog.title}
-                  </h1>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-8">
+                <EnhancedAuthorCard 
+                  blog={blog}
+                  variant="compact"
+                />
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>{formatDate(blog.published_at || blog.created_at)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="h-4 w-4" />
+                  <span>{readingTime || blog.reading_time || 5} min read</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Eye className="h-4 w-4" />
+                  <span>{formatNumber(blog.view_count || 0)} views</span>
+                </div>
+                {blog.is_ai_generated && (
+                  <Badge className="bg-purple-100 text-purple-800">
+                    <Brain className="h-3 w-3 mr-1" />
+                    AI Generated
+                  </Badge>
+                )}
+              </div>
 
-                  {blog.excerpt && (
-                    <p className="text-xl text-gray-600 leading-relaxed mb-6">
-                      {blog.excerpt}
-                    </p>
-                  )}
+              {/* Tags */}
+              {blog.tags && blog.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {blog.tags.map((tag) => (
+                    <Badge key={tag} variant="secondary" className="text-sm">
+                      <Tag className="h-3 w-3 mr-1" />
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </header>
 
-                  {/* Tags */}
-                  {blog.tags && blog.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {blog.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-sm">
-                          <Tag className="h-3 w-3 mr-1" />
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+            {/* Article Content with Medium Typography */}
+            <div 
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            />
+
+            {/* Article Footer */}
+            <footer className="mt-16 pt-8 border-t border-gray-200">
+              <div className="medium-divider">
+                <span>End of Article</span>
+              </div>
+              
+              {/* Enhanced Author Card */}
+              <EnhancedAuthorCard 
+                blog={blog}
+                variant="detailed"
+                className="mb-8"
+              />
+
+              {/* Article Actions */}
+              <div className="flex items-center justify-between p-6 bg-gray-50 rounded-lg mb-8">
+                <div className="flex items-center gap-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleToggleLike}
+                    className={isLiked ? 'text-red-600 border-red-200 bg-red-50' : ''}
+                  >
+                    <Heart className={`h-4 w-4 mr-2 ${isLiked ? 'fill-red-600' : ''}`} />
+                    {likesCount} likes
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleToggleBookmark}
+                    className={isBookmarked ? 'text-blue-600 border-blue-200 bg-blue-50' : ''}
+                  >
+                    <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-blue-600' : ''}`} />
+                    {isBookmarked ? 'Saved' : 'Save'}
+                  </Button>
+
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowShareMenu(!showShareMenu)}
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleToggleLike}
-                      className={isLiked ? 'text-red-600 border-red-200 bg-red-50' : ''}
-                    >
-                      <Heart className={`h-4 w-4 mr-2 ${isLiked ? 'fill-red-600' : ''}`} />
-                      {likesCount}
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleToggleBookmark}
-                      className={isBookmarked ? 'text-blue-600 border-blue-200 bg-blue-50' : ''}
-                    >
-                      <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-blue-600' : ''}`} />
-                      {isBookmarked ? 'Saved' : 'Save'}
-                    </Button>
+                <div className="text-sm text-gray-500">
+                  {wordCount} words • {comments.length} comments
+                </div>
+              </div>
+            </footer>
+          </article>
+        )}
+      </ImmersiveReader>
 
-                    <div className="relative">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => setShowShareMenu(!showShareMenu)}
-                      >
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Share
-                      </Button>
+      {/* Main Layout - Only show when not in immersive mode */}
+      {!isImmersiveMode && (
+        <div className="min-h-screen bg-gray-50">
+          <div className="container mx-auto px-4 py-8">
+            {/* Back Navigation & Controls */}
+            <div className="flex items-center justify-between mb-6">
+              <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+              
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  className="hidden lg:flex"
+                >
+                  {sidebarCollapsed ? <SidebarOpen className="h-4 w-4" /> : <SidebarClose className="h-4 w-4" />}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsImmersiveMode(true)}
+                >
+                  <Maximize className="h-4 w-4 mr-2" />
+                  Focus Mode
+                </Button>
+              </div>
+            </div>
 
-                      {showShareMenu && (
-                        <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border z-10 p-2 min-w-[180px]">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleShare('facebook')}
-                            className="w-full justify-start"
-                          >
-                            <Facebook className="h-4 w-4 mr-2 text-blue-600" />
-                            Facebook
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleShare('twitter')}
-                            className="w-full justify-start"
-                          >
-                            <Twitter className="h-4 w-4 mr-2 text-blue-400" />
-                            Twitter
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleShare('linkedin')}
-                            className="w-full justify-start"
-                          >
-                            <Linkedin className="h-4 w-4 mr-2 text-blue-700" />
-                            LinkedIn
-                          </Button>
-                          <Separator className="my-1" />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleShare('copy')}
-                            className="w-full justify-start"
-                          >
-                            <Copy className="h-4 w-4 mr-2" />
-                            Copy Link
-                          </Button>
+            <div className={`grid ${sidebarCollapsed ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-4'} gap-8`}>
+              {/* Main Content */}
+              <div className={sidebarCollapsed ? 'col-span-1' : 'lg:col-span-3'}>
+                <article className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  {/* Article Header */}
+                  <div className="p-8 border-b border-gray-100">
+                    <div className="mb-6">
+                      <div className="flex flex-wrap items-center gap-3 mb-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <User className="h-4 w-4" />
+                          <span className="font-medium text-gray-700">{blog?.author_name || 'Anonymous'}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>{formatDate(blog?.published_at || blog?.created_at)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          <span>{readingTime || blog?.reading_time || 5} min read</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye className="h-4 w-4" />
+                          <span>{formatNumber(blog?.view_count || 0)} views</span>
+                        </div>
+                        {blog?.is_ai_generated && (
+                          <Badge className="bg-purple-100 text-purple-800">
+                            <Brain className="h-3 w-3 mr-1" />
+                            AI Generated
+                          </Badge>
+                        )}
+                      </div>
+
+                      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        {blog?.title}
+                      </h1>
+
+                      {blog?.excerpt && (
+                        <p className="text-xl text-gray-600 leading-relaxed mb-6">
+                          {blog.excerpt}
+                        </p>
+                      )}
+
+                      {/* Tags */}
+                      {blog?.tags && blog.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {blog.tags.map((tag) => (
+                            <Badge key={tag} variant="secondary" className="text-sm">
+                              <Tag className="h-3 w-3 mr-1" />
+                              {tag}
+                            </Badge>
+                          ))}
                         </div>
                       )}
                     </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Article Content */}
-              <div className="p-8">
-                <div className="prose prose-lg max-w-none">
-                  <div 
-                    className="text-gray-800 leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: blog.content }}
-                  />
-                </div>
-              </div>
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={handleToggleLike}
+                          className={isLiked ? 'text-red-600 border-red-200 bg-red-50' : ''}
+                        >
+                          <Heart className={`h-4 w-4 mr-2 ${isLiked ? 'fill-red-600' : ''}`} />
+                          {likesCount}
+                        </Button>
+                        
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={handleToggleBookmark}
+                          className={isBookmarked ? 'text-blue-600 border-blue-200 bg-blue-50' : ''}
+                        >
+                          <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-blue-600' : ''}`} />
+                          {isBookmarked ? 'Saved' : 'Save'}
+                        </Button>
 
-              {/* Article Footer */}
-              <div className="p-8 border-t border-gray-100 bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                      {(blog.author_name || 'A')[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{blog.author_name || 'Anonymous'}</h4>
-                      <p className="text-sm text-gray-600">Content Creator</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-500">
-                      {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
-                    </span>
-                  </div>
-                </div>
-              </div>
+                        <div className="relative">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setShowShareMenu(!showShareMenu)}
+                          >
+                            <Share2 className="h-4 w-4 mr-2" />
+                            Share
+                          </Button>
 
-              {/* Comments Section */}
-              <div className="p-8 border-t border-gray-100">
-                <CommentsSection
-                  comments={comments}
-                  onAddComment={handleAddComment}
-                  loading={commentsLoading}
-                  title="Discussion"
-                />
-              </div>
-            </article>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Table of Contents */}
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg">Table of Contents</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm">
-                  <a href="#overview" className="block text-gray-600 hover:text-purple-600 transition-colors">
-                    Overview
-                  </a>
-                  <a href="#main-content" className="block text-gray-600 hover:text-purple-600 transition-colors">
-                    Main Content
-                  </a>
-                  <a href="#conclusion" className="block text-gray-600 hover:text-purple-600 transition-colors">
-                    Conclusion
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Related Articles */}
-            {relatedBlogs.length > 0 && (
-              <Card className="border-0 shadow-sm">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg">Related Articles</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {relatedBlogs.map((relatedBlog) => (
-                      <div key={relatedBlog.id} className="border border-gray-100 rounded-lg p-3 hover:border-gray-200 transition-colors">
-                        <Link to={`/blogs/${relatedBlog.slug}`}>
-                          <h4 className="font-medium text-gray-900 hover:text-purple-600 transition-colors line-clamp-2 mb-2">
-                            {relatedBlog.title}
-                          </h4>
-                        </Link>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <span>{formatDate(relatedBlog.published_at || relatedBlog.created_at)}</span>
-                          <span>•</span>
-                          <span>{relatedBlog.reading_time || 5} min read</span>
+                          {showShareMenu && (
+                            <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border z-10 p-2 min-w-[180px]">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleShare('facebook')}
+                                className="w-full justify-start"
+                              >
+                                <Facebook className="h-4 w-4 mr-2 text-blue-600" />
+                                Facebook
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleShare('twitter')}
+                                className="w-full justify-start"
+                              >
+                                <Twitter className="h-4 w-4 mr-2 text-blue-400" />
+                                Twitter
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleShare('linkedin')}
+                                className="w-full justify-start"
+                              >
+                                <Linkedin className="h-4 w-4 mr-2 text-blue-700" />
+                                LinkedIn
+                              </Button>
+                              <Separator className="my-1" />
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleShare('copy')}
+                                className="w-full justify-start"
+                              >
+                                <Copy className="h-4 w-4 mr-2" />
+                                Copy Link
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                  <Link to="/blogs" className="block mt-4">
-                    <Button variant="outline" className="w-full">
-                      View All Articles
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
 
-            {/* Newsletter Signup */}
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-blue-50">
-              <CardContent className="p-6 text-center">
-                <h3 className="font-semibold text-gray-900 mb-2">Stay Updated</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Get the latest insights delivered to your inbox
-                </p>
-                <div className="space-y-3">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                  />
-                  <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-purple-700">
-                    Subscribe
-                  </Button>
+                  {/* Article Content */}
+                  <div className="p-8">
+                    <div className="medium-article">
+                      <div 
+                        className="prose prose-lg max-w-none"
+                        dangerouslySetInnerHTML={{ __html: blog?.content }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Article Footer */}
+                  <div className="p-8 border-t border-gray-100 bg-gray-50">
+                    <EnhancedAuthorCard 
+                      blog={blog}
+                      variant="default"
+                      className="mb-6"
+                    />
+                  </div>
+
+                  {/* Comments Section */}
+                  <div id="comments-section" className="p-8 border-t border-gray-100">
+                    <CommentsSection
+                      comments={comments}
+                      onAddComment={handleAddComment}
+                      loading={commentsLoading}
+                      title="Discussion"
+                    />
+                  </div>
+                </article>
+              </div>
+
+              {/* Sidebar */}
+              {!sidebarCollapsed && (
+                <div className="space-y-6">
+                  {/* Table of Contents */}
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-lg">Table of Contents</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2 text-sm">
+                        <a href="#overview" className="block text-gray-600 hover:text-purple-600 transition-colors">
+                          Overview
+                        </a>
+                        <a href="#main-content" className="block text-gray-600 hover:text-purple-600 transition-colors">
+                          Main Content
+                        </a>
+                        <a href="#conclusion" className="block text-gray-600 hover:text-purple-600 transition-colors">
+                          Conclusion
+                        </a>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Related Articles */}
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-lg">Related Articles</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {relatedBlogsLoading ? (
+                        <div className="space-y-3">
+                          {[...Array(3)].map((_, i) => (
+                            <div key={i} className="animate-pulse">
+                              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        relatedBlogs.map((relatedBlog) => (
+                          <Link 
+                            key={relatedBlog.id} 
+                            to={`/blogs/${relatedBlog.slug}`}
+                            className="block group"
+                          >
+                            <h4 className="text-sm font-medium text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2 mb-1">
+                              {relatedBlog.title}
+                            </h4>
+                            <p className="text-xs text-gray-500">
+                              {formatDate(relatedBlog.published_at || relatedBlog.created_at)} • {relatedBlog.reading_time || 5} min read
+                            </p>
+                          </Link>
+                        ))
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Newsletter Signup */}
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-lg">Stay Updated</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Stay Updated</h3>
+                        <p className="text-sm text-gray-600 mb-4">
+                          Get the latest insights delivered to your inbox
+                        </p>
+                        <div className="space-y-3">
+                          <input
+                            type="email"
+                            placeholder="Enter your email"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          />
+                          <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-purple-700">
+                            Subscribe
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Quick Actions */}
+                  <Card className="border-0 shadow-sm">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-lg">Quick Actions</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <Button className="w-full justify-start" variant="outline" size="sm">
+                        <ThumbsUp className="h-4 w-4 mr-2" />
+                        Recommend Article
+                      </Button>
+                      <Button className="w-full justify-start" variant="outline" size="sm">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        View Source
+                      </Button>
+                      <Button 
+                        className="w-full justify-start" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const commentsSection = document.querySelector('#comments-section');
+                          commentsSection?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Discussion
+                      </Button>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full justify-start" variant="outline" size="sm">
-                  <ThumbsUp className="h-4 w-4 mr-2" />
-                  Recommend Article
-                </Button>
-                <Button className="w-full justify-start" variant="outline" size="sm">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View Source
-                </Button>
-                <Button className="w-full justify-start" variant="outline" size="sm">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Discussion
-                </Button>
-              </CardContent>
-            </Card>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Click outside to close share menu */}
-      {showShareMenu && (
-        <div
-          className="fixed inset-0 z-0"
-          onClick={() => setShowShareMenu(false)}
-        />
+          {/* Click outside to close share menu */}
+          {showShareMenu && (
+            <div
+              className="fixed inset-0 z-0"
+              onClick={() => setShowShareMenu(false)}
+            />
+          )}
+        </div>
       )}
-      </div>
     </>
   );
 };
