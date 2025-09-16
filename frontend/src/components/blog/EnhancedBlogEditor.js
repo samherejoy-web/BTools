@@ -467,66 +467,114 @@ const EnhancedBlogEditor = ({
 
   return (
     <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white' : ''}`}>
+      {/* Contextual Toolbar */}
+      <ContextualToolbar editor={editor} onImageUpload={handleImageUpload} />
+      
       <div className={`${isFullscreen ? 'h-full p-6' : ''} space-y-6`}>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
+        <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${isFocusMode ? 'opacity-50 hover:opacity-100 transition-opacity' : ''}`}>
+          <div className="flex-1">
+            {/* Large Title Input - Medium Style */}
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter your blog title..."
-              className="text-3xl font-bold bg-transparent border-none outline-none placeholder-gray-400 w-full max-w-2xl"
+              placeholder="Title"
+              className={`text-4xl md:text-5xl font-bold bg-transparent border-none outline-none placeholder-gray-400 w-full mb-4 ${isFocusMode ? 'text-center' : ''}`}
+              style={{ fontFamily: 'var(--font-display)' }}
             />
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+            
+            {/* Subtitle/Excerpt */}
+            <input
+              type="text"
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              placeholder="Write a subtitle..."
+              className={`text-xl text-gray-600 bg-transparent border-none outline-none placeholder-gray-400 w-full mb-6 ${isFocusMode ? 'text-center' : ''}`}
+              style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic' }}
+            />
+            
+            <div className={`flex items-center gap-4 text-sm text-gray-500 ${isFocusMode ? 'justify-center' : ''}`}>
               <span>{stats.wordCount} words</span>
               <span>{stats.charCount} characters</span>
               <span>{stats.readingTime} min read</span>
               <span>{tags.length} tags</span>
+              {blogId && <span className="text-green-600">● Auto-saving</span>}
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setShowSeoModal(true)}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              SEO
-            </Button>
-            
-            <Button
-              variant="outline"
-              onClick={() => setShowJsonLdModal(true)}
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              JSON-LD
-            </Button>
-            
-            <Button
-              onClick={() => handleSave('draft')}
-              disabled={saving}
-              variant="outline"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              {saving ? 'Saving...' : 'Save Draft'}
-            </Button>
-            
-            <Button
-              onClick={() => handleSave('published')}
-              disabled={saving}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              Publish
-            </Button>
-          </div>
+          {!isFocusMode && (
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsFocusMode(true)}
+              >
+                <Focus className="h-4 w-4 mr-2" />
+                Focus
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowSeoModal(true)}
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                SEO
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowJsonLdModal(true)}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                JSON-LD
+              </Button>
+              
+              <Button
+                onClick={() => handleSave('draft')}
+                disabled={saving}
+                variant="outline"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {saving ? 'Saving...' : 'Save Draft'}
+              </Button>
+              
+              <Button
+                onClick={() => handleSave('published')}
+                disabled={saving}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                Publish
+              </Button>
+            </div>
+          )}
         </div>
 
+        {/* Focus Mode Controls */}
+        {isFocusMode && (
+          <div className="fixed top-4 right-4 z-10 flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowPreview(!showPreview)}
+            >
+              {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsFocusMode(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+
         {/* Editor Layout */}
-        <div className={`grid ${showPreview ? 'grid-cols-2' : 'grid-cols-1'} gap-6 ${isFullscreen ? 'h-[calc(100vh-200px)]' : 'min-h-[600px]'}`}>
+        <div className={`${isFocusMode ? 'flex justify-center' : `grid ${showPreview ? 'grid-cols-2' : 'grid-cols-1'} gap-6`} ${isFullscreen ? 'h-[calc(100vh-200px)]' : 'min-h-[600px]'}`}>
           {/* Editor Panel */}
-          <Card className="border-0 shadow-sm flex flex-col">
-            <Toolbar />
+          <Card className={`border-0 shadow-sm flex flex-col ${isFocusMode ? 'max-w-4xl w-full' : ''}`}>
+            {!isFocusMode && <Toolbar />}
             <div 
               className="flex-1 overflow-auto"
               onDrop={handleDrop}
@@ -537,23 +585,26 @@ const EnhancedBlogEditor = ({
           </Card>
 
           {/* Preview Panel */}
-          {showPreview && (
+          {showPreview && !isFocusMode && (
             <Card className="border-0 shadow-sm flex flex-col">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Live Preview</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <BookOpen className="h-5 w-5" />
+                  Live Preview
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex-1 overflow-auto">
-                <div className="prose prose-lg max-w-none">
-                  <h1 className="text-3xl font-bold mb-4">{title || 'Blog Title'}</h1>
+                <div className="medium-article">
+                  <h1 className="text-4xl font-bold mb-4">{title || 'Blog Title'}</h1>
                   {excerpt && (
-                    <p className="text-xl text-gray-600 mb-6 italic">{excerpt}</p>
+                    <p className="lead text-gray-600 mb-8">{excerpt}</p>
                   )}
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw]}
                     components={{
                       img: ({ node, ...props }) => (
-                        <img {...props} className="rounded-lg max-w-full h-auto" />
+                        <img {...props} className="rounded-lg max-w-full h-auto my-4" />
                       ),
                       a: ({ node, ...props }) => (
                         <a {...props} className="text-blue-600 hover:text-blue-800 underline" />
@@ -562,7 +613,7 @@ const EnhancedBlogEditor = ({
                         inline ? (
                           <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono" {...props} />
                         ) : (
-                          <code className="block bg-gray-100 p-4 rounded-md font-mono text-sm" {...props} />
+                          <code className="block bg-gray-100 p-4 rounded-md font-mono text-sm my-4" {...props} />
                         ),
                     }}
                   >
@@ -582,55 +633,57 @@ const EnhancedBlogEditor = ({
           )}
         </div>
 
-        {/* Excerpt and Tags Section */}
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-6 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Excerpt (Optional)
-              </label>
-              <textarea
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
-                placeholder="Brief description of your blog post..."
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+        {/* Tags Section - Hidden in focus mode */}
+        {!isFocusMode && (
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tags
+                </label>
+                <div className="flex gap-2 mb-3">
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+                    placeholder="Add tags..."
+                    className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <Button size="sm" onClick={handleAddTag}>
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-red-100 hover:text-red-800 transition-colors"
+                      onClick={() => handleRemoveTag(tag)}
+                    >
+                      {tag} ×
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tags
-              </label>
-              <div className="flex gap-2 mb-3">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                  placeholder="Add tags..."
-                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <Button size="sm" onClick={handleAddTag}>
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="cursor-pointer hover:bg-red-100 hover:text-red-800 transition-colors"
-                    onClick={() => handleRemoveTag(tag)}
-                  >
-                    {tag} ×
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Writing Tips - Only show in focus mode */}
+        {isFocusMode && (
+          <div className="fixed bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border max-w-sm">
+            <h4 className="font-semibold text-gray-900 mb-2">Writing Tips</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Use clear, conversational language</li>
+              <li>• Break up long paragraphs</li>
+              <li>• Add subheadings for structure</li>
+              <li>• Include relevant images</li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* SEO Settings Modal */}
