@@ -7909,7 +7909,51 @@ if __name__ == "__main__":
         print(f"✅ Authenticated as {user_role}")
         
         # Run the comprehensive review request tests
-        success = tester.test_review_request_comprehensive()
+        print("\n🔍 COMPREHENSIVE REVIEW REQUEST TESTING")
+        print("=" * 70)
+        print("Testing SuperAdmin Dashboard Analytics and Blog Publishing Flow")
+        print("1. SuperAdmin Dashboard Analytics endpoint testing")
+        print("2. Blog Publishing workflow testing")
+        print("3. Data verification (real vs mock)")
+        print("4. Authentication and role-based access testing")
+        print("-" * 70)
+        
+        results = []
+        
+        # Test 1: SuperAdmin Dashboard Analytics
+        print("\n📊 TEST 1: SUPERADMIN DASHBOARD ANALYTICS")
+        result1 = tester.test_superadmin_dashboard_analytics()
+        results.append(result1)
+        print(f"   Result: {'✅ PASSED' if result1 else '❌ FAILED'}")
+        
+        # Test 2: Blog Publishing Flow
+        print("\n📝 TEST 2: BLOG PUBLISHING FLOW")
+        result2 = tester.test_blog_publishing_flow()
+        results.append(result2)
+        print(f"   Result: {'✅ PASSED' if result2 else '❌ FAILED'}")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 COMPREHENSIVE REVIEW REQUEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL REVIEW REQUEST TESTS PASSED!")
+            print(f"   ✅ SuperAdmin Dashboard Analytics: Working with real data")
+            print(f"   ✅ Blog Publishing Flow: Complete workflow functional")
+            print(f"   ✅ Authentication: Role-based access control working")
+            print(f"   ✅ Data Verification: Real database data confirmed")
+        else:
+            print(f"   ⚠️ Some review request tests failed")
+            if not result1:
+                print(f"   ❌ SuperAdmin Dashboard Analytics: Issues detected")
+            if not result2:
+                print(f"   ❌ Blog Publishing Flow: Issues detected")
+        
+        success = all(results)
         
         # Print final summary
         print(f"\n📊 FINAL TEST RESULTS")
