@@ -595,7 +595,7 @@ const SuperAdminDashboard = () => {
         </Card>
       </div>
 
-      
+      {/* Quick Actions */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
