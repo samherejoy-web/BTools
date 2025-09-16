@@ -165,6 +165,38 @@ const SuperAdminDashboard = () => {
     }
   ];
 
+  // System Health Cards
+  const systemHealthCards = [
+    {
+      title: 'User Verification Rate',
+      value: `${dashboardData.user_insights?.verification_rate || 0}%`,
+      icon: Users,
+      color: 'bg-green-500',
+      trend: dashboardData.user_insights?.verification_rate > 80 ? 'good' : 'warning'
+    },
+    {
+      title: 'Active Content',
+      value: `${dashboardData.system_health?.active_content_percentage || 0}%`,
+      icon: Activity,
+      color: 'bg-blue-500',
+      trend: dashboardData.system_health?.active_content_percentage > 90 ? 'good' : 'ok'
+    },
+    {
+      title: 'Content Quality',
+      value: `${dashboardData.system_health?.content_quality_score || 0}%`,
+      icon: Star,
+      color: 'bg-yellow-500',
+      trend: dashboardData.system_health?.content_quality_score > 80 ? 'good' : 'warning'
+    },
+    {
+      title: 'User Engagement',
+      value: formatNumber(dashboardData.system_health?.user_engagement_score || 0),
+      icon: TrendingUp,
+      color: 'bg-purple-500',
+      trend: 'good'
+    }
+  ];
+
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
       {/* Header */}
