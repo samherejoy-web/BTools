@@ -3103,6 +3103,221 @@ Test Bulk Tool 2 {timestamp},Another test tool created via bulk upload,Another t
         
         return all(results)
 
+    def test_blog_retrieval_by_slug_comprehensive(self):
+        """Comprehensive test of blog retrieval by slug functionality - REVIEW REQUEST"""
+        print("\n🔍 BLOG RETRIEVAL BY SLUG COMPREHENSIVE TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        print("Testing specific blog retrieval functionality as requested:")
+        print("1. GET /api/blogs endpoint to see what blogs exist")
+        print("2. GET /api/blogs/by-slug/{blog_slug} endpoint with existing slugs")
+        print("3. Check if 404 error mentioned in test results is still happening")
+        print("4. Verify blog view increment endpoint POST /api/blogs/{blog_slug}/view")
+        print("5. Test blog like and bookmark endpoints")
+        print("-" * 70)
+        
+        results = []
+        
+        # Test 1: Get all blogs to see what exists
+        print("\n📝 TEST 1: GET ALL BLOGS TO IDENTIFY EXISTING SLUGS")
+        success, blogs_response = self.run_test(
+            "Get All Blogs",
+            "GET",
+            "blogs",
+            200,
+            description="Get all published blogs to identify existing slugs for testing"
+        )
+        results.append(success)
+        
+        available_slugs = []
+        if success and isinstance(blogs_response, list):
+            print(f"   ✅ Found {len(blogs_response)} published blogs")
+            for i, blog in enumerate(blogs_response[:5]):  # Show first 5 blogs
+                slug = blog.get('slug', 'no-slug')
+                title = blog.get('title', 'No title')
+                available_slugs.append(slug)
+                print(f"   Blog {i+1}: '{title}' -> slug: '{slug}'")
+            
+            if len(blogs_response) > 5:
+                print(f"   ... and {len(blogs_response) - 5} more blogs")
+        else:
+            print(f"   ❌ Failed to get blogs or no blogs found")
+            return False
+        
+        if not available_slugs:
+            print(f"   ❌ No blog slugs available for testing")
+            return False
+        
+        # Test 2: Test blog retrieval by slug with existing slugs
+        print(f"\n📝 TEST 2: BLOG RETRIEVAL BY SLUG WITH EXISTING SLUGS")
+        slug_test_results = []
+        
+        # Test with first 3 available slugs
+        test_slugs = available_slugs[:3]
+        print(f"   Testing with slugs: {test_slugs}")
+        
+        for i, slug in enumerate(test_slugs):
+            print(f"\n   Testing slug {i+1}: '{slug}'")
+            success, slug_response = self.run_test(
+                f"Get Blog by Slug - {slug}",
+                "GET",
+                f"blogs/by-slug/{slug}",
+                200,
+                description=f"Test GET /api/blogs/by-slug/{slug}"
+            )
+            slug_test_results.append(success)
+            
+            if success and isinstance(slug_response, dict):
+                blog_title = slug_response.get('title', 'Unknown')
+                blog_status = slug_response.get('status', 'Unknown')
+                view_count = slug_response.get('view_count', 0)
+                print(f"   ✅ Successfully retrieved: '{blog_title}' (status: {blog_status}, views: {view_count})")
+                
+                # Verify SEO fields are present
+                seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+                seo_present = sum(1 for field in seo_fields if slug_response.get(field))
+                print(f"   SEO fields present: {seo_present}/{len(seo_fields)}")
+                
+                # Verify JSON-LD if present
+                if slug_response.get('json_ld'):
+                    print(f"   ✅ JSON-LD structured data present")
+                else:
+                    print(f"   ⚠️ JSON-LD structured data missing")
+            else:
+                print(f"   ❌ Failed to retrieve blog by slug '{slug}' - This is the 404 issue!")
+        
+        results.extend(slug_test_results)
+        
+        # Test 3: Test with non-existent slug to verify 404 handling
+        print(f"\n📝 TEST 3: TEST 404 ERROR HANDLING WITH NON-EXISTENT SLUG")
+        success, error_response = self.run_test(
+            "Get Blog by Non-existent Slug",
+            "GET",
+            "blogs/by-slug/non-existent-blog-slug-12345",
+            404,
+            description="Test 404 error handling with non-existent slug"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Correctly returns 404 for non-existent slug")
+        else:
+            print(f"   ❌ 404 error handling not working properly")
+        
+        # Test 4: Test blog view increment endpoint
+        print(f"\n📝 TEST 4: BLOG VIEW INCREMENT ENDPOINT")
+        if available_slugs:
+            test_slug = available_slugs[0]
+            print(f"   Testing view increment with slug: '{test_slug}'")
+            
+            # First get current view count
+            success, current_blog = self.run_test(
+                f"Get Current View Count - {test_slug}",
+                "GET",
+                f"blogs/by-slug/{test_slug}",
+                200,
+                description="Get current view count before increment"
+            )
+            
+            current_views = 0
+            if success and isinstance(current_blog, dict):
+                current_views = current_blog.get('view_count', 0)
+                print(f"   Current view count: {current_views}")
+            
+            # Increment view count
+            success, increment_response = self.run_test(
+                f"Increment Blog View - {test_slug}",
+                "POST",
+                f"blogs/{test_slug}/view",
+                200,
+                description=f"Test POST /api/blogs/{test_slug}/view"
+            )
+            results.append(success)
+            
+            if success and isinstance(increment_response, dict):
+                new_view_count = increment_response.get('view_count', 0)
+                print(f"   ✅ View count incremented to: {new_view_count}")
+                
+                if new_view_count > current_views:
+                    print(f"   ✅ View count properly incremented (+{new_view_count - current_views})")
+                    results.append(True)
+                else:
+                    print(f"   ❌ View count not incremented properly")
+                    results.append(False)
+            else:
+                print(f"   ❌ Failed to increment view count")
+                results.append(False)
+        
+        # Test 5: Test blog like and bookmark endpoints (requires authentication)
+        print(f"\n📝 TEST 5: BLOG LIKE AND BOOKMARK ENDPOINTS")
+        
+        # First try to login to test authenticated endpoints
+        login_success, role = self.test_login("superadmin@marketmind.com", "admin123")
+        
+        if login_success and available_slugs:
+            test_slug = available_slugs[0]
+            print(f"   Testing like/bookmark with slug: '{test_slug}' (authenticated)")
+            
+            # Test blog like endpoint
+            success, like_response = self.run_test(
+                f"Toggle Blog Like - {test_slug}",
+                "POST",
+                f"blogs/{test_slug}/like",
+                200,
+                description=f"Test POST /api/blogs/{test_slug}/like"
+            )
+            results.append(success)
+            
+            if success and isinstance(like_response, dict):
+                liked = like_response.get('liked', False)
+                like_count = like_response.get('like_count', 0)
+                print(f"   ✅ Blog like toggle: liked={liked}, count={like_count}")
+            else:
+                print(f"   ❌ Failed to toggle blog like")
+            
+            # Test blog bookmark endpoint
+            success, bookmark_response = self.run_test(
+                f"Toggle Blog Bookmark - {test_slug}",
+                "POST",
+                f"blogs/{test_slug}/bookmark",
+                200,
+                description=f"Test POST /api/blogs/{test_slug}/bookmark"
+            )
+            results.append(success)
+            
+            if success and isinstance(bookmark_response, dict):
+                bookmarked = bookmark_response.get('bookmarked', False)
+                print(f"   ✅ Blog bookmark toggle: bookmarked={bookmarked}")
+            else:
+                print(f"   ❌ Failed to toggle blog bookmark")
+        else:
+            print(f"   ⚠️ Skipping like/bookmark tests - authentication failed or no slugs available")
+            results.extend([False, False])  # Add failed results for like and bookmark tests
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 BLOG RETRIEVAL BY SLUG COMPREHENSIVE SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        # Specific findings about the 404 issue
+        slug_failures = len(slug_test_results) - sum(slug_test_results)
+        if slug_failures > 0:
+            print(f"\n🚨 CRITICAL FINDING: {slug_failures}/{len(slug_test_results)} blog slug retrievals failed!")
+            print(f"   This confirms the 404 error mentioned in test results is still happening.")
+            print(f"   Blog retrieval by slug endpoint has issues with existing published blogs.")
+        else:
+            print(f"\n✅ GOOD NEWS: All blog slug retrievals successful!")
+            print(f"   The 404 error mentioned in test results appears to be resolved.")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL BLOG RETRIEVAL TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some blog retrieval tests failed - needs investigation")
+        
+        return all(results)
+
     def test_production_readiness_check(self):
         """Test key production features as requested in review"""
         print("\n🔍 PRODUCTION READINESS CHECK")
