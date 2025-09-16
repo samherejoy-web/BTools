@@ -8467,13 +8467,469 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
         
         return passed_areas == total_areas
 
+    def test_blog_medium_style_enhancements(self):
+        """Test blog functionality with Medium-style enhancements - REVIEW REQUEST"""
+        print("\n🔍 BLOG MEDIUM-STYLE ENHANCEMENTS TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        if not self.token:
+            print("❌ Skipping blog Medium-style tests - no authentication token")
+            return False
+        
+        results = []
+        timestamp = datetime.now().strftime('%H%M%S')
+        
+        # Test 1: Blog CRUD Operations with Medium-style fields
+        print("\n📝 TEST 1: BLOG CRUD OPERATIONS WITH MEDIUM-STYLE FIELDS")
+        
+        # Create blog with enhanced Medium-style content
+        blog_data = {
+            "title": f"Medium-Style Blog Post {timestamp}",
+            "content": f"""
+            <h1>The Future of Productivity Tools in 2024</h1>
+            <p class="lead">Exploring how modern productivity tools are reshaping the way we work and collaborate in the digital age.</p>
+            
+            <h2>Introduction</h2>
+            <p>In today's fast-paced digital world, productivity tools have become essential for both individuals and teams. This comprehensive guide explores the latest trends and innovations in productivity software.</p>
+            
+            <blockquote>
+                <p>"The best productivity tool is the one that gets out of your way and lets you focus on what matters most."</p>
+                <cite>— Productivity Expert</cite>
+            </blockquote>
+            
+            <h2>Key Features of Modern Tools</h2>
+            <ul>
+                <li><strong>Real-time collaboration</strong> - Work together seamlessly</li>
+                <li><strong>AI-powered insights</strong> - Smart recommendations and automation</li>
+                <li><strong>Cross-platform sync</strong> - Access your work anywhere</li>
+                <li><strong>Advanced analytics</strong> - Track productivity metrics</li>
+            </ul>
+            
+            <h3>Popular Tools Analysis</h3>
+            <p>Let's examine some of the most popular productivity tools available today:</p>
+            
+            <h4>Notion</h4>
+            <p>An all-in-one workspace that combines notes, tasks, wikis, and databases. Perfect for teams that need flexibility and customization.</p>
+            
+            <h4>Slack</h4>
+            <p>The communication hub that brings teams together, enabling seamless collaboration through channels, direct messages, and integrations.</p>
+            
+            <h4>Figma</h4>
+            <p>A collaborative design tool that allows teams to create, prototype, and iterate on designs in real-time.</p>
+            
+            <h2>Conclusion</h2>
+            <p>The landscape of productivity tools continues to evolve, with new features and capabilities being added regularly. The key is finding the right combination of tools that work for your specific needs and workflow.</p>
+            
+            <p><em>What productivity tools do you use in your daily workflow? Share your thoughts in the comments below.</em></p>
+            """,
+            "excerpt": "Exploring how modern productivity tools are reshaping the way we work and collaborate in the digital age. A comprehensive guide to the latest trends and innovations.",
+            "tags": ["productivity", "tools", "collaboration", "workflow", "technology", "medium-style"],
+            "seo_title": f"The Future of Productivity Tools in 2024 - Complete Guide {timestamp}",
+            "seo_description": "Discover the latest trends in productivity tools for 2024. Learn about real-time collaboration, AI-powered insights, and cross-platform synchronization.",
+            "seo_keywords": "productivity tools, collaboration, workflow, Notion, Slack, Figma, 2024 trends",
+            "json_ld": {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": f"The Future of Productivity Tools in 2024",
+                "author": {
+                    "@type": "Person",
+                    "name": "Test Author"
+                },
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "MarketMindAI",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://marketmindai.com/logo.png"
+                    }
+                },
+                "datePublished": datetime.now().isoformat(),
+                "dateModified": datetime.now().isoformat(),
+                "description": "Comprehensive guide to productivity tools and their impact on modern workflows",
+                "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": f"https://marketmindai.com/blogs/medium-style-blog-post-{timestamp}"
+                },
+                "image": "https://marketmindai.com/blog-images/productivity-tools.jpg",
+                "wordCount": 450,
+                "keywords": ["productivity", "tools", "collaboration", "workflow"]
+            }
+        }
+        
+        success, response = self.run_test(
+            "Create Medium-Style Blog",
+            "POST",
+            "user/blogs",
+            200,
+            data=blog_data,
+            description="Create blog with Medium-style enhanced content and fields"
+        )
+        results.append(success)
+        
+        created_blog_id = None
+        created_blog_slug = None
+        
+        if success and isinstance(response, dict) and 'id' in response:
+            created_blog_id = response['id']
+            created_blog_slug = response.get('slug')
+            
+            print(f"   ✅ Medium-style blog created successfully")
+            print(f"   Blog ID: {created_blog_id}")
+            print(f"   Blog Slug: {created_blog_slug}")
+            print(f"   Reading Time: {response.get('reading_time', 'N/A')} minutes")
+            print(f"   Word Count: ~{len(blog_data['content'].split())} words")
+            
+            # Verify Medium-style fields
+            medium_fields = ['seo_title', 'seo_description', 'seo_keywords', 'json_ld', 'reading_time', 'tags']
+            for field in medium_fields:
+                if field in response and response[field]:
+                    print(f"   ✅ {field}: Present and populated")
+                else:
+                    print(f"   ❌ {field}: Missing or empty")
+            
+            self.created_resources['blogs'].append({
+                'id': created_blog_id,
+                'title': blog_data['title'],
+                'slug': created_blog_slug
+            })
+        else:
+            print(f"   ❌ Failed to create Medium-style blog")
+            results.append(False)
+        
+        if not created_blog_id:
+            print("❌ Cannot continue testing - blog creation failed")
+            return False
+        
+        # Test 2: Blog Retrieval (by ID and slug)
+        print("\n📝 TEST 2: BLOG RETRIEVAL (BY ID AND SLUG)")
+        
+        # Test retrieval by ID
+        success, blog_by_id = self.run_test(
+            "Get Blog by ID",
+            "GET",
+            f"blogs/{created_blog_id}",
+            200,
+            description="Retrieve blog by ID with all Medium-style fields"
+        )
+        results.append(success)
+        
+        if success and isinstance(blog_by_id, dict):
+            print(f"   ✅ Blog retrieved by ID successfully")
+            print(f"   Title: {blog_by_id.get('title', 'N/A')}")
+            print(f"   Reading Time: {blog_by_id.get('reading_time', 'N/A')} minutes")
+            print(f"   Tags Count: {len(blog_by_id.get('tags', []))}")
+        
+        # Test retrieval by slug
+        if created_blog_slug:
+            success, blog_by_slug = self.run_test(
+                "Get Blog by Slug",
+                "GET",
+                f"blogs/by-slug/{created_blog_slug}",
+                200,
+                description="Retrieve blog by slug with all Medium-style fields"
+            )
+            results.append(success)
+            
+            if success and isinstance(blog_by_slug, dict):
+                print(f"   ✅ Blog retrieved by slug successfully")
+                print(f"   SEO Title: {blog_by_slug.get('seo_title', 'N/A')}")
+                print(f"   SEO Description: {blog_by_slug.get('seo_description', 'N/A')[:50]}...")
+        
+        # Test 3: Blog Updates
+        print("\n📝 TEST 3: BLOG UPDATES WITH MEDIUM-STYLE ENHANCEMENTS")
+        
+        update_data = {
+            "title": f"Updated Medium-Style Blog Post {timestamp}",
+            "content": blog_data['content'] + "\n\n<h2>Updated Section</h2><p>This section was added during the update test to verify content modification capabilities.</p>",
+            "tags": ["productivity", "tools", "collaboration", "workflow", "technology", "medium-style", "updated"],
+            "seo_keywords": "productivity tools, collaboration, workflow, Notion, Slack, Figma, 2024 trends, updated",
+            "json_ld": {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": f"Updated Medium-Style Blog Post {timestamp}",
+                "dateModified": datetime.now().isoformat(),
+                "description": "Updated comprehensive guide to productivity tools"
+            }
+        }
+        
+        success, updated_blog = self.run_test(
+            "Update Medium-Style Blog",
+            "PUT",
+            f"user/blogs/{created_blog_id}",
+            200,
+            data=update_data,
+            description="Update blog with enhanced Medium-style content"
+        )
+        results.append(success)
+        
+        if success and isinstance(updated_blog, dict):
+            print(f"   ✅ Blog updated successfully")
+            print(f"   New Title: {updated_blog.get('title', 'N/A')}")
+            print(f"   Updated Reading Time: {updated_blog.get('reading_time', 'N/A')} minutes")
+            print(f"   Updated Tags Count: {len(updated_blog.get('tags', []))}")
+        
+        # Test 4: Blog Publishing Flow
+        print("\n📝 TEST 4: BLOG PUBLISHING FLOW")
+        
+        success, publish_response = self.run_test(
+            "Publish Medium-Style Blog",
+            "POST",
+            f"user/blogs/{created_blog_id}/publish",
+            200,
+            description="Publish blog to make it publicly available"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Blog published successfully")
+            
+            # Verify blog appears in public blogs
+            success, public_blogs = self.run_test(
+                "Verify Published Blog in Public List",
+                "GET",
+                "blogs?limit=20",
+                200,
+                description="Check if published blog appears in public blog list"
+            )
+            results.append(success)
+            
+            if success and isinstance(public_blogs, list):
+                published_blog = next((blog for blog in public_blogs if blog.get('id') == created_blog_id), None)
+                if published_blog:
+                    print(f"   ✅ Published blog found in public list")
+                    print(f"   Status: {published_blog.get('status', 'N/A')}")
+                    print(f"   Published At: {published_blog.get('published_at', 'N/A')}")
+                else:
+                    print(f"   ❌ Published blog not found in public list")
+                    results.append(False)
+        
+        # Test 5: Blog Engagement Features
+        print("\n📝 TEST 5: BLOG ENGAGEMENT FEATURES")
+        
+        if created_blog_slug:
+            # Test view count increment
+            success, view_response = self.run_test(
+                "Increment Blog View Count",
+                "POST",
+                f"blogs/{created_blog_slug}/view",
+                200,
+                description="Increment view count for blog engagement tracking"
+            )
+            results.append(success)
+            
+            if success and isinstance(view_response, dict):
+                print(f"   ✅ View count incremented")
+                print(f"   New View Count: {view_response.get('view_count', 'N/A')}")
+            
+            # Test blog like functionality
+            success, like_response = self.run_test(
+                "Toggle Blog Like",
+                "POST",
+                f"blogs/{created_blog_slug}/like",
+                200,
+                description="Test blog like/unlike functionality"
+            )
+            results.append(success)
+            
+            if success and isinstance(like_response, dict):
+                print(f"   ✅ Blog like toggled")
+                print(f"   Liked: {like_response.get('liked', 'N/A')}")
+                print(f"   Like Count: {like_response.get('like_count', 'N/A')}")
+            
+            # Test blog bookmark functionality
+            success, bookmark_response = self.run_test(
+                "Toggle Blog Bookmark",
+                "POST",
+                f"blogs/{created_blog_slug}/bookmark",
+                200,
+                description="Test blog bookmark functionality"
+            )
+            results.append(success)
+            
+            if success and isinstance(bookmark_response, dict):
+                print(f"   ✅ Blog bookmark toggled")
+                print(f"   Bookmarked: {bookmark_response.get('bookmarked', 'N/A')}")
+        
+        # Test 6: Blog Comments System
+        print("\n📝 TEST 6: BLOG COMMENTS SYSTEM")
+        
+        if created_blog_slug:
+            # Create a comment
+            comment_data = {
+                "content": "This is an excellent analysis of productivity tools! I particularly appreciate the detailed comparison between Notion, Slack, and Figma. The Medium-style formatting makes it very readable."
+            }
+            
+            success, comment_response = self.run_test(
+                "Create Blog Comment",
+                "POST",
+                f"blogs/{created_blog_slug}/comments",
+                200,
+                data=comment_data,
+                description="Create comment on blog post"
+            )
+            results.append(success)
+            
+            if success and isinstance(comment_response, dict):
+                print(f"   ✅ Comment created successfully")
+                print(f"   Comment ID: {comment_response.get('id', 'N/A')}")
+                print(f"   User: {comment_response.get('user_name', 'N/A')}")
+                print(f"   Content: {comment_response.get('content', 'N/A')[:50]}...")
+            
+            # Get comments
+            success, comments_list = self.run_test(
+                "Get Blog Comments",
+                "GET",
+                f"blogs/{created_blog_slug}/comments",
+                200,
+                description="Retrieve all comments for blog post"
+            )
+            results.append(success)
+            
+            if success and isinstance(comments_list, list):
+                print(f"   ✅ Comments retrieved successfully")
+                print(f"   Comments Count: {len(comments_list)}")
+        
+        # Test 7: Blog Reading Stats and SEO
+        print("\n📝 TEST 7: BLOG READING STATS AND SEO VALIDATION")
+        
+        if created_blog_id:
+            # Get updated blog to check reading stats
+            success, final_blog = self.run_test(
+                "Get Final Blog Stats",
+                "GET",
+                f"blogs/{created_blog_id}",
+                200,
+                description="Get blog with all reading stats and SEO data"
+            )
+            results.append(success)
+            
+            if success and isinstance(final_blog, dict):
+                print(f"   ✅ Blog stats retrieved successfully")
+                
+                # Validate reading time calculation
+                content_word_count = len(final_blog.get('content', '').split())
+                calculated_reading_time = max(1, content_word_count // 200)
+                actual_reading_time = final_blog.get('reading_time', 0)
+                
+                print(f"   Word Count: ~{content_word_count}")
+                print(f"   Calculated Reading Time: {calculated_reading_time} minutes")
+                print(f"   Actual Reading Time: {actual_reading_time} minutes")
+                
+                if abs(calculated_reading_time - actual_reading_time) <= 1:
+                    print(f"   ✅ Reading time calculation accurate")
+                    results.append(True)
+                else:
+                    print(f"   ❌ Reading time calculation inaccurate")
+                    results.append(False)
+                
+                # Validate SEO fields
+                seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+                seo_valid = True
+                for field in seo_fields:
+                    value = final_blog.get(field)
+                    if value and len(str(value).strip()) > 0:
+                        print(f"   ✅ {field}: Present ({len(str(value))} chars)")
+                    else:
+                        print(f"   ❌ {field}: Missing or empty")
+                        seo_valid = False
+                
+                results.append(seo_valid)
+                
+                # Validate JSON-LD structured data
+                json_ld = final_blog.get('json_ld')
+                if json_ld and isinstance(json_ld, dict):
+                    required_ld_fields = ['@context', '@type', 'headline', 'author', 'datePublished']
+                    ld_valid = all(field in json_ld for field in required_ld_fields)
+                    
+                    if ld_valid:
+                        print(f"   ✅ JSON-LD structured data valid ({len(json_ld)} fields)")
+                        results.append(True)
+                    else:
+                        print(f"   ❌ JSON-LD structured data incomplete")
+                        results.append(False)
+                else:
+                    print(f"   ❌ JSON-LD structured data missing")
+                    results.append(False)
+        
+        # Test 8: Blog Listing and Search
+        print("\n📝 TEST 8: BLOG LISTING AND SEARCH FUNCTIONALITY")
+        
+        # Test pagination
+        success, paginated_blogs = self.run_test(
+            "Test Blog Pagination",
+            "GET",
+            "blogs?skip=0&limit=5",
+            200,
+            description="Test blog listing with pagination"
+        )
+        results.append(success)
+        
+        if success and isinstance(paginated_blogs, list):
+            print(f"   ✅ Pagination working - Retrieved {len(paginated_blogs)} blogs")
+        
+        # Test search functionality
+        success, search_results = self.run_test(
+            "Test Blog Search",
+            "GET",
+            "blogs?search=productivity",
+            200,
+            description="Test blog search functionality"
+        )
+        results.append(success)
+        
+        if success and isinstance(search_results, list):
+            print(f"   ✅ Search working - Found {len(search_results)} blogs matching 'productivity'")
+        
+        # Test tag filtering
+        success, tag_filtered = self.run_test(
+            "Test Blog Tag Filtering",
+            "GET",
+            "blogs?tag=productivity",
+            200,
+            description="Test blog filtering by tags"
+        )
+        results.append(success)
+        
+        if success and isinstance(tag_filtered, list):
+            print(f"   ✅ Tag filtering working - Found {len(tag_filtered)} blogs with 'productivity' tag")
+        
+        # Test sorting options
+        sort_options = ["newest", "oldest", "most_viewed", "trending"]
+        for sort_option in sort_options:
+            success, sorted_blogs = self.run_test(
+                f"Test Blog Sorting - {sort_option}",
+                "GET",
+                f"blogs?sort={sort_option}&limit=5",
+                200,
+                description=f"Test blog sorting by {sort_option}"
+            )
+            results.append(success)
+            
+            if success:
+                print(f"   ✅ Sorting by {sort_option} working")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 BLOG MEDIUM-STYLE ENHANCEMENTS SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL BLOG MEDIUM-STYLE ENHANCEMENT TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some blog enhancement tests failed")
+        
+        return all(results)
+
     def run_comprehensive_tests(self):
         """Run comprehensive test suite"""
         print("🚀 Starting Comprehensive MarketMindAI API Testing")
         print("=" * 60)
         
-        # For the review request, focus on SEO and blog publishing
-        return self.run_comprehensive_seo_blog_testing()
+        # For the review request, focus on blog Medium-style enhancements
+        return self.test_blog_medium_style_enhancements()
 
 if __name__ == "__main__":
     tester = MarketMindAPITester()
