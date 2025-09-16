@@ -379,6 +379,20 @@ const ToolsPage = () => {
               <Card key={tool.id} className="hover:shadow-lg transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-6">
+                    {/* Logo Thumbnail for List View */}
+                    {tool.logo_thumbnail_url && (
+                      <div className="flex-shrink-0">
+                        <img 
+                          src={tool.logo_thumbnail_url} 
+                          alt={`${tool.name} logo`}
+                          className="w-16 h-16 rounded-lg object-cover border border-gray-200"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-2">
                         <div>
