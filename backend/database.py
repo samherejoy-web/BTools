@@ -1,17 +1,29 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import QueuePool
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Use SQLite for simplicity and performance
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./marketmind.db")
+# PostgreSQL Database Configuration
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://marketmind:secure_marketmind_2024@localhost:5432/marketmind_prod")
 
+# Create engine with PostgreSQL optimizations
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
+    poolclass=QueuePool,
+    pool_size=20,
+    max_overflow=0,
+    pool_pre_ping=True,
+    pool_recycle=3600,
+    echo=False,
+    # PostgreSQL specific optimizations
+    connect_args={
+        "application_name": "MarketMindAI",
+        "options": "-c timezone=UTC"
+    }
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
