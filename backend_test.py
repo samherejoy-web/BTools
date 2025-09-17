@@ -10278,10 +10278,17 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
                 authenticated = True
         
         if authenticated:
-            # Run the Medium-style blog enhancement tests
-            print("\n🎯 BLOG MEDIUM-STYLE ENHANCEMENTS TESTING")
+            # Run the specific blog by-slug functionality test as requested
+            print("\n🎯 BLOG BY-SLUG FUNCTIONALITY TESTING - REVIEW REQUEST")
             print("=" * 70)
-            return self.test_blog_medium_style_enhancements()
+            blog_by_slug_result = self.test_blog_by_slug_functionality_review()
+            
+            # Also run the comprehensive blog functionality test
+            print("\n📚 COMPREHENSIVE BLOG FUNCTIONALITY TESTING")
+            print("=" * 70)
+            comprehensive_result = self.test_blog_medium_style_enhancements()
+            
+            return blog_by_slug_result and comprehensive_result
         else:
             print("❌ Could not authenticate - skipping blog tests")
             return False
