@@ -10061,63 +10061,76 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
             return False
 
 if __name__ == "__main__":
+    print("🚀 COMPREHENSIVE BLOG FUNCTIONALITY TESTING - REVIEW REQUEST")
+    print("=" * 70)
+    print("Testing all blog-related backend functionality after useEffect fixes")
+    print("Focus: Production readiness and comprehensive coverage")
+    print("-" * 70)
+    
     tester = MarketMindAPITester()
     
-    # Basic setup
-    print("🚀 Starting Blog Medium-Style Enhancement Testing")
-    print("=" * 60)
-    
-    # Test health check first
+    # First, test basic connectivity
+    print("\n🔧 BASIC CONNECTIVITY TESTS")
     tester.test_health_check()
+    tester.test_debug_connectivity()
     
-    # Try to authenticate
-    authenticated = False
-    user_accounts = [
-        ("superadmin@marketmind.com", "admin123", "superadmin"),
-        ("admin@marketmind.com", "admin123", "admin"),
-        ("user@marketmind.com", "user123", "user")
-    ]
+    # Test authentication with existing user
+    print("\n🔐 AUTHENTICATION TESTS")
+    # Try to login with superadmin first
+    success, role = tester.test_login("superadmin@marketmind.com", "admin123")
     
-    for email, password, expected_role in user_accounts:
-        success, role = tester.test_login(email, password)
-        if success and role:
-            print(f"✅ Successfully authenticated as {role}")
-            authenticated = True
-            break
-    
-    if not authenticated:
-        print("🔄 No existing users found, creating test user...")
+    if not success:
+        # If superadmin login fails, try to register a new user
+        print("Superadmin login failed, registering new test user...")
         tester.test_register()
-    
-    # Run the specific blog retrieval by slug tests
-    if authenticated or tester.token:
-        success = tester.test_blog_retrieval_by_slug_specific_review()
-    else:
-        print("❌ Could not authenticate - cannot run blog tests")
-        success = False
-    
-    # Print final summary
-    print(f"\n" + "="*80)
-    print(f"🏁 TESTING COMPLETED")
-    print(f"="*80)
-    print(f"Total tests run: {tester.tests_run}")
-    print(f"Tests passed: {tester.tests_passed}")
-    print(f"Tests failed: {len(tester.failed_tests)}")
-    
-    if tester.tests_run > 0:
-        success_rate = (tester.tests_passed / tester.tests_run) * 100
-        print(f"Success rate: {success_rate:.1f}%")
-    
-    if tester.failed_tests:
-        print(f"\n❌ FAILED TESTS:")
-        for i, failed_test in enumerate(tester.failed_tests[:10], 1):
-            print(f"   {i}. {failed_test.get('name', 'Unknown test')}")
-            if 'error' in failed_test:
-                print(f"      Error: {failed_test['error']}")
-            elif 'expected' in failed_test and 'actual' in failed_test:
-                print(f"      Expected: {failed_test['expected']}, Got: {failed_test['actual']}")
+        # Get the last created user for login
+        if tester.created_resources['users']:
+            last_user = tester.created_resources['users'][-1]
+            success, role = tester.test_login(last_user['email'], "TestPass123!")
     
     if success:
-        print(f"\n🎉 ALL BLOG MEDIUM-STYLE ENHANCEMENT TESTS PASSED!")
+        print(f"✅ Authenticated successfully as {role}")
+        
+        # Run comprehensive blog functionality test
+        print("\n🎯 RUNNING COMPREHENSIVE BLOG FUNCTIONALITY TEST")
+        blog_test_result = tester.test_comprehensive_blog_functionality_review()
+        
+        # Print final summary
+        print("\n" + "=" * 70)
+        print("🏁 FINAL TEST SUMMARY")
+        print("=" * 70)
+        print(f"Total Tests Run: {tester.tests_run}")
+        print(f"Tests Passed: {tester.tests_passed}")
+        print(f"Tests Failed: {len(tester.failed_tests)}")
+        print(f"Success Rate: {(tester.tests_passed/tester.tests_run*100):.1f}%")
+        
+        if blog_test_result:
+            print("\n🎉 COMPREHENSIVE BLOG FUNCTIONALITY: ✅ ALL TESTS PASSED")
+            print("✅ Blog CRUD Operations working correctly")
+            print("✅ Blog Publishing Flow working correctly")
+            print("✅ Blog Engagement Features working correctly")
+            print("✅ Blog Comments System working correctly")
+            print("✅ Blog Search and Filtering working correctly")
+            print("✅ SEO and Medium-Style Features working correctly")
+            print("✅ Performance and Error Handling working correctly")
+            print("\n🚀 BLOG BACKEND IS PRODUCTION READY!")
+        else:
+            print("\n❌ COMPREHENSIVE BLOG FUNCTIONALITY: SOME TESTS FAILED")
+            print("⚠️ Blog backend may need attention before production")
+        
+        if tester.failed_tests:
+            print(f"\n❌ FAILED TESTS ({len(tester.failed_tests)}):")
+            for i, failed_test in enumerate(tester.failed_tests, 1):
+                print(f"{i}. {failed_test['name']}")
+                if 'expected' in failed_test:
+                    print(f"   Expected: {failed_test['expected']}, Got: {failed_test['actual']}")
+                if 'error' in failed_test:
+                    print(f"   Error: {failed_test['error']}")
+                print(f"   Endpoint: {failed_test['endpoint']}")
     else:
-        print(f"\n⚠️ Some tests failed - check details above")
+        print("❌ Authentication failed - cannot run blog functionality tests")
+        print("Please check authentication credentials and try again")
+    
+    print("\n" + "=" * 70)
+    print("🔚 BLOG FUNCTIONALITY TESTING COMPLETED")
+    print("=" * 70)
