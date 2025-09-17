@@ -67,27 +67,10 @@ const BlogDetailPage = () => {
   // Generate SEO data for the blog - only when blog data is loaded
   const seoData = useBlogSEO(blog);
 
-  useEffect(() => {
-    if (blogSlug) {
-      fetchBlogDetails();
-      fetchRelatedBlogs();
-      fetchComments();
-    }
-  }, [blogSlug]);
-
-  // Calculate reading stats when blog content changes
-  useEffect(() => {
-    if (blog?.content) {
-      const text = blog.content.replace(/<[^>]*>/g, ''); // Strip HTML tags
-      const words = text.split(/\s+/).filter(word => word.length > 0).length;
-      const time = Math.ceil(words / 200); // 200 words per minute
-      
-      setWordCount(words);
-      setReadingTime(time);
-    }
-  }, [blog?.content]);
-
-  const fetchBlogDetails = async () => {
+  // Memoized fetch functions to prevent infinite loops
+  const fetchBlogDetails = useCallback(async () => {
+    if (!blogSlug) return;
+    
     try {
       setLoading(true);
       const response = await apiClient.get(`/blogs/by-slug/${blogSlug}`);
@@ -103,9 +86,11 @@ const BlogDetailPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [blogSlug, navigate]);
 
-  const fetchRelatedBlogs = async () => {
+  const fetchRelatedBlogs = useCallback(async () => {
+    if (!blogSlug) return;
+    
     try {
       setRelatedBlogsLoading(true);
       const response = await apiClient.get(`/blogs?limit=3`);
@@ -116,9 +101,11 @@ const BlogDetailPage = () => {
     } finally {
       setRelatedBlogsLoading(false);
     }
-  };
+  }, [blogSlug]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
+    if (!blogSlug) return;
+    
     try {
       setCommentsLoading(true);
       const response = await apiClient.get(`/blogs/${blogSlug}/comments`);
@@ -128,7 +115,15 @@ const BlogDetailPage = () => {
     } finally {
       setCommentsLoading(false);
     }
-  };
+  }, [blogSlug]);
+
+  useEffect(() => {
+    if (blogSlug) {
+      fetchBlogDetails();
+      fetchRelatedBlogs();
+      fetchComments();
+    }
+  }, [blogSlug, fetchBlogDetails, fetchRelatedBlogs, fetchComments]);
 
   const handleAddComment = async (commentData) => {
     try {
