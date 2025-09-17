@@ -127,11 +127,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Blog Publishing Flow - New Blog Creation and Publishing"
-    - "Blog Publishing Flow - Draft to Published Conversion"
-    - "EnhancedBlogEditor Component Behavior"
-    - "Blog Status Verification and Public Visibility"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
