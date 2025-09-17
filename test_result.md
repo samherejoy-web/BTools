@@ -146,9 +146,12 @@ frontend:
 
 metadata:
   created_by: "testing_agent"
-  version: "1.0"
-  test_sequence: 1
+  version: "2.0"
+  test_sequence: 2
   run_ui: false
+  postgresql_migration_tested: true
+  comprehensive_backend_testing: true
+  last_updated: "2025-09-17T09:02:30Z"
 
 test_plan:
   current_focus: []
