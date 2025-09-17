@@ -263,8 +263,8 @@ const EnhancedBlogEditor = ({
       .trim();
   };
 
-  // Save handler
-  const handleSave = async (status = 'draft') => {
+  // Memoized save handler for better performance
+  const handleSave = useCallback(async (status = 'draft') => {
     if (!title.trim()) {
       toast.error('Please enter a blog title');
       return;
@@ -313,7 +313,7 @@ const EnhancedBlogEditor = ({
     } finally {
       setSaving(false);
     }
-  };
+  }, [title, content, excerpt, tags, seoTitle, seoDescription, seoKeywords, jsonLd, onSave, onPublish]);
 
   // Toolbar component
   const Toolbar = () => (
