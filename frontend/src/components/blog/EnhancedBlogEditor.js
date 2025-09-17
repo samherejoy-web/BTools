@@ -150,18 +150,7 @@ const EnhancedBlogEditor = ({
     },
   });
 
-  // Auto-save effect with proper cleanup
-  useEffect(() => {
-    if (!editor || !blogId || !title.trim() || !content.trim()) return;
-
-    const timer = setTimeout(() => {
-      handleAutoSave();
-    }, 3000); // Auto-save after 3 seconds of inactivity
-
-    return () => clearTimeout(timer);
-  }, [editor, blogId, title, content, handleAutoSave]);
-
-  // Auto-save function with proper dependencies
+  // Auto-save function with proper dependencies (defined before useEffect)
   const handleAutoSave = useCallback(async () => {
     if (!blogId || !title.trim() || !content.trim()) return;
     
@@ -183,6 +172,17 @@ const EnhancedBlogEditor = ({
       console.error('Auto-save error:', error);
     }
   }, [blogId, title, content, excerpt, tags, seoTitle, seoDescription, seoKeywords, jsonLd]);
+
+  // Auto-save effect with proper cleanup (now placed after function definition)
+  useEffect(() => {
+    if (!editor || !blogId || !title.trim() || !content.trim()) return;
+
+    const timer = setTimeout(() => {
+      handleAutoSave();
+    }, 3000); // Auto-save after 3 seconds of inactivity
+
+    return () => clearTimeout(timer);
+  }, [editor, blogId, title, content, handleAutoSave]);
 
   // Image upload handler
   const handleImageUpload = useCallback(async (file) => {
