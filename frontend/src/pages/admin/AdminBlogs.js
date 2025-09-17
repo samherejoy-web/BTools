@@ -31,12 +31,8 @@ const AdminBlogs = () => {
   const [selectedAuthor, setSelectedAuthor] = useState('all');
   const [authors, setAuthors] = useState([]);
 
-  useEffect(() => {
-    fetchBlogs();
-    fetchAuthors();
-  }, [searchTerm, selectedStatus, selectedAuthor]);
-
-  const fetchBlogs = async () => {
+  // Memoized fetch functions to prevent infinite loops
+  const fetchBlogs = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -101,9 +97,9 @@ const AdminBlogs = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedStatus, selectedAuthor]);
 
-  const fetchAuthors = async () => {
+  const fetchAuthors = useCallback(async () => {
     try {
       // Mock authors for demo
       const mockAuthors = [
@@ -115,71 +111,84 @@ const AdminBlogs = () => {
     } catch (error) {
       console.error('Error fetching authors:', error);
     }
-  };
+  }, []);
 
-  const handleUpdateBlog = async (blogId, updateData) => {
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  useEffect(() => {
+    fetchAuthors();
+  }, [fetchAuthors]);
+
+  // Memoized handlers
+  const handleUpdateBlog = useCallback(async (blogId, updateData) => {
     try {
       await apiClient.put(`/admin/blogs/${blogId}`, updateData);
       toast.success('Blog updated successfully');
-      fetchBlogs();
+      await fetchBlogs();
     } catch (error) {
       console.error('Error updating blog:', error);
       toast.error('Failed to update blog');
     }
-  };
+  }, [fetchBlogs]);
 
-  const handleDeleteBlog = async (blogId) => {
+  const handleDeleteBlog = useCallback(async (blogId) => {
     if (!window.confirm('Are you sure you want to delete this blog?')) return;
 
     try {
       await apiClient.delete(`/admin/blogs/${blogId}`);
       toast.success('Blog deleted successfully');
-      fetchBlogs();
+      await fetchBlogs();
     } catch (error) {
       console.error('Error deleting blog:', error);
       toast.error('Failed to delete blog');
     }
-  };
+  }, [fetchBlogs]);
 
-  const handleStatusChange = async (blogId, newStatus) => {
+  const handleStatusChange = useCallback(async (blogId, newStatus) => {
     try {
       await apiClient.put(`/admin/blogs/${blogId}`, { status: newStatus });
       toast.success(`Blog ${newStatus} successfully`);
-      fetchBlogs();
+      await fetchBlogs();
     } catch (error) {
       console.error('Error updating blog status:', error);
       toast.error('Failed to update blog status');
     }
-  };
+  }, [fetchBlogs]);
 
-  const getStatusBadge = (status) => {
+  // Memoized utility functions
+  const getStatusBadge = useCallback((status) => {
     const variants = {
       published: 'bg-green-100 text-green-800',
       draft: 'bg-yellow-100 text-yellow-800',
       archived: 'bg-gray-100 text-gray-800'
     };
     return variants[status] || variants.draft;
-  };
+  }, []);
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = useCallback((status) => {
     switch (status) {
       case 'published': return <CheckCircle className="h-3 w-3" />;
       case 'draft': return <Clock className="h-3 w-3" />;
       case 'archived': return <Archive className="h-3 w-3" />;
       default: return <Clock className="h-3 w-3" />;
     }
-  };
+  }, []);
 
-  const filteredBlogs = blogs.filter(blog => {
-    const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         blog.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         blog.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesStatus = selectedStatus === 'all' || blog.status === selectedStatus;
-    const matchesAuthor = selectedAuthor === 'all' || blog.author_id === selectedAuthor;
-    
-    return matchesSearch && matchesStatus && matchesAuthor;
-  });
+  // Memoized filtered blogs for better performance
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter(blog => {
+      const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           blog.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           blog.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesStatus = selectedStatus === 'all' || blog.status === selectedStatus;
+      const matchesAuthor = selectedAuthor === 'all' || blog.author_id === selectedAuthor;
+      
+      return matchesSearch && matchesStatus && matchesAuthor;
+    });
+  }, [blogs, searchTerm, selectedStatus, selectedAuthor]);
 
   if (loading) {
     return (
