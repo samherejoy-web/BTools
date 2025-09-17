@@ -16,6 +16,23 @@ const BlogEditor = () => {
   const [aiGenerating, setAiGenerating] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
 
+  // Memoized fetch function to prevent infinite loops
+  const fetchBlogData = useCallback(async () => {
+    if (!blogId || blogId === 'new') return;
+    
+    try {
+      setLoading(true);
+      const response = await apiClient.get(`/user/blogs/${blogId}`);
+      setBlog(response.data);
+    } catch (error) {
+      console.error('Error fetching blog data:', error);
+      toast.error('Failed to load blog');
+      navigate('/dashboard/blogs');
+    } finally {
+      setLoading(false);
+    }
+  }, [blogId, navigate]);
+
   useEffect(() => {
     if (blogId && blogId !== 'new') {
       fetchBlogData();
@@ -35,23 +52,10 @@ const BlogEditor = () => {
         is_ai_generated: false
       });
     }
-  }, [blogId]);
+  }, [blogId, fetchBlogData]);
 
-  const fetchBlogData = async () => {
-    try {
-      setLoading(true);
-      const response = await apiClient.get(`/user/blogs/${blogId}`);
-      setBlog(response.data);
-    } catch (error) {
-      console.error('Error fetching blog data:', error);
-      toast.error('Failed to load blog');
-      navigate('/dashboard/blogs');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSave = async (blogData) => {
+  // Memoized save handler
+  const handleSave = useCallback(async (blogData) => {
     try {
       let response;
       if (blogId && blogId !== 'new') {
@@ -68,9 +72,10 @@ const BlogEditor = () => {
       console.error('Error saving blog:', error);
       throw error;
     }
-  };
+  }, [blogId, navigate]);
 
-  const handlePublish = async (blogData) => {
+  // Memoized publish handler
+  const handlePublish = useCallback(async (blogData) => {
     try {
       let response;
       if (blogId && blogId !== 'new') {
@@ -91,9 +96,10 @@ const BlogEditor = () => {
       console.error('Error publishing blog:', error);
       throw error;
     }
-  };
+  }, [blogId, navigate]);
 
-  const generateAIContent = async () => {
+  // Memoized AI content generation
+  const generateAIContent = useCallback(async () => {
     if (!aiPrompt.trim()) {
       toast.error('Please enter a topic or prompt for AI generation');
       return;
@@ -127,7 +133,7 @@ const BlogEditor = () => {
     } finally {
       setAiGenerating(false);
     }
-  };
+  }, [aiPrompt, blog]);
 
   if (loading) {
     return (
