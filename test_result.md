@@ -116,11 +116,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Blog Creation with Draft Status"
-    - "Blog Publishing Endpoint"
-    - "Published Blog Visibility"
-    - "Blog Status Management"
-    - "Blog Timestamp Management"
+    - "Blog Publishing Flow - New Blog Creation and Publishing"
+    - "Blog Publishing Flow - Draft to Published Conversion"
+    - "EnhancedBlogEditor Component Behavior"
+    - "Blog Status Verification and Public Visibility"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -128,3 +127,5 @@ test_plan:
 agent_communication:
   - agent: "testing"
     message: "✅ ALL BLOG PUBLISHING FUNCTIONALITY TESTS PASSED (100% success rate). The blog publishing flow works perfectly: 1) Blogs are created as draft by default, 2) Publish endpoint correctly changes status to 'published' and sets published_at timestamp, 3) Published blogs appear in public listings while drafts remain private, 4) All API endpoints respond correctly with proper data structure including SEO fields and JSON-LD."
+  - agent: "testing"
+    message: "🔄 STARTING FRONTEND BLOG PUBLISHING TESTS: Testing complete blog publishing flow including new blog creation with publish status, draft to published conversion, EnhancedBlogEditor component behavior, and public blog visibility verification."
