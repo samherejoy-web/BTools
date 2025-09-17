@@ -38,7 +38,7 @@ const ImmersiveReader = ({ children, isActive, onToggle }) => {
     setFontSize(prev => Math.max(14, Math.min(32, prev + delta)));
   };
 
-  if (!isActive) return children;
+  if (!isActive) return null;
 
   const readerStyles = {
     fontSize: `${fontSize}px`,
