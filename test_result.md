@@ -60,17 +60,53 @@ backend:
         comment: "✅ Published timestamp (published_at) is correctly set only when blog is published via the publish endpoint. Draft blogs have null published_at. Timestamp format is ISO 8601 UTC."
 
 frontend:
-  - task: "Frontend Blog Publishing UI"
-    implemented: false
+  - task: "Blog Publishing Flow - New Blog Creation and Publishing"
+    implemented: true
     working: "NA"
-    file: "frontend/src/App.js"
+    file: "frontend/src/pages/user/BlogEditor.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Not tested - frontend testing not performed as per instructions."
+        comment: "Starting comprehensive testing of blog publishing functionality. Testing new blog creation with publish status."
+
+  - task: "Blog Publishing Flow - Draft to Published Conversion"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/user/BlogEditor.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing existing draft blog conversion to published status."
+
+  - task: "EnhancedBlogEditor Component Behavior"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/blog/EnhancedBlogEditor.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing EnhancedBlogEditor component's onPublish vs onSave callback behavior based on status."
+
+  - task: "Blog Status Verification and Public Visibility"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/public/BlogsPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing that published blogs appear in public listings and draft blogs remain private."
 
 metadata:
   created_by: "testing_agent"
