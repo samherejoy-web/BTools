@@ -18,12 +18,7 @@ engine = create_engine(
     max_overflow=0,
     pool_pre_ping=True,
     pool_recycle=3600,
-    echo=False,
-    # PostgreSQL specific optimizations
-    connect_args={
-        "application_name": "MarketMindAI",
-        "options": "-c timezone=UTC"
-    }
+    echo=False
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
