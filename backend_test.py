@@ -10013,6 +10013,232 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
         
         return all(results)
 
+    def test_blog_by_slug_functionality_review(self):
+        """Test blog by-slug endpoint functionality - REVIEW REQUEST"""
+        print("\n🔍 BLOG BY-SLUG FUNCTIONALITY TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        print("Testing specific blog by-slug functionality as requested:")
+        print("1. GET /api/blogs/by-slug/{slug} endpoint with different slugs")
+        print("2. Verify blog content structure is correct and complete")
+        print("3. Test view increment functionality on blogs")
+        print("4. Confirm blog engagement features (like, bookmark) are working")
+        print("-" * 70)
+        
+        results = []
+        
+        # Test 1: Get available published blogs first
+        print("\n📝 TEST 1: GET AVAILABLE PUBLISHED BLOGS")
+        success, blogs_response = self.run_test(
+            "Get Published Blogs",
+            "GET",
+            "blogs?limit=10",
+            200,
+            description="Get published blogs to identify available slugs for testing"
+        )
+        results.append(success)
+        
+        available_slugs = []
+        if success and isinstance(blogs_response, list) and len(blogs_response) > 0:
+            print(f"   ✅ Found {len(blogs_response)} published blogs")
+            
+            # Extract slugs from first few blogs
+            for blog in blogs_response[:5]:  # Test with first 5 blogs
+                slug = blog.get('slug')
+                if slug:
+                    available_slugs.append(slug)
+                    print(f"   - Available slug: {slug}")
+            
+            if len(available_slugs) >= 3:
+                print(f"   ✅ Found {len(available_slugs)} slugs for testing")
+                results.append(True)
+            else:
+                print(f"   ⚠️ Only found {len(available_slugs)} slugs, need at least 3")
+                results.append(False)
+        else:
+            print(f"   ❌ No published blogs found for slug testing")
+            results.append(False)
+            return False
+        
+        # Test 2: Test GET /api/blogs/by-slug/{slug} with different slugs
+        print("\n📝 TEST 2: GET BLOGS BY SLUG WITH DIFFERENT SLUGS")
+        
+        tested_slugs = []
+        for i, slug in enumerate(available_slugs[:3]):  # Test first 3 slugs
+            print(f"\n   Testing slug {i+1}: {slug}")
+            
+            success, response = self.run_test(
+                f"Get Blog by Slug - {slug}",
+                "GET",
+                f"blogs/by-slug/{slug}",
+                200,
+                description=f"Test GET /api/blogs/by-slug/{slug}"
+            )
+            results.append(success)
+            
+            if success and isinstance(response, dict):
+                tested_slugs.append(slug)
+                print(f"   ✅ Blog retrieved successfully")
+                print(f"      Title: {response.get('title', 'N/A')}")
+                print(f"      Status: {response.get('status', 'N/A')}")
+                print(f"      View Count: {response.get('view_count', 0)}")
+                print(f"      Like Count: {response.get('like_count', 0)}")
+                
+                # Test 3: Verify blog content structure is complete
+                print(f"   📋 CONTENT STRUCTURE VERIFICATION:")
+                required_fields = [
+                    'id', 'title', 'slug', 'content', 'excerpt', 'author_id', 
+                    'author_name', 'status', 'view_count', 'like_count', 
+                    'reading_time', 'tags', 'created_at', 'updated_at'
+                ]
+                
+                missing_fields = []
+                present_fields = []
+                
+                for field in required_fields:
+                    if field in response and response[field] is not None:
+                        present_fields.append(field)
+                    else:
+                        missing_fields.append(field)
+                
+                print(f"      Present fields: {len(present_fields)}/{len(required_fields)}")
+                if missing_fields:
+                    print(f"      Missing fields: {missing_fields}")
+                    results.append(False)
+                else:
+                    print(f"      ✅ All required fields present")
+                    results.append(True)
+                
+                # Verify SEO fields
+                seo_fields = ['seo_title', 'seo_description', 'seo_keywords']
+                seo_present = sum(1 for field in seo_fields if response.get(field))
+                print(f"      SEO fields: {seo_present}/{len(seo_fields)} present")
+                
+                # Verify JSON-LD structured data
+                if response.get('json_ld'):
+                    json_ld_keys = len(response['json_ld']) if isinstance(response['json_ld'], dict) else 0
+                    print(f"      JSON-LD: Present ({json_ld_keys} keys)")
+                else:
+                    print(f"      JSON-LD: Not present")
+            else:
+                print(f"   ❌ Failed to retrieve blog by slug: {slug}")
+        
+        # Test 4: Test 404 error handling for non-existent slug
+        print(f"\n📝 TEST 3: 404 ERROR HANDLING")
+        non_existent_slug = "non-existent-blog-slug-12345"
+        success, response = self.run_test(
+            "Get Non-existent Blog by Slug",
+            "GET",
+            f"blogs/by-slug/{non_existent_slug}",
+            404,
+            description="Test 404 error handling for non-existent slug"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ 404 error handling working correctly")
+        else:
+            print(f"   ❌ 404 error handling not working properly")
+        
+        # Test 5: Test view increment functionality
+        if tested_slugs and self.token:
+            print(f"\n📝 TEST 4: VIEW INCREMENT FUNCTIONALITY")
+            test_slug = tested_slugs[0]  # Use first successfully tested slug
+            
+            # Get current view count
+            success, before_response = self.run_test(
+                "Get Blog Before View Increment",
+                "GET",
+                f"blogs/by-slug/{test_slug}",
+                200,
+                description="Get blog before view increment"
+            )
+            
+            if success:
+                before_views = before_response.get('view_count', 0)
+                print(f"   Current view count: {before_views}")
+                
+                # Increment view count
+                success, increment_response = self.run_test(
+                    "Increment Blog View",
+                    "POST",
+                    f"blogs/{test_slug}/view",
+                    200,
+                    description=f"Test POST /api/blogs/{test_slug}/view"
+                )
+                results.append(success)
+                
+                if success and isinstance(increment_response, dict):
+                    new_view_count = increment_response.get('view_count', 0)
+                    print(f"   ✅ View increment successful")
+                    print(f"   New view count: {new_view_count}")
+                    
+                    if new_view_count > before_views:
+                        print(f"   ✅ View count properly incremented ({before_views} → {new_view_count})")
+                        results.append(True)
+                    else:
+                        print(f"   ❌ View count not incremented properly")
+                        results.append(False)
+                else:
+                    print(f"   ❌ View increment failed")
+        
+        # Test 6: Test blog engagement features (like, bookmark)
+        if tested_slugs and self.token:
+            print(f"\n📝 TEST 5: BLOG ENGAGEMENT FEATURES")
+            test_slug = tested_slugs[0]  # Use first successfully tested slug
+            
+            # Test like functionality
+            print(f"   Testing LIKE functionality:")
+            success, like_response = self.run_test(
+                "Toggle Blog Like",
+                "POST",
+                f"blogs/{test_slug}/like",
+                200,
+                description=f"Test POST /api/blogs/{test_slug}/like"
+            )
+            results.append(success)
+            
+            if success and isinstance(like_response, dict):
+                liked = like_response.get('liked', False)
+                like_count = like_response.get('like_count', 0)
+                print(f"   ✅ Like toggle successful")
+                print(f"      Liked: {liked}")
+                print(f"      Like count: {like_count}")
+            else:
+                print(f"   ❌ Like functionality failed")
+            
+            # Test bookmark functionality
+            print(f"   Testing BOOKMARK functionality:")
+            success, bookmark_response = self.run_test(
+                "Toggle Blog Bookmark",
+                "POST",
+                f"blogs/{test_slug}/bookmark",
+                200,
+                description=f"Test POST /api/blogs/{test_slug}/bookmark"
+            )
+            results.append(success)
+            
+            if success and isinstance(bookmark_response, dict):
+                bookmarked = bookmark_response.get('bookmarked', False)
+                print(f"   ✅ Bookmark toggle successful")
+                print(f"      Bookmarked: {bookmarked}")
+            else:
+                print(f"   ❌ Bookmark functionality failed")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 BLOG BY-SLUG FUNCTIONALITY REVIEW SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL BLOG BY-SLUG TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some blog by-slug tests failed")
+        
+        return all(results)
+
     def run_comprehensive_tests(self):
         """Run comprehensive test suite"""
         print("🚀 Starting Comprehensive MarketMindAI API Testing")
