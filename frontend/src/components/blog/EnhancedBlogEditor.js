@@ -309,10 +309,10 @@ const EnhancedBlogEditor = ({
         status,
       };
       
-      if (onSave) {
-        await onSave(blogData);
-      } else if (onPublish && status === 'published') {
+      if (onPublish && status === 'published') {
         await onPublish(blogData);
+      } else if (onSave) {
+        await onSave(blogData);
       }
       
       toast.success(status === 'published' ? 'Blog published successfully!' : 'Blog saved successfully!');
