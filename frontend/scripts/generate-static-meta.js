@@ -31,7 +31,7 @@ const STATIC_ROUTES = {
 
 // Generate meta tags HTML
 function generateMetaTags(route, routeData) {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://sync-codebase-8.preview.emergentagent.com';
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://sync-and-fix-1.preview.emergentagent.com';
   const currentUrl = `${backendUrl}${route === '/' ? '' : route}`;
   const imageUrl = `${backendUrl}/api/images/og-default.jpg`;
   
