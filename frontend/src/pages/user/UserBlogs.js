@@ -29,11 +29,8 @@ const UserBlogs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
 
-  useEffect(() => {
-    fetchUserBlogs();
-  }, [selectedStatus]);
-
-  const fetchUserBlogs = async () => {
+  // Memoized fetch function to prevent infinite loops
+  const fetchUserBlogs = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -98,47 +95,56 @@ const UserBlogs = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedStatus]);
 
-  const handleDeleteBlog = async (blogId) => {
+  useEffect(() => {
+    fetchUserBlogs();
+  }, [fetchUserBlogs]);
+
+  // Memoized delete handler
+  const handleDeleteBlog = useCallback(async (blogId) => {
     if (!window.confirm('Are you sure you want to delete this blog?')) return;
 
     try {
       await apiClient.delete(`/user/blogs/${blogId}`);
       toast.success('Blog deleted successfully');
-      fetchUserBlogs();
+      await fetchUserBlogs();
     } catch (error) {
       console.error('Error deleting blog:', error);
       toast.error('Failed to delete blog');
     }
-  };
+  }, [fetchUserBlogs]);
 
-  const getStatusBadge = (status) => {
+  // Memoized utility functions
+  const getStatusBadge = useCallback((status) => {
     const variants = {
       published: 'bg-green-100 text-green-800',
       draft: 'bg-yellow-100 text-yellow-800',
       archived: 'bg-gray-100 text-gray-800'
     };
     return variants[status] || variants.draft;
-  };
+  }, []);
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = useCallback((status) => {
     switch (status) {
       case 'published': return <CheckCircle className="h-3 w-3" />;
       case 'draft': return <Clock className="h-3 w-3" />;
       case 'archived': return <Archive className="h-3 w-3" />;
       default: return <Clock className="h-3 w-3" />;
     }
-  };
+  }, []);
 
-  const filteredBlogs = blogs.filter(blog => {
-    const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         blog.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesStatus = selectedStatus === 'all' || blog.status === selectedStatus;
-    
-    return matchesSearch && matchesStatus;
-  });
+  // Memoized filtered blogs for better performance
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter(blog => {
+      const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           blog.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesStatus = selectedStatus === 'all' || blog.status === selectedStatus;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [blogs, searchTerm, selectedStatus]);
 
   if (loading) {
     return (
