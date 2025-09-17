@@ -154,7 +154,7 @@ const EnhancedBlogEditor = ({
     },
   });
 
-  // Auto-save function
+  // Auto-save function with proper dependencies
   const handleAutoSave = useCallback(async () => {
     if (!blogId || !title.trim() || !content.trim()) return;
     
