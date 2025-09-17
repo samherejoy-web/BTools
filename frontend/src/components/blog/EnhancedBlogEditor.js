@@ -86,7 +86,7 @@ const EnhancedBlogEditor = ({
   const [showToolbar, setShowToolbar] = useState(true);
   const [writingStats, setWritingStats] = useState({ words: 0, characters: 0, readingTime: 0 });
   
-  // TipTap editor configuration
+  // TipTap editor configuration with better performance
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -122,7 +122,7 @@ const EnhancedBlogEditor = ({
       }),
     ],
     content: initialContent,
-    onUpdate: ({ editor }) => {
+    onUpdate: useCallback(({ editor }) => {
       const newContent = editor.getHTML();
       setContent(newContent);
       
@@ -133,26 +133,24 @@ const EnhancedBlogEditor = ({
       const readingTime = Math.ceil(words / 200);
       
       setWritingStats({ words, characters, readingTime });
-      
-      // Auto-save functionality
-      if (autoSaveTimer) {
-        clearTimeout(autoSaveTimer);
-      }
-      
-      const timer = setTimeout(() => {
-        if (blogId && newContent.trim()) {
-          handleAutoSave();
-        }
-      }, 3000); // Auto-save after 3 seconds of inactivity
-      
-      setAutoSaveTimer(timer);
-    },
+    }, []),
     editorProps: {
       attributes: {
         class: `medium-article prose prose-lg max-w-none focus:outline-none min-h-[400px] p-6 ${isFocusMode ? 'p-12' : ''}`,
       },
     },
   });
+
+  // Auto-save effect with proper cleanup
+  useEffect(() => {
+    if (!editor || !blogId || !title.trim() || !content.trim()) return;
+
+    const timer = setTimeout(() => {
+      handleAutoSave();
+    }, 3000); // Auto-save after 3 seconds of inactivity
+
+    return () => clearTimeout(timer);
+  }, [editor, blogId, title, content, handleAutoSave]);
 
   // Auto-save function with proper dependencies
   const handleAutoSave = useCallback(async () => {
