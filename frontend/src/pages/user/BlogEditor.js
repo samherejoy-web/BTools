@@ -84,9 +84,12 @@ const BlogEditor = () => {
         await apiClient.post(`/user/blogs/${blogId}/publish`);
         response = await apiClient.get(`/user/blogs/${blogId}`);
       } else {
-        // Create and publish in one step
-        blogData.status = 'published';
+        // Create blog first, then publish
         response = await apiClient.post('/user/blogs', blogData);
+        // Always call publish endpoint after blog creation for published status
+        await apiClient.post(`/user/blogs/${response.data.id}/publish`);
+        // Get updated blog data after publishing
+        response = await apiClient.get(`/user/blogs/${response.data.id}`);
         navigate(`/dashboard/blogs/edit/${response.data.id}`, { replace: true });
       }
       
