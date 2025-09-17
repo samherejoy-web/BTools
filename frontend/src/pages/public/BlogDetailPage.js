@@ -125,7 +125,20 @@ const BlogDetailPage = () => {
     }
   }, [blogSlug, fetchBlogDetails, fetchRelatedBlogs, fetchComments]);
 
-  const handleAddComment = async (commentData) => {
+  // Calculate reading stats when blog content changes
+  useEffect(() => {
+    if (blog?.content) {
+      const text = blog.content.replace(/<[^>]*>/g, ''); // Strip HTML tags
+      const words = text.split(/\s+/).filter(word => word.length > 0).length;
+      const time = Math.ceil(words / 200); // 200 words per minute
+      
+      setWordCount(words);
+      setReadingTime(time);
+    }
+  }, [blog?.content]);
+
+  // Memoized comment handler to prevent re-renders
+  const handleAddComment = useCallback(async (commentData) => {
     try {
       await apiClient.post(`/blogs/${blogSlug}/comments`, commentData);
       await fetchComments(); // Refresh comments
@@ -135,9 +148,10 @@ const BlogDetailPage = () => {
       toast.error('Failed to add comment');
       throw error;
     }
-  };
+  }, [blogSlug, fetchComments]);
 
-  const handleToggleBookmark = async () => {
+  // Memoized interaction handlers
+  const handleToggleBookmark = useCallback(async () => {
     if (!user) {
       toast.error('Please login to bookmark articles');
       navigate('/login');
@@ -152,9 +166,9 @@ const BlogDetailPage = () => {
       console.error('Error toggling bookmark:', error);
       toast.error('Failed to update bookmark');
     }
-  };
+  }, [user, blogSlug, isBookmarked, navigate]);
 
-  const handleToggleLike = async () => {
+  const handleToggleLike = useCallback(async () => {
     if (!user) {
       toast.error('Please login to like articles');
       navigate('/login');
@@ -171,9 +185,10 @@ const BlogDetailPage = () => {
       console.error('Error toggling like:', error);
       toast.error('Failed to update like');
     }
-  };
+  }, [user, blogSlug, isLiked, likesCount, navigate]);
 
-  const handleShare = (platform) => {
+  // Memoized share handler
+  const handleShare = useCallback((platform) => {
     const url = window.location.href;
     const title = blog?.title || '';
     const text = blog?.excerpt || '';
@@ -192,10 +207,10 @@ const BlogDetailPage = () => {
       window.open(shareUrls[platform], '_blank', 'width=600,height=400');
     }
     setShowShareMenu(false);
-  };
+  }, [blog?.title, blog?.excerpt]);
 
-  // Process blog content to make it readable
-  const formatBlogContent = (content) => {
+  // Memoized content formatter for better performance
+  const formatBlogContent = useCallback((content) => {
     if (!content) return '';
     
     // Remove HTML tags for now and format as readable text
@@ -208,7 +223,7 @@ const BlogDetailPage = () => {
       .replace(/<[^>]*>/g, '')
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .trim();
-  };
+  }, []);
 
   if (loading) {
     return (
