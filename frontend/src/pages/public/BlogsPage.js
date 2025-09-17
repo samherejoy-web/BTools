@@ -36,12 +36,8 @@ const BlogsPage = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [aiGeneratedOnly, setAiGeneratedOnly] = useState(false);
 
-  useEffect(() => {
-    fetchBlogs();
-    fetchCategories();
-  }, [selectedCategory, sortBy, aiGeneratedOnly]);
-
-  const fetchBlogs = async () => {
+  // Memoized fetch functions to prevent infinite loops
+  const fetchBlogs = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -58,18 +54,27 @@ const BlogsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory, sortBy, aiGeneratedOnly]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await apiClient.get('/categories');
       setCategories(response.data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
-  };
+  }, []);
 
-  const handleSearch = async () => {
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  // Memoized search handler
+  const handleSearch = useCallback(async () => {
     if (!searchTerm.trim()) {
       fetchBlogs();
       return;
@@ -85,14 +90,17 @@ const BlogsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm, fetchBlogs]);
 
-  const filteredBlogs = blogs.filter(blog => 
-    !searchTerm || 
-    blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  // Memoized filtered blogs to improve performance
+  const filteredBlogs = useMemo(() => {
+    return blogs.filter(blog => 
+      !searchTerm || 
+      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }, [blogs, searchTerm]);
 
   if (loading && blogs.length === 0) {
     return (
