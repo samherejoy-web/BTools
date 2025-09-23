@@ -230,17 +230,28 @@ const Footer = () => {
               </p>
             </div>
             <div className="mt-4 md:mt-0 md:ml-6">
-              <form className="flex flex-col sm:flex-row gap-3">
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                 />
                 <button
                   type="submit"
-                  className="btn-primary whitespace-nowrap"
+                  disabled={loading}
+                  className="btn-primary whitespace-nowrap flex items-center justify-center gap-2 px-6"
                 >
-                  Subscribe
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Subscribing...
+                    </>
+                  ) : (
+                    'Subscribe'
+                  )}
                 </button>
               </form>
             </div>
