@@ -54,14 +54,16 @@ const Footer = () => {
             {/* Company info */}
             <div className="lg:col-span-1">
               <Link to="/" className="flex items-center mb-4">
-                <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">MM</span>
-                </div>
-                <span className="ml-2 text-xl font-bold text-gray-900">MarketMind</span>
+                <img 
+                  src="https://marketmindai.com/logo.png" 
+                  alt="MarketMindAI"
+                  className="h-8 w-8 rounded-lg"
+                />
+                <span className="ml-2 text-xl font-bold text-gray-900">MarketMindAI</span>
               </Link>
               <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                Discover, compare, and choose the best tools for your business. 
-                Powered by AI insights and community reviews.
+                Discover, compare, and choose the best B2B tools for your business. 
+                Powered by AI insights and community reviews for lead generation and productivity.
               </p>
               
               {/* Social links */}
