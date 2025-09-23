@@ -213,6 +213,31 @@ function App() {
               </ProtectedRoute>
             } />
             
+            {/* Static Pages Routes */}
+            <Route path="/about" element={
+              <Layout>
+                <AboutPage />
+              </Layout>
+            } />
+            
+            <Route path="/contact" element={
+              <Layout>
+                <ContactPage />
+              </Layout>
+            } />
+            
+            <Route path="/privacy" element={
+              <Layout>
+                <PrivacyPolicyPage />
+              </Layout>
+            } />
+            
+            <Route path="/terms" element={
+              <Layout>
+                <TermsOfServicePage />
+              </Layout>
+            } />
+            
             {/* SEO Tools Routes */}
             <Route path="/seo-tools" element={
               <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
