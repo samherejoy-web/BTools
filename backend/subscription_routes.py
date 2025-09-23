@@ -25,8 +25,16 @@ class EmailSubscriptionResponse(BaseModel):
     source: str
     created_at: str
     
-    class Config:
-        from_attributes = True
+    @classmethod
+    def from_db_model(cls, db_model):
+        return cls(
+            id=db_model.id,
+            email=db_model.email,
+            company_name=db_model.company_name,
+            subscription_type=db_model.subscription_type,
+            source=db_model.source,
+            created_at=db_model.created_at.isoformat() if db_model.created_at else ""
+        )
 
 @router.post("/api/subscribe", response_model=dict)
 async def subscribe_email(
