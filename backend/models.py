@@ -242,3 +242,15 @@ class ToolLike(Base):
     # Relationships
     tool = relationship("Tool", back_populates="likes")
     user = relationship("User")
+
+class EmailSubscription(Base):
+    __tablename__ = "email_subscriptions"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    email = Column(String, nullable=False, unique=True, index=True)
+    company_name = Column(String, nullable=True)
+    subscription_type = Column(String, default="newsletter")  # newsletter, partnership, etc.
+    is_active = Column(Boolean, default=True)
+    source = Column(String, default="website")  # website, footer, partnership, etc.
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
