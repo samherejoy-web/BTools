@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Mail, 
   Twitter, 
   Github, 
   Linkedin,
-  ExternalLink
+  ExternalLink,
+  Loader2
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
