@@ -24,6 +24,7 @@ from ai_blog_routes import router as ai_blog_router
 from sitemap_routes import router as sitemap_router
 from seo_routes import router as seo_router
 from email_verification_routes import get_email_verification_routes
+from subscription_routes import router as subscription_router
 
 # Configure logging
 import os
