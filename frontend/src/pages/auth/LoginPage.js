@@ -122,10 +122,12 @@ const LoginPage = () => {
           </Link>
           
           <Link to="/" className="flex justify-center items-center mb-6">
-            <div className="h-12 w-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">MM</span>
-            </div>
-            <span className="ml-3 text-2xl font-bold text-gray-900">MarketMind</span>
+            <img 
+              src="https://marketmindai.com/logo.png" 
+              alt="MarketMindAI"
+              className="h-12 w-12 rounded-lg"
+            />
+            <span className="ml-3 text-2xl font-bold text-gray-900">MarketMindAI</span>
           </Link>
           
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
