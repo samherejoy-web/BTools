@@ -157,7 +157,7 @@ async def partnership_contact(
             detail="Failed to submit partnership inquiry"
         )
 
-@router.get("/api/subscriptions", response_model=list[EmailSubscriptionResponse])
+@router.get("/api/subscriptions")
 async def get_subscriptions(
     subscription_type: str = None,
     db: Session = Depends(get_db)
@@ -169,4 +169,6 @@ async def get_subscriptions(
         query = query.filter(EmailSubscription.subscription_type == subscription_type)
     
     subscriptions = query.filter(EmailSubscription.is_active == True).all()
-    return subscriptions
+    
+    # Convert to response format
+    return [EmailSubscriptionResponse.from_db_model(sub) for sub in subscriptions]
