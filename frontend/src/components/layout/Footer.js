@@ -31,10 +31,10 @@ const Footer = () => {
       { name: 'Partnerships', href: '/partnerships' },
     ],
     community: [
-      { name: 'Discord', href: 'https://discord.gg/marketmind', external: true },
-      { name: 'Twitter', href: 'https://twitter.com/marketmindai', external: true },
-      { name: 'LinkedIn', href: 'https://linkedin.com/company/marketmind', external: true },
-      { name: 'GitHub', href: 'https://github.com/marketmind', external: true },
+      { name: 'Discord', href: 'https://discord.com/users/market_mindai', external: true },
+      { name: 'X (Twitter)', href: 'https://x.com/marketmindai1', external: true },
+      { name: 'LinkedIn', href: 'https://www.linkedin.com/company/market-mindai', external: true },
+      { name: 'GitHub', href: 'https://github.com/marketmindais', external: true },
     ]
   };
 
