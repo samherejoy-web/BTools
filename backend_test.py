@@ -7927,16 +7927,16 @@ def main():
     # Return exit code based on critical tests
     critical_tests = [health_success, subscription_success, categories_success]
     if all(critical_tests):
-        print("🎉 NEW SEO FEATURES testing PASSED!")
-        print("✅ All requested SEO features are working correctly:")
-        print("   • Internal Linking Suggestions API")
-        print("   • SEO Score Calculator API (Tools & Blogs)")
-        print("   • Page Analysis API")
-        print("   • Authentication and Error Handling")
+        print("🎉 MarketMindAI Backend Testing PASSED!")
+        print("✅ Critical functionality working correctly:")
+        print("   • Health Check API")
+        print("   • Subscription Endpoints (/api/subscribe, /api/partnership-contact)")
+        print("   • Categories API")
+        print("   • Basic connectivity")
         return 0
     else:
-        print("❌ NEW SEO FEATURES testing FAILED!")
-        print("⚠️ Some SEO features need attention - see details above")
+        print("❌ MarketMindAI Backend Testing FAILED!")
+        print("⚠️ Some critical features need attention - see details above")
         return 1
 
     def test_review_request_specific_tests(self):
