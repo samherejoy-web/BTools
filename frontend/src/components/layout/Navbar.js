@@ -77,10 +77,12 @@ const Navbar = () => {
           {/* Logo and primary navigation */}
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">MM</span>
-              </div>
-              <span className="ml-2 text-xl font-bold text-gray-900">MarketMind</span>
+              <img 
+                src="https://marketmindai.com/logo.png" 
+                alt="MarketMindAI"
+                className="h-8 w-8 rounded-lg"
+              />
+              <span className="ml-2 text-xl font-bold text-gray-900">MarketMindAI</span>
             </Link>
 
             {/* Desktop navigation */}
