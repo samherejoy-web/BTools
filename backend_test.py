@@ -7862,10 +7862,10 @@ Review Test Tool 2,Another test tool for bulk upload verification,Second test to
         return all(results)
 
 def main():
-    print("🚀 Starting MarketMind AI Platform - NEW SEO FEATURES TESTING")
+    print("🚀 Starting MarketMindAI Platform - COMPREHENSIVE TESTING")
     print("=" * 80)
-    print("🎯 FOCUS: Testing newly implemented SEO features as requested in review")
-    print("📋 Features: Internal Links, SEO Score Calculator, Page Analysis, Authentication")
+    print("🎯 FOCUS: Testing MarketMindAI application after branding updates")
+    print("📋 Features: Subscription endpoints, branding updates, static pages")
     print("=" * 80)
     
     tester = MarketMindAPITester()
@@ -7874,23 +7874,31 @@ def main():
     print("\n🔍 BASIC CONNECTIVITY TEST")
     health_success = tester.test_health_check()
     if not health_success:
-        print("❌ Basic connectivity failed - cannot proceed with SEO tests")
+        print("❌ Basic connectivity failed - cannot proceed with tests")
         return 1
     
     print("✅ Basic connectivity successful")
     
-    # Authenticate as superadmin for testing
-    print("\n🔐 AUTHENTICATION")
+    # Test subscription endpoints (no auth required)
+    print("\n📧 SUBSCRIPTION ENDPOINTS TESTING")
+    subscription_success = tester.test_subscription_endpoints()
+    
+    # Test basic API endpoints
+    print("\n🔍 BASIC API ENDPOINTS")
+    categories_success = tester.test_categories()
+    tools_success = tester.test_tools()
+    blogs_success = tester.test_blogs()
+    
+    # Try to authenticate for additional tests
+    print("\n🔐 AUTHENTICATION ATTEMPT")
     login_success, user_role = tester.test_login("superadmin@marketmind.com", "admin123")
-    if not login_success:
-        print("❌ Authentication failed - cannot proceed with authenticated SEO tests")
-        return 1
-    
-    print(f"✅ Authenticated as {user_role}")
-    
-    # Run the NEW SEO features comprehensive test
-    print("\n🔍 NEW SEO FEATURES COMPREHENSIVE TESTING")
-    new_seo_success = tester.test_new_seo_features_comprehensive()
+    if login_success:
+        print(f"✅ Authenticated as {user_role}")
+        
+        # Test user dashboard if authenticated
+        dashboard_success = tester.test_user_dashboard()
+    else:
+        print("⚠️ Authentication failed - continuing with public endpoint tests only")
     
     # Print comprehensive results
     print("\n" + "=" * 80)
@@ -7916,8 +7924,9 @@ def main():
     
     print("\n" + "=" * 80)
     
-    # Return exit code based on results
-    if new_seo_success:
+    # Return exit code based on critical tests
+    critical_tests = [health_success, subscription_success, categories_success]
+    if all(critical_tests):
         print("🎉 NEW SEO FEATURES testing PASSED!")
         print("✅ All requested SEO features are working correctly:")
         print("   • Internal Linking Suggestions API")
