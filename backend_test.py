@@ -1898,6 +1898,161 @@ class MarketMindAPITester:
         
         return all(results)
 
+    # SUBSCRIPTION ENDPOINTS TESTING - REVIEW REQUEST
+    def test_subscription_endpoints(self):
+        """Test email subscription and partnership contact endpoints - REVIEW REQUEST"""
+        print("\n🔍 SUBSCRIPTION ENDPOINTS TESTING - REVIEW REQUEST")
+        print("=" * 70)
+        
+        results = []
+        timestamp = datetime.now().strftime('%H%M%S')
+        
+        # Test 1: Newsletter Subscription
+        print("\n📧 TEST 1: NEWSLETTER SUBSCRIPTION")
+        subscription_data = {
+            "email": f"newsletter_test_{timestamp}@test.com",
+            "company_name": "Test Company",
+            "subscription_type": "newsletter",
+            "source": "footer"
+        }
+        
+        success, response = self.run_test(
+            "Newsletter Subscription",
+            "POST",
+            "subscribe",
+            200,
+            data=subscription_data,
+            description="Test POST /api/subscribe for newsletter subscription"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Newsletter subscription successful")
+            print(f"   Message: {response.get('message', 'N/A')}")
+            print(f"   Subscription ID: {response.get('subscription_id', 'N/A')}")
+            
+            # Test duplicate subscription
+            success2, response2 = self.run_test(
+                "Duplicate Newsletter Subscription",
+                "POST",
+                "subscribe",
+                200,
+                data=subscription_data,
+                description="Test duplicate subscription handling"
+            )
+            results.append(success2)
+            
+            if success2 and isinstance(response2, dict):
+                print(f"   ✅ Duplicate subscription handled correctly")
+                print(f"   Message: {response2.get('message', 'N/A')}")
+        
+        # Test 2: Partnership Contact
+        print("\n🤝 TEST 2: PARTNERSHIP CONTACT")
+        partnership_data = {
+            "email": f"partnership_test_{timestamp}@test.com",
+            "company_name": "Test Partnership Company",
+            "subscription_type": "partnership",
+            "source": "partnership_form"
+        }
+        
+        success, response = self.run_test(
+            "Partnership Contact",
+            "POST",
+            "partnership-contact",
+            200,
+            data=partnership_data,
+            description="Test POST /api/partnership-contact for partnership inquiries"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, dict):
+            print(f"   ✅ Partnership contact successful")
+            print(f"   Message: {response.get('message', 'N/A')}")
+            print(f"   Contact ID: {response.get('contact_id', 'N/A')}")
+            
+            # Verify hello@marketmindai.com is mentioned
+            message = response.get('message', '')
+            if 'hello@marketmindai.com' in message:
+                print(f"   ✅ Correct partnership email mentioned")
+                results.append(True)
+            else:
+                print(f"   ❌ Partnership email not mentioned in response")
+                results.append(False)
+        
+        # Test 3: Get Subscriptions (Admin endpoint)
+        print("\n📋 TEST 3: GET SUBSCRIPTIONS")
+        success, response = self.run_test(
+            "Get All Subscriptions",
+            "GET",
+            "subscriptions",
+            200,
+            description="Test GET /api/subscriptions (admin endpoint)"
+        )
+        results.append(success)
+        
+        if success and isinstance(response, list):
+            print(f"   ✅ Retrieved {len(response)} subscriptions")
+            
+            # Test filtering by subscription type
+            success2, response2 = self.run_test(
+                "Get Newsletter Subscriptions",
+                "GET",
+                "subscriptions?subscription_type=newsletter",
+                200,
+                description="Test GET /api/subscriptions with newsletter filter"
+            )
+            results.append(success2)
+            
+            if success2 and isinstance(response2, list):
+                print(f"   ✅ Retrieved {len(response2)} newsletter subscriptions")
+            
+            success3, response3 = self.run_test(
+                "Get Partnership Subscriptions",
+                "GET",
+                "subscriptions?subscription_type=partnership",
+                200,
+                description="Test GET /api/subscriptions with partnership filter"
+            )
+            results.append(success3)
+            
+            if success3 and isinstance(response3, list):
+                print(f"   ✅ Retrieved {len(response3)} partnership subscriptions")
+        
+        # Test 4: Invalid Email Validation
+        print("\n❌ TEST 4: INVALID EMAIL VALIDATION")
+        invalid_data = {
+            "email": "invalid-email",
+            "company_name": "Test Company"
+        }
+        
+        success, response = self.run_test(
+            "Invalid Email Subscription",
+            "POST",
+            "subscribe",
+            422,  # Validation error expected
+            data=invalid_data,
+            description="Test email validation with invalid email"
+        )
+        results.append(success)
+        
+        if success:
+            print(f"   ✅ Email validation working correctly")
+        
+        # Overall summary
+        passed_tests = sum(results)
+        total_tests = len(results)
+        
+        print(f"\n📊 SUBSCRIPTION ENDPOINTS SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print(f"   🎉 ALL SUBSCRIPTION TESTS PASSED!")
+        else:
+            print(f"   ⚠️ Some subscription tests failed")
+        
+        return all(results)
+
     # ADMIN TESTS
     def test_admin_dashboard(self):
         """Test admin dashboard"""
