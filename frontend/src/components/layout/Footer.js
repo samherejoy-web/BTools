@@ -15,6 +15,44 @@ const Footer = () => {
   const [loading, setLoading] = useState(false);
   const currentYear = new Date().getFullYear();
 
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      const response = await fetch(`${backendUrl}/api/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          subscription_type: 'newsletter',
+          source: 'footer'
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success(data.message || 'Successfully subscribed to newsletter!');
+        setEmail('');
+      } else {
+        toast.error(data.detail || 'Failed to subscribe');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast.error('Failed to subscribe. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const footerLinks = {
     product: [
       { name: 'Browse Tools', href: '/tools' },
