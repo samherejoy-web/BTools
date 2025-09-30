@@ -390,6 +390,441 @@ def create_seed_data():
             db.add(blog)
         
         db.commit()
+        
+        # Create Static Pages
+        static_pages = [
+            {
+                "page_key": "about",
+                "title": "About MarketMind AI",
+                "content": """
+                <h1>About MarketMind AI</h1>
+                
+                <p>MarketMind AI is your ultimate destination for discovering, comparing, and choosing the best business tools. We're passionate about helping businesses and individuals make informed decisions about the tools that power their productivity and growth.</p>
+                
+                <h2>Our Mission</h2>
+                <p>We believe that having the right tools can make all the difference in achieving success. Our mission is to provide a comprehensive platform where you can:</p>
+                <ul>
+                    <li>Discover innovative tools across all categories</li>
+                    <li>Read authentic reviews from real users</li>
+                    <li>Compare features, pricing, and capabilities side-by-side</li>
+                    <li>Make data-driven decisions with AI-powered insights</li>
+                </ul>
+                
+                <h2>What Makes Us Different</h2>
+                <p>Unlike other tool directories, MarketMind AI combines human expertise with artificial intelligence to provide you with:</p>
+                <ul>
+                    <li><strong>AI-Powered Recommendations:</strong> Our intelligent algorithms help match you with tools that fit your specific needs</li>
+                    <li><strong>Verified Reviews:</strong> All reviews go through our verification process to ensure authenticity</li>
+                    <li><strong>Comprehensive Comparisons:</strong> Compare up to 5 tools side-by-side with detailed feature breakdowns</li>
+                    <li><strong>Expert Content:</strong> Our team creates in-depth guides and analyses to help you understand each tool</li>
+                </ul>
+                
+                <h2>Our Team</h2>
+                <p>MarketMind AI is built by a team of productivity enthusiasts, software engineers, and business experts who understand the challenges of finding the right tools in today's crowded market.</p>
+                
+                <p>We're constantly working to improve our platform and add new features that make your tool discovery journey even better.</p>
+                
+                <h2>Join Our Community</h2>
+                <p>Be part of a growing community of 10,000+ professionals who trust MarketMind AI for their tool discovery needs. Share your experiences, learn from others, and help shape the future of business productivity.</p>
+                """,
+                "meta_description": "Learn about MarketMind AI - your ultimate destination for discovering and comparing the best business tools with AI-powered insights."
+            },
+            {
+                "page_key": "contact",
+                "title": "Contact Us",
+                "content": """
+                <h1>Contact MarketMind AI</h1>
+                
+                <p>We'd love to hear from you! Whether you have questions, feedback, or want to collaborate with us, don't hesitate to get in touch.</p>
+                
+                <h2>Get in Touch</h2>
+                <div class="contact-info">
+                    <p><strong>Email:</strong> hello@marketmind.ai</p>
+                    <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                    <p><strong>Address:</strong> San Francisco, CA, United States</p>
+                </div>
+                
+                <h2>Business Inquiries</h2>
+                <p>For partnership opportunities, tool submissions, or business collaborations:</p>
+                <p><strong>Business Email:</strong> partnerships@marketmind.ai</p>
+                
+                <h2>Support</h2>
+                <p>Need help with your account or have technical issues?</p>
+                <p><strong>Support Email:</strong> support@marketmind.ai</p>
+                
+                <h2>Media & Press</h2>
+                <p>For media inquiries and press releases:</p>
+                <p><strong>Press Email:</strong> press@marketmind.ai</p>
+                
+                <h2>Follow Us</h2>
+                <p>Stay updated with the latest news and updates:</p>
+                <ul>
+                    <li><a href="https://twitter.com/marketmindai" target="_blank">Twitter</a></li>
+                    <li><a href="https://linkedin.com/company/marketmind" target="_blank">LinkedIn</a></li>
+                    <li><a href="https://github.com/marketmind" target="_blank">GitHub</a></li>
+                    <li><a href="https://discord.gg/marketmind" target="_blank">Discord</a></li>
+                </ul>
+                
+                <h2>Office Hours</h2>
+                <p>Our team is available Monday through Friday, 9:00 AM to 6:00 PM PST.</p>
+                
+                <p><em>We typically respond to all inquiries within 24 hours.</em></p>
+                """,
+                "meta_description": "Contact MarketMind AI for support, partnerships, or any questions about our business tools platform."
+            },
+            {
+                "page_key": "privacy",
+                "title": "Privacy Policy",
+                "content": """
+                <h1>Privacy Policy</h1>
+                <p><em>Last updated: December 2024</em></p>
+                
+                <p>At MarketMind AI, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.</p>
+                
+                <h2>Information We Collect</h2>
+                
+                <h3>Personal Information</h3>
+                <p>We may collect personal information that you provide to us, including:</p>
+                <ul>
+                    <li>Name and contact information (email address, phone number)</li>
+                    <li>Account credentials (username, password)</li>
+                    <li>Profile information and bio</li>
+                    <li>Reviews and comments you post</li>
+                    <li>Communication preferences</li>
+                </ul>
+                
+                <h3>Usage Information</h3>
+                <p>We automatically collect certain information when you use our services:</p>
+                <ul>
+                    <li>Device information (IP address, browser type, operating system)</li>
+                    <li>Usage data (pages visited, time spent, clicks)</li>
+                    <li>Cookies and similar tracking technologies</li>
+                </ul>
+                
+                <h2>How We Use Your Information</h2>
+                <p>We use the information we collect to:</p>
+                <ul>
+                    <li>Provide, maintain, and improve our services</li>
+                    <li>Process your account registration and manage your profile</li>
+                    <li>Send you newsletters and marketing communications (with your consent)</li>
+                    <li>Respond to your comments, questions, and customer service requests</li>
+                    <li>Analyze usage patterns and improve user experience</li>
+                    <li>Prevent fraud and ensure security</li>
+                </ul>
+                
+                <h2>Information Sharing</h2>
+                <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except:</p>
+                <ul>
+                    <li>To service providers who help us operate our platform</li>
+                    <li>When required by law or to protect our rights</li>
+                    <li>In connection with a business transfer or acquisition</li>
+                </ul>
+                
+                <h2>Data Security</h2>
+                <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no internet transmission is 100% secure.</p>
+                
+                <h2>Your Rights</h2>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Access, update, or delete your personal information</li>
+                    <li>Opt-out of marketing communications</li>
+                    <li>Request a copy of your data</li>
+                    <li>Lodge a complaint with a supervisory authority</li>
+                </ul>
+                
+                <h2>Cookies</h2>
+                <p>We use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. You can control cookie settings through your browser preferences.</p>
+                
+                <h2>Third-Party Links</h2>
+                <p>Our website may contain links to third-party websites. We are not responsible for the privacy practices of these external sites.</p>
+                
+                <h2>Children's Privacy</h2>
+                <p>Our services are not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
+                
+                <h2>Changes to This Policy</h2>
+                <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "last updated" date.</p>
+                
+                <h2>Contact Us</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+                <p>Email: privacy@marketmind.ai<br>
+                Address: San Francisco, CA, United States</p>
+                """,
+                "meta_description": "MarketMind AI Privacy Policy - Learn how we collect, use, and protect your personal information."
+            },
+            {
+                "page_key": "terms",
+                "title": "Terms of Service",
+                "content": """
+                <h1>Terms of Service</h1>
+                <p><em>Last updated: December 2024</em></p>
+                
+                <p>Welcome to MarketMind AI. These Terms of Service ("Terms") govern your use of our website and services. By accessing or using MarketMind AI, you agree to be bound by these Terms.</p>
+                
+                <h2>1. Acceptance of Terms</h2>
+                <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                
+                <h2>2. Use License</h2>
+                <p>Permission is granted to temporarily download one copy of the materials on MarketMind AI's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                <ul>
+                    <li>modify or copy the materials;</li>
+                    <li>use the materials for any commercial purpose or for any public display;</li>
+                    <li>attempt to reverse engineer any software contained on the website;</li>
+                    <li>remove any copyright or other proprietary notations from the materials.</li>
+                </ul>
+                
+                <h2>3. User Accounts</h2>
+                <p>When you create an account with us, you must provide information that is accurate, complete, and current at all times. You are responsible for safeguarding the password and for maintaining the confidentiality of your account.</p>
+                
+                <h2>4. User Content</h2>
+                <p>Our service may allow you to post, link, store, share and otherwise make available certain information, text, graphics, or other material ("Content"). You are responsible for the Content that you post to the service, including its legality, reliability, and appropriateness.</p>
+                
+                <h2>5. Prohibited Uses</h2>
+                <p>You may not use our service:</p>
+                <ul>
+                    <li>For any unlawful purpose or to solicit others to perform unlawful acts</li>
+                    <li>To violate any international, federal, provincial, or state regulations, rules, laws, or local ordinances</li>
+                    <li>To infringe upon or violate our intellectual property rights or the intellectual property rights of others</li>
+                    <li>To harass, abuse, insult, harm, defame, slander, disparage, intimidate, or discriminate</li>
+                    <li>To submit false or misleading information</li>
+                    <li>To spam, phish, pharm, pretext, spider, crawl, or scrape</li>
+                </ul>
+                
+                <h2>6. Intellectual Property Rights</h2>
+                <p>The service and its original content, features and functionality are and will remain the exclusive property of MarketMind AI and its licensors. The service is protected by copyright, trademark, and other laws.</p>
+                
+                <h2>7. Reviews and Ratings</h2>
+                <p>Users may post reviews and ratings for tools. All reviews must be honest, factual, and based on your actual experience with the tool. We reserve the right to remove reviews that violate these guidelines.</p>
+                
+                <h2>8. Termination</h2>
+                <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+                
+                <h2>9. Disclaimer</h2>
+                <p>The information on this website is provided on an 'as is' basis. To the fullest extent permitted by law, MarketMind AI excludes all representations, warranties, conditions and terms relating to our website and the use of this website.</p>
+                
+                <h2>10. Limitation of Liability</h2>
+                <p>In no event shall MarketMind AI, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
+                
+                <h2>11. Governing Law</h2>
+                <p>These Terms shall be interpreted and governed by the laws of the State of California, USA.</p>
+                
+                <h2>12. Changes to Terms</h2>
+                <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect.</p>
+                
+                <h2>13. Contact Information</h2>
+                <p>If you have any questions about these Terms of Service, please contact us at:</p>
+                <p>Email: legal@marketmind.ai<br>
+                Address: San Francisco, CA, United States</p>
+                """,
+                "meta_description": "MarketMind AI Terms of Service - Read our terms and conditions for using our business tools platform."
+            }
+        ]
+        
+        for page_data in static_pages:
+            page = StaticPage(
+                id=str(uuid.uuid4()),
+                page_key=page_data["page_key"],
+                title=page_data["title"],
+                content=page_data["content"],
+                meta_description=page_data["meta_description"],
+                is_published=True
+            )
+            db.add(page)
+        
+        # Create Site Settings
+        site_settings = [
+            {
+                "setting_key": "company_name",
+                "setting_value": "MarketMind AI",
+                "setting_type": "text",
+                "description": "Company name displayed on the site",
+                "is_public": True
+            },
+            {
+                "setting_key": "contact_email",
+                "setting_value": "hello@marketmind.ai",
+                "setting_type": "email",
+                "description": "Main contact email address",
+                "is_public": True
+            },
+            {
+                "setting_key": "contact_address",
+                "setting_value": "San Francisco, CA, United States",
+                "setting_type": "text",
+                "description": "Company address",
+                "is_public": True
+            },
+            {
+                "setting_key": "github_url",
+                "setting_value": "https://github.com/marketmind",
+                "setting_type": "url",
+                "description": "GitHub profile URL",
+                "is_public": True
+            },
+            {
+                "setting_key": "linkedin_url",
+                "setting_value": "https://linkedin.com/company/marketmind",
+                "setting_type": "url",
+                "description": "LinkedIn company page URL",
+                "is_public": True
+            },
+            {
+                "setting_key": "twitter_url",
+                "setting_value": "https://twitter.com/marketmindai",
+                "setting_type": "url",
+                "description": "Twitter/X profile URL",
+                "is_public": True
+            },
+            {
+                "setting_key": "discord_url",
+                "setting_value": "https://discord.gg/marketmind",
+                "setting_type": "url",
+                "description": "Discord server invitation URL",
+                "is_public": True
+            },
+            {
+                "setting_key": "phone_number",
+                "setting_value": "+1 (555) 123-4567",
+                "setting_type": "text",
+                "description": "Contact phone number",
+                "is_public": True
+            },
+            {
+                "setting_key": "support_email",
+                "setting_value": "support@marketmind.ai",
+                "setting_type": "email",
+                "description": "Support email address",
+                "is_public": True
+            },
+            {
+                "setting_key": "business_email",
+                "setting_value": "partnerships@marketmind.ai",
+                "setting_type": "email",
+                "description": "Business partnerships email",
+                "is_public": True
+            }
+        ]
+        
+        for setting_data in site_settings:
+            setting = SiteSettings(
+                id=str(uuid.uuid4()),
+                **setting_data
+            )
+            db.add(setting)
+        
+        # Create sample newsletter subscriptions
+        newsletter_subscriptions = [
+            {"email": "user1@example.com", "name": "John Doe", "is_confirmed": True},
+            {"email": "user2@example.com", "name": "Jane Smith", "is_confirmed": True},
+            {"email": "subscriber1@test.com", "name": "Alex Johnson", "is_confirmed": True},
+            {"email": "subscriber2@test.com", "name": "Sarah Wilson", "is_confirmed": False},
+            {"email": "tester@marketmind.ai", "name": "Test User", "is_confirmed": True}
+        ]
+        
+        for sub_data in newsletter_subscriptions:
+            newsletter = Newsletter(
+                id=str(uuid.uuid4()),
+                email=sub_data["email"],
+                name=sub_data["name"],
+                is_active=True,
+                is_confirmed=sub_data["is_confirmed"],
+                confirmed_at=datetime.utcnow() if sub_data["is_confirmed"] else None,
+                source="seed_data"
+            )
+            db.add(newsletter)
+        
+        # Create Free Tools
+        free_tools_data = [
+            {
+                "name": "Google Analytics",
+                "description": "Free web analytics service that tracks and reports website traffic",
+                "url": "https://analytics.google.com",
+                "category": "Analytics",
+                "is_featured": True,
+                "order_index": 1
+            },
+            {
+                "name": "Canva Free",
+                "description": "Free version of the popular graphic design platform",
+                "url": "https://canva.com",
+                "category": "Design",
+                "is_featured": True,
+                "order_index": 2
+            },
+            {
+                "name": "GitHub",
+                "description": "Free code repository hosting and version control",
+                "url": "https://github.com",
+                "category": "Development",
+                "is_featured": True,
+                "order_index": 3
+            },
+            {
+                "name": "MailChimp Free",
+                "description": "Free email marketing platform for small businesses",
+                "url": "https://mailchimp.com",
+                "category": "Marketing",
+                "is_featured": True,
+                "order_index": 4
+            },
+            {
+                "name": "Trello",
+                "description": "Free project management tool with Kanban boards",
+                "url": "https://trello.com",
+                "category": "Productivity",
+                "is_featured": True,
+                "order_index": 5
+            },
+            {
+                "name": "Google Drive",
+                "description": "Free cloud storage and document collaboration",
+                "url": "https://drive.google.com",
+                "category": "Storage",
+                "order_index": 6
+            },
+            {
+                "name": "Slack Free",
+                "description": "Free team communication and collaboration platform",
+                "url": "https://slack.com",
+                "category": "Communication",
+                "order_index": 7
+            },
+            {
+                "name": "HubSpot CRM",
+                "description": "Free customer relationship management software",
+                "url": "https://hubspot.com",
+                "category": "CRM",
+                "order_index": 8
+            },
+            {
+                "name": "Zoom Basic",
+                "description": "Free video conferencing software",
+                "url": "https://zoom.us",
+                "category": "Communication",
+                "order_index": 9
+            },
+            {
+                "name": "Buffer Free",
+                "description": "Free social media scheduling and management tool",
+                "url": "https://buffer.com",
+                "category": "Marketing",
+                "order_index": 10
+            }
+        ]
+        
+        for tool_data in free_tools_data:
+            free_tool = FreeTool(
+                id=str(uuid.uuid4()),
+                name=tool_data["name"],
+                description=tool_data["description"],
+                url=tool_data["url"],
+                category=tool_data["category"],
+                is_featured=tool_data.get("is_featured", False),
+                is_active=True,
+                order_index=tool_data["order_index"]
+            )
+            db.add(free_tool)
+        
+        db.commit()
         print("✅ Seed data created successfully!")
         print("\n📝 Login credentials:")
         print("Super Admin: superadmin@marketmind.com / admin123")
