@@ -146,7 +146,9 @@ const Footer = () => {
                 <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">MM</span>
                 </div>
-                <span className="ml-2 text-xl font-bold text-gray-900">MarketMind</span>
+                <span className="ml-2 text-xl font-bold text-gray-900">
+                  {siteSettings.company_name || 'MarketMind'}
+                </span>
               </Link>
               <p className="text-gray-600 text-sm leading-relaxed mb-6">
                 Discover, compare, and choose the best tools for your business. 
@@ -211,22 +213,39 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Resources links */}
+            {/* Free Tools links */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-                Resources
+                Free Tools
               </h3>
               <ul className="space-y-3">
-                {footerLinks.resources.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      to={item.href}
-                      className="text-gray-600 hover:text-gray-900 text-sm transition-colors duration-200"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
+                {loading ? (
+                  <li className="text-sm text-gray-500">Loading...</li>
+                ) : footerLinks.freeTools.length > 0 ? (
+                  footerLinks.freeTools.map((tool) => (
+                    <li key={tool.id}>
+                      <a
+                        href={tool.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-600 hover:text-gray-900 text-sm transition-colors duration-200 inline-flex items-center"
+                      >
+                        {tool.name}
+                        <ExternalLink className="ml-1 h-3 w-3" />
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-sm text-gray-500">No tools available</li>
+                )}
+                <li>
+                  <Link
+                    to="/free-tools"
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    View All Free Tools →
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -275,17 +294,23 @@ const Footer = () => {
               </p>
             </div>
             <div className="mt-4 md:mt-0 md:ml-6">
-              <form className="flex flex-col sm:flex-row gap-3">
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubscribing}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  data-testid="newsletter-email-input"
                 />
                 <button
                   type="submit"
-                  className="btn-primary whitespace-nowrap"
+                  disabled={isSubscribing}
+                  className="btn-primary whitespace-nowrap disabled:opacity-50"
+                  data-testid="newsletter-subscribe-btn"
                 >
-                  Subscribe
+                  {isSubscribing ? 'Subscribing...' : 'Subscribe'}
                 </button>
               </form>
             </div>
@@ -297,7 +322,7 @@ const Footer = () => {
           <div className="md:flex md:items-center md:justify-between">
             <div className="flex items-center space-x-6">
               <p className="text-gray-500 text-sm">
-                © {currentYear} MarketMind AI. All rights reserved.
+                © {currentYear} {siteSettings.company_name || 'MarketMind AI'}. All rights reserved.
               </p>
             </div>
             <div className="mt-4 md:mt-0">
