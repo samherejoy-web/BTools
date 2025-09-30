@@ -308,7 +308,11 @@ async def root():
             "admin", 
             "user",
             "tools",
-            "blogs"
+            "blogs",
+            "static-pages",
+            "newsletter",
+            "free-tools",
+            "site-settings"
         ]
     }
 
