@@ -24,6 +24,10 @@ from ai_blog_routes import router as ai_blog_router
 from sitemap_routes import router as sitemap_router
 from seo_routes import router as seo_router
 from email_verification_routes import get_email_verification_routes
+from static_pages_routes import router as static_pages_router
+from site_settings_routes import router as site_settings_router
+from newsletter_routes import router as newsletter_router
+from free_tools_routes import router as free_tools_router
 
 # Configure logging
 import os
