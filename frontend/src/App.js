@@ -343,6 +343,38 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
+            
+            <Route path="/superadmin/static-pages" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminStaticPages />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/superadmin/site-settings" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminSiteSettings />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/superadmin/newsletter" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminNewsletter />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/superadmin/free-tools" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminFreeTools />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
           </Routes>
           
           <Toaster position="top-right" />
