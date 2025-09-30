@@ -15,6 +15,8 @@ import ToolDetailPage from './pages/public/ToolDetailPage';
 import BlogsPage from './pages/public/BlogsPage';
 import BlogDetailPage from './pages/public/BlogDetailPage';
 import CompareToolsPage from './pages/public/CompareToolsPage';
+import StaticPage from './pages/public/StaticPage';
+import FreeToolsPage from './pages/public/FreeToolsPage';
 
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage';
