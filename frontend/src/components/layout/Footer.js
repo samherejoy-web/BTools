@@ -81,25 +81,57 @@ const Footer = () => {
       { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
     ],
-    resources: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'API Documentation', href: '/api-docs' },
-      { name: 'Submit a Tool', href: '/submit-tool' },
-      { name: 'Partnerships', href: '/partnerships' },
-    ],
+    freeTools: freeTools.slice(0, 4), // Limit to 4 for footer display
     community: [
-      { name: 'Discord', href: 'https://discord.gg/marketmind', external: true },
-      { name: 'Twitter', href: 'https://twitter.com/marketmindai', external: true },
-      { name: 'LinkedIn', href: 'https://linkedin.com/company/marketmind', external: true },
-      { name: 'GitHub', href: 'https://github.com/marketmind', external: true },
+      { 
+        name: 'Discord', 
+        href: siteSettings.discord_url || 'https://discord.gg/marketmind', 
+        external: true 
+      },
+      { 
+        name: 'Twitter', 
+        href: siteSettings.twitter_url || 'https://twitter.com/marketmindai', 
+        external: true 
+      },
+      { 
+        name: 'LinkedIn', 
+        href: siteSettings.linkedin_url || 'https://linkedin.com/company/marketmind', 
+        external: true 
+      },
+      { 
+        name: 'GitHub', 
+        href: siteSettings.github_url || 'https://github.com/marketmind', 
+        external: true 
+      },
     ]
   };
 
   const socialLinks = [
-    { name: 'Twitter', href: 'https://twitter.com/marketmindai', icon: Twitter },
-    { name: 'LinkedIn', href: 'https://linkedin.com/company/marketmind', icon: Linkedin },
-    { name: 'GitHub', href: 'https://github.com/marketmind', icon: Github },
-    { name: 'Email', href: 'mailto:hello@marketmind.ai', icon: Mail },
+    { 
+      name: 'Twitter', 
+      href: siteSettings.twitter_url || 'https://twitter.com/marketmindai', 
+      icon: Twitter 
+    },
+    { 
+      name: 'LinkedIn', 
+      href: siteSettings.linkedin_url || 'https://linkedin.com/company/marketmind', 
+      icon: Linkedin 
+    },
+    { 
+      name: 'GitHub', 
+      href: siteSettings.github_url || 'https://github.com/marketmind', 
+      icon: Github 
+    },
+    { 
+      name: 'Discord',
+      href: siteSettings.discord_url || 'https://discord.gg/marketmind',
+      icon: MessageSquare
+    },
+    { 
+      name: 'Email', 
+      href: `mailto:${siteSettings.contact_email || 'hello@marketmind.ai'}`, 
+      icon: Mail 
+    },
   ];
 
   return (
