@@ -92,7 +92,7 @@ const StaticPage = () => {
                   day: 'numeric'
                 })}
               </p>
-              {pageKey === 'contact' && (
+              {getPageKey() === 'contact' && (
                 <div className="mt-6">
                   <p className="text-gray-600">
                     Have questions? Contact us at{' '}
