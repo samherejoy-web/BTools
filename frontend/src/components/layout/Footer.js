@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Mail, 
   Twitter, 
   Github, 
   Linkedin,
-  ExternalLink
+  ExternalLink,
+  MessageSquare
 } from 'lucide-react';
+import { toast } from 'sonner';
+import apiClient from '../../utils/apiClient';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
