@@ -149,6 +149,46 @@ function App() {
               </ProtectedRoute>
             } />
             
+            {/* Static Pages Routes */}
+            <Route path="/about" element={
+              <Layout>
+                <StaticPage />
+              </Layout>
+            } />
+            
+            <Route path="/contact" element={
+              <Layout>
+                <StaticPage />
+              </Layout>
+            } />
+            
+            <Route path="/privacy" element={
+              <Layout>
+                <StaticPage />
+              </Layout>
+            } />
+            
+            <Route path="/terms" element={
+              <Layout>
+                <StaticPage />
+              </Layout>
+            } />
+            
+            {/* Free Tools Page */}
+            <Route path="/free-tools" element={
+              <Layout>
+                <FreeToolsPage />
+              </Layout>
+            } />
+            
+            {/* Dynamic Static Pages Route */}
+            <Route path="/:pageKey" element={
+              <Layout>
+                <StaticPage />
+              </Layout>
+            } />
+            
+            
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
