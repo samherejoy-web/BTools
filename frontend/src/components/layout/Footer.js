@@ -13,6 +13,60 @@ import apiClient from '../../utils/apiClient';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [siteSettings, setSiteSettings] = useState({});
+  const [freeTools, setFreeTools] = useState([]);
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFooterData();
+  }, []);
+
+  const fetchFooterData = async () => {
+    try {
+      const [settingsRes, toolsRes] = await Promise.all([
+        apiClient.get('/site-settings'),
+        apiClient.get('/free-tools?featured_only=true&limit=8')
+      ]);
+      
+      setSiteSettings(settingsRes.data);
+      setFreeTools(toolsRes.data);
+    } catch (error) {
+      console.error('Error fetching footer data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    setIsSubscribing(true);
+    try {
+      await apiClient.post('/newsletter/subscribe', {
+        email: email,
+        source: 'footer'
+      });
+      
+      toast.success('Successfully subscribed to newsletter!');
+      setEmail('');
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      if (error.response?.status === 400) {
+        toast.info('You are already subscribed to our newsletter');
+      } else {
+        toast.error('Failed to subscribe. Please try again.');
+      }
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   const footerLinks = {
     product: [
