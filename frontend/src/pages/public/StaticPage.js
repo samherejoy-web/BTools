@@ -5,18 +5,27 @@ import apiClient from '../../utils/apiClient';
 
 const StaticPage = () => {
   const { pageKey } = useParams();
+  const location = useLocation();
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Extract page key from URL path if not available from params
+  const getPageKey = () => {
+    if (pageKey) return pageKey;
+    const path = location.pathname.substring(1); // Remove leading slash
+    return path || 'home';
+  };
+
   useEffect(() => {
     fetchPage();
-  }, [pageKey]);
+  }, [pageKey, location.pathname]);
 
   const fetchPage = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/pages/${pageKey}`);
+      const currentPageKey = getPageKey();
+      const response = await apiClient.get(`/pages/${currentPageKey}`);
       setPage(response.data);
     } catch (error) {
       console.error('Error fetching page:', error);
