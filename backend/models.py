@@ -242,3 +242,60 @@ class ToolLike(Base):
     # Relationships
     tool = relationship("Tool", back_populates="likes")
     user = relationship("User")
+
+# Static Pages Model (for About, Contact, Privacy, Terms)
+class StaticPage(Base):
+    __tablename__ = "static_pages"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    page_key = Column(String, unique=True, nullable=False)  # 'about', 'contact', 'privacy', 'terms'
+    title = Column(String, nullable=False)
+    content = Column(Text, nullable=False)
+    meta_description = Column(Text)
+    is_published = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+# Site Settings Model (for URLs, contact info, etc.)
+class SiteSettings(Base):
+    __tablename__ = "site_settings"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    setting_key = Column(String, unique=True, nullable=False)
+    setting_value = Column(Text)
+    setting_type = Column(String, default="text")  # text, url, email, json
+    description = Column(Text)
+    is_public = Column(Boolean, default=True)  # Whether this setting can be displayed publicly
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+# Newsletter Subscription Model
+class Newsletter(Base):
+    __tablename__ = "newsletters"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    email = Column(String, unique=True, nullable=False, index=True)
+    name = Column(String)
+    is_active = Column(Boolean, default=True)
+    is_confirmed = Column(Boolean, default=False)
+    confirmation_token = Column(String, unique=True)
+    subscribed_at = Column(DateTime, default=datetime.utcnow)
+    confirmed_at = Column(DateTime)
+    unsubscribed_at = Column(DateTime)
+    source = Column(String, default="website")  # website, api, admin, etc.
+
+# Free Tools Model (Enhanced tools categorization)
+class FreeTool(Base):
+    __tablename__ = "free_tools"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    description = Column(Text)
+    url = Column(String, nullable=False)
+    icon_url = Column(String)
+    category = Column(String)  # 'seo', 'productivity', 'design', etc.
+    is_featured = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    order_index = Column(Integer, default=0)  # For custom ordering
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
