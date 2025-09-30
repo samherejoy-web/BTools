@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from database import engine, SessionLocal
-from models import Base, User, Category, Tool, Blog, Review
+from models import Base, User, Category, Tool, Blog, Review, StaticPage, SiteSettings, Newsletter, FreeTool
 from auth import get_password_hash
 import uuid
 from datetime import datetime
