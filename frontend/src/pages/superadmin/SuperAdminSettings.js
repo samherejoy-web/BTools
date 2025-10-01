@@ -27,12 +27,18 @@ const SuperAdminSettings = () => {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [logoPreview, setLogoPreview] = useState(null);
   const [formData, setFormData] = useState({
     social_twitter_url: '',
     social_linkedin_url: '',
     social_github_url: '',
     social_discord_url: '',
     social_facebook_url: ''
+  });
+  const [logoData, setLogoData] = useState({
+    site_logo_url: '',
+    site_logo_alt_text: ''
   });
 
   useEffect(() => {
