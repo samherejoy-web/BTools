@@ -122,8 +122,8 @@ const BlogsPage = () => {
 
   // Generate SEO data
   const seoTitle = selectedCategory 
-    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Articles - MarketMind Blog`
-    : 'Expert Guides & Tool Reviews - MarketMind Blog';
+    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Articles - MarketMindAI Blog`
+    : 'Expert Guides & Tool Reviews - MarketMindAI Blog';
   
   const seoDescription = selectedCategory
     ? `Read expert ${categories.find(c => c.slug === selectedCategory)?.name?.toLowerCase() || selectedCategory} guides and articles. Get insights from industry experts and make better tool decisions.`
