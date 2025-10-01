@@ -10,11 +10,17 @@ import {
   Github,
   MessageSquare,
   Facebook,
-  Link2
+  Link2,
+  Upload,
+  Image,
+  Trash2,
+  Eye,
+  AlertCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { toast } from 'sonner';
+import Logo from '../../components/ui/Logo';
 import apiClient from '../../utils/apiClient';
 
 const SuperAdminSettings = () => {
