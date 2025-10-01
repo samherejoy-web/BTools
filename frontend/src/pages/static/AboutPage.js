@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Users, Target, Award, Lightbulb, TrendingUp, Zap } from 'lucide-react';
 
