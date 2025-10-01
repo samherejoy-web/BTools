@@ -65,7 +65,7 @@ const SuperAdminSettings = () => {
       });
       setLogoData({
         site_logo_url: settingsData.site_logo_url || '',
-        site_logo_alt_text: settingsData.site_logo_alt_text || 'MarketMind AI'
+        site_logo_alt_text: settingsData.site_logo_alt_text || 'MarketMindAI'
       });
     } catch (error) {
       console.error('Error fetching settings:', error);
