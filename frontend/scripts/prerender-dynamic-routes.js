@@ -65,7 +65,7 @@ function generateDynamicMetaTags(type, data) {
   }
   
   if (type === 'blog') {
-    const title = data.seo_title || `${data.title} | MarketMind Blog`;
+    const title = data.seo_title || `${data.title} | MarketMindAI Blog`;
     const description = data.seo_description || `${data.content.substring(0, 150)}...`;
     const keywords = data.seo_keywords || `${data.title}, business tools, productivity, software guide`;
     const url = `${baseUrl}/blogs/${data.slug}`;
