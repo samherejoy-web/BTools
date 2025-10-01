@@ -67,7 +67,7 @@ const AdminSEO = () => {
         {
           id: '2',
           page_path: '/tools',
-          title: 'Business Tools Directory - MarketMind',
+          title: 'Business Tools Directory - MarketMindAI',
           description: 'Browse our comprehensive directory of business tools across all categories. Find the perfect software solution for your needs.',
           keywords: 'tools directory, business software, productivity tools, saas directory',
           json_ld: {
