@@ -325,7 +325,7 @@ chmod +x /var/www/marketmind/backup.sh
 (crontab -l 2>/dev/null; echo "0 2 * * * /var/www/marketmind/backup.sh") | crontab -
 
 print_status "=========================================="
-print_status "🎉 MarketMind AI Production Build Complete!"
+print_status "🎉 MarketMindAI Production Build Complete!"
 print_status "=========================================="
 echo ""
 print_status "📋 POST-DEPLOYMENT CHECKLIST:"
