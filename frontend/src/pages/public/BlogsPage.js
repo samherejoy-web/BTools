@@ -527,15 +527,15 @@ const BlogsPage = () => {
               <p className="text-purple-100 mb-6">
                 Get the latest insights and tool reviews delivered to your inbox
               </p>
-              <div className="max-w-md mx-auto flex gap-3">
-                <input
-                  type="email"
+              <div className="max-w-md mx-auto">
+                <NewsletterForm 
+                  source="blog"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-lg text-gray-900 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-white/50"
+                  buttonText="Subscribe"
+                  className="flex gap-3"
+                  inputClassName="flex-1 px-4 py-2 rounded-lg text-gray-900 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-white/50"
+                  buttonClassName="bg-white text-purple-600 hover:bg-gray-100"
                 />
-                <Button className="bg-white text-purple-600 hover:bg-gray-100">
-                  Subscribe
-                </Button>
               </div>
             </CardContent>
           </Card>
