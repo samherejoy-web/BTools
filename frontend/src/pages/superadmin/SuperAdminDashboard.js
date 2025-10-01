@@ -649,7 +649,7 @@ const SuperAdminDashboard = () => {
               className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800"
               onClick={() => navigate('/superadmin/settings')}
             >
-              <Settings className="h-5 w-5" />
+              <Cog className="h-5 w-5" />
               Site Settings
             </Button>
           </div>
