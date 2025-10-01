@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { FileText, Scale, AlertTriangle, CheckCircle, Clock, Shield } from 'lucide-react';
 
