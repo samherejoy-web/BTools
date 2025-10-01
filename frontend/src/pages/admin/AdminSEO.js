@@ -57,7 +57,7 @@ const AdminSEO = () => {
             "url": "https://marketmind.com"
           },
           meta_tags: {
-            "og:title": "MarketMind - Discover the Best Business Tools",
+            "og:title": "MarketMindAI - Discover the Best Business Tools",
             "og:description": "Find, compare, and choose from thousands of business tools",
             "og:type": "website"
           },
