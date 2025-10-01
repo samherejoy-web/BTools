@@ -43,8 +43,14 @@ const Logo = ({
   const fetchLogoData = async () => {
     try {
       const response = await apiClient.get('/public/site-settings');
-      const logoUrl = response.data.site_logo_url;
+      let logoUrl = response.data.site_logo_url;
       const altText = response.data.site_logo_alt_text || "MarketMind AI";
+      
+      // Convert relative URL to absolute URL using the backend URL
+      if (logoUrl && logoUrl.trim() && logoUrl.startsWith('/')) {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        logoUrl = `${backendUrl}${logoUrl}`;
+      }
       
       setLogoData({
         logoUrl: logoUrl && logoUrl.trim() ? logoUrl : null,
