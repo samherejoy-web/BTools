@@ -107,6 +107,66 @@ const SuperAdminUsers = () => {
     }
   };
 
+  const handleExportNewsletterSubscribers = async () => {
+    try {
+      const response = await apiClient.get('/superadmin/export/newsletter-subscribers', {
+        responseType: 'blob'
+      });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Extract filename from response headers or create default
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition 
+        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') 
+        : `newsletter_subscribers_${new Date().toISOString().split('T')[0]}.csv`;
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Newsletter subscribers exported successfully');
+    } catch (error) {
+      console.error('Error exporting newsletter subscribers:', error);
+      toast.error('Failed to export newsletter subscribers');
+    }
+  };
+
+  const handleExportContactSubmissions = async () => {
+    try {
+      const response = await apiClient.get('/superadmin/export/contact-submissions', {
+        responseType: 'blob'
+      });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Extract filename from response headers or create default
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition 
+        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') 
+        : `contact_submissions_${new Date().toISOString().split('T')[0]}.csv`;
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Contact submissions exported successfully');
+    } catch (error) {
+      console.error('Error exporting contact submissions:', error);
+      toast.error('Failed to export contact submissions');
+    }
+  };
+
   const getRoleIcon = (role) => {
     switch (role) {
       case 'superadmin': return <Crown className="h-4 w-4" />;
