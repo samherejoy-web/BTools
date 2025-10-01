@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-echo "🚀 MarketMind AI Production Build Started"
+echo "🚀 MarketMindAI Production Build Started"
 echo "=========================================="
 
 # Colors for output
