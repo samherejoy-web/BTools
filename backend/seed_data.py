@@ -43,7 +43,7 @@ def create_seed_data():
         # Create Admin
         admin = User(
             id=str(uuid.uuid4()),
-            email="admin@marketmind.com",
+            email="admin@marketmindai.com",
             username="admin",
             hashed_password=get_password_hash("admin123"),
             full_name="Site Administrator",
