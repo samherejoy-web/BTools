@@ -57,7 +57,7 @@ function generateDynamicMetaTags(type, data) {
         } : null,
         "publisher": {
           "@type": "Organization",
-          "name": "MarketMind",
+          "name": "MarketMindAI",
           "url": baseUrl
         }
       }
@@ -93,7 +93,7 @@ function generateDynamicMetaTags(type, data) {
         },
         "publisher": {
           "@type": "Organization",
-          "name": "MarketMind",
+          "name": "MarketMindAI",
           "url": baseUrl,
           "logo": {
             "@type": "ImageObject",
