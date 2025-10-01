@@ -97,7 +97,7 @@ const HomePage = () => {
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "WebSite",
-          "name": "MarketMind",
+          "name": "MarketMindAI",
           "url": process.env.REACT_APP_BACKEND_URL || '',
           "description": "Discover and compare the best business tools",
           "potentialAction": {
