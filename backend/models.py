@@ -267,3 +267,13 @@ class NewsletterSubscription(Base):
     source = Column(String, default="website")  # website, footer, blog, etc.
     subscribed_at = Column(DateTime, default=datetime.utcnow)
     unsubscribed_at = Column(DateTime, nullable=True)
+
+class SiteSettings(Base):
+    __tablename__ = "site_settings"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    key = Column(String, nullable=False, unique=True)
+    value = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
