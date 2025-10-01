@@ -35,6 +35,7 @@ import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
 import { useAuth } from '../../contexts/AuthContext';
+import NewsletterForm from '../../components/Newsletter/NewsletterForm';
 
 // Import new Medium-style components
 import ReadingProgressBar from '../../components/blog/ReadingProgressBar';
