@@ -77,12 +77,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           {/* Logo and primary navigation */}
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">MM</span>
-              </div>
-              <span className="ml-2 text-xl font-bold text-gray-900">MarketMind</span>
-            </Link>
+            <Logo linkClassName="flex items-center" showText={true} />
 
             {/* Desktop navigation */}
             <div className="hidden md:ml-8 md:flex md:space-x-8">
