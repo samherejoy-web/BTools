@@ -1764,13 +1764,15 @@ async def initialize_social_urls(
 async def get_public_site_settings(db: Session = Depends(get_db)):
     """Get public site settings (non-sensitive settings only)"""
     
-    # Only return social media URLs and other public settings
+    # Only return social media URLs, logo settings, and other public settings
     public_keys = [
         "social_twitter_url",
         "social_linkedin_url", 
         "social_github_url",
         "social_discord_url",
-        "social_facebook_url"
+        "social_facebook_url",
+        "site_logo_url",
+        "site_logo_alt_text"
     ]
     
     settings = db.query(SiteSettings).filter(SiteSettings.key.in_(public_keys)).all()
