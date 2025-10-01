@@ -1776,7 +1776,51 @@ async def get_public_site_settings(db: Session = Depends(get_db)):
     ]
     
     settings = db.query(SiteSettings).filter(SiteSettings.key.in_(public_keys)).all()
+    settings_dict = {setting.key: setting.value for setting in settings}
     
-    return {
-        setting.key: setting.value for setting in settings
-    }
+    # Convert relative logo URL to API endpoint URL for better external access
+    if settings_dict.get('site_logo_url') and settings_dict['site_logo_url'].startswith('/uploads/'):
+        settings_dict['site_logo_url'] = f"/api/public/logo"
+    
+    return settings_dict
+
+@router.get("/api/public/logo")
+async def get_public_logo(db: Session = Depends(get_db)):
+    """Get the current site logo file"""
+    from fastapi.responses import FileResponse
+    
+    try:
+        # Get logo URL from settings
+        logo_setting = db.query(SiteSettings).filter(SiteSettings.key == "site_logo_url").first()
+        
+        if not logo_setting or not logo_setting.value:
+            raise HTTPException(status_code=404, detail="Logo not found")
+        
+        # Convert relative path to absolute file path
+        logo_path = logo_setting.value
+        if logo_path.startswith('/'):
+            logo_path = logo_path[1:]  # Remove leading slash
+        
+        full_path = os.path.join(logo_path)
+        
+        # Check if file exists
+        if not os.path.exists(full_path):
+            raise HTTPException(status_code=404, detail="Logo file not found")
+        
+        # Determine content type based on file extension
+        import mimetypes
+        content_type, _ = mimetypes.guess_type(full_path)
+        if not content_type:
+            content_type = "image/png"
+        
+        return FileResponse(
+            full_path,
+            media_type=content_type,
+            headers={
+                "Cache-Control": "public, max-age=86400",  # Cache for 24 hours
+                "Access-Control-Allow-Origin": "*"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Logo not available")
