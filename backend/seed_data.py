@@ -48,7 +48,9 @@ def create_seed_data():
             hashed_password=get_password_hash("admin123"),
             full_name="Site Administrator",
             role="admin",
-            bio="Site content administrator"
+            bio="Site content administrator",
+            is_email_verified=True,
+            is_active=True
         )
         db.add(admin)
         
