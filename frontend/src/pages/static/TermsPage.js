@@ -6,6 +6,11 @@ const TermsPage = () => {
   const lastUpdated = "January 15, 2024";
   const effectiveDate = "January 15, 2024";
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <Helmet>
