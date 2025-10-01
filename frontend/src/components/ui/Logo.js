@@ -86,8 +86,11 @@ const Logo = ({
         <img
           src={logoData.logoUrl}
           alt={logoData.altText}
-          className={`${config.container} object-contain`}
-          style={{ maxHeight: config.container.includes('h-6') ? '24px' : config.container.includes('h-12') ? '48px' : '32px' }}
+          className={`${config.container} object-contain object-left`}
+          style={{ 
+            maxHeight: config.container.includes('h-6') ? '24px' : config.container.includes('h-12') ? '48px' : '32px',
+            maxWidth: config.container.includes('h-6') ? '120px' : config.container.includes('h-12') ? '200px' : '150px'
+          }}
           loading="eager"
           onError={(e) => {
             console.error('Logo failed to load, falling back to default');
