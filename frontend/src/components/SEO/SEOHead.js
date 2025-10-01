@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import JSONLDScript from './JSONLDScript';
 
 const SEOHead = React.memo(({
-  title = 'MarketMind - Discover the Best Business Tools',
+  title = 'MarketMindAI - Discover the Best Business Tools',
   description = 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
   keywords = '',
   canonical = '',
@@ -15,7 +15,7 @@ const SEOHead = React.memo(({
   publishedTime = '',
   modifiedTime = '',
   type = 'website',
-  siteName = 'MarketMind',
+  siteName = 'MarketMindAI',
   locale = 'en_US'
 }) => {
   // Get current URL for canonical and og:url
