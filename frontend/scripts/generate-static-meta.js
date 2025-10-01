@@ -73,7 +73,7 @@ function generateMetaTags(route, routeData) {
       "image": "${imageUrl}",
       "publisher": {
         "@type": "Organization",
-        "name": "MarketMind",
+        "name": "MarketMindAI",
         "url": "${backendUrl}",
         "logo": {
           "@type": "ImageObject",
