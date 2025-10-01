@@ -77,7 +77,7 @@ class JSONLDGenerator:
             "dateModified": blog.get('updated_at', '').isoformat() if blog.get('updated_at') else None,
             "author": {
                 "@type": "Person",
-                "name": blog.get('author_name', 'MarketMind Team'),
+                "name": blog.get('author_name', 'MarketMindAI Team'),
                 "url": cls.BASE_URL
             },
             "publisher": {
