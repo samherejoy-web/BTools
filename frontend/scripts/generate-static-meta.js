@@ -4,7 +4,7 @@ const path = require('path');
 // Static routes configuration with their meta data
 const STATIC_ROUTES = {
   '/': {
-    title: 'MarketMind - Discover the Best Business Tools',
+    title: 'MarketMindAI - Discover the Best Business Tools',
     description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews from 10,000+ users.',
     keywords: 'business tools, productivity software, SaaS tools, tool comparison, software reviews, business productivity',
     ogType: 'website'
