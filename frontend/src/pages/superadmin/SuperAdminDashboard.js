@@ -607,7 +607,7 @@ const SuperAdminDashboard = () => {
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
             <Button 
               className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
               onClick={() => navigate('/superadmin/users')}
@@ -641,7 +641,14 @@ const SuperAdminDashboard = () => {
               onClick={() => navigate('/superadmin/categories')}
             >
               <BarChart3 className="h-5 w-5" />
-              View Analytics
+              Categories
+            </Button>
+            <Button 
+              className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800"
+              onClick={() => navigate('/superadmin/settings')}
+            >
+              <Settings className="h-5 w-5" />
+              Site Settings
             </Button>
           </div>
         </CardContent>
