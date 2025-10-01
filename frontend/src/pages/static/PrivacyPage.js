@@ -5,6 +5,11 @@ import { Shield, Lock, Eye, Users, FileText, Clock } from 'lucide-react';
 const PrivacyPage = () => {
   const lastUpdated = "January 15, 2024";
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <Helmet>
