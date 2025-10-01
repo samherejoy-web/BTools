@@ -13,7 +13,7 @@ class LogoManagementTester:
         self.errors = []
         self.superadmin_credentials = {
             "email": "superadmin@marketmind.com",
-            "password": "SuperAdmin123!"
+            "password": "admin123"
         }
 
     def log_result(self, test_name, success, message="", response_data=None):
