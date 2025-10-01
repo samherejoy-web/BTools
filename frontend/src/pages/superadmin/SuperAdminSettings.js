@@ -63,6 +63,10 @@ const SuperAdminSettings = () => {
         social_discord_url: settingsData.social_discord_url || '',
         social_facebook_url: settingsData.social_facebook_url || ''
       });
+      setLogoData({
+        site_logo_url: settingsData.site_logo_url || '',
+        site_logo_alt_text: settingsData.site_logo_alt_text || 'MarketMind AI'
+      });
     } catch (error) {
       console.error('Error fetching settings:', error);
       toast.error('Failed to fetch settings');
