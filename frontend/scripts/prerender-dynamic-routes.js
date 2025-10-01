@@ -89,7 +89,7 @@ function generateDynamicMetaTags(type, data) {
         "dateModified": data.updated_at,
         "author": {
           "@type": "Person",
-          "name": data.author_name || "MarketMind Team"
+          "name": data.author_name || "MarketMindAI Team"
         },
         "publisher": {
           "@type": "Organization",
