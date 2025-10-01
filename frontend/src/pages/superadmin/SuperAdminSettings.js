@@ -142,7 +142,7 @@ const SuperAdminSettings = () => {
       
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('alt_text', logoData.site_logo_alt_text || 'MarketMind AI Logo');
+      formData.append('alt_text', logoData.site_logo_alt_text || 'MarketMindAI Logo');
 
       const response = await apiClient.post('/superadmin/settings/upload-logo', formData, {
         headers: {
