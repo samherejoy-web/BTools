@@ -48,6 +48,12 @@ import SuperAdminSEO from './pages/superadmin/SuperAdminSEO';
 // SEO Tools
 import SEOToolsPage from './pages/seo/SEOToolsPage';
 
+// Static Pages
+import AboutPage from './pages/static/AboutPage';
+import ContactPage from './pages/static/ContactPage';
+import PrivacyPage from './pages/static/PrivacyPage';
+import TermsPage from './pages/static/TermsPage';
+
 import './App.css';
 
 // Protected Route Component
