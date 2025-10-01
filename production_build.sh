@@ -161,7 +161,7 @@ print_status "Step 6: Creating SystemD service..."
 
 cat > /etc/systemd/system/marketmind.service << 'EOF'
 [Unit]
-Description=MarketMind AI Backend Service
+Description=MarketMindAI Backend Service
 After=network.target postgresql.service
 Requires=postgresql.service
 
