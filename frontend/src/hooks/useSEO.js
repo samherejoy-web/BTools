@@ -14,8 +14,8 @@ const useSEO = ({
   const seoData = useMemo(() => {
     // Generate optimized title
     const optimizedTitle = title 
-      ? `${title} | MarketMind`
-      : 'MarketMind - Discover the Best Business Tools';
+      ? `${title} | MarketMindAI`
+      : 'MarketMindAI - Discover the Best Business Tools';
 
     // Generate optimized description with fallback
     const optimizedDescription = description || 
@@ -79,7 +79,7 @@ export const useBlogSEO = (blog) => {
   return useMemo(() => {
     if (!blog) {
       return {
-        title: 'MarketMind - Discover the Best Business Tools',
+        title: 'MarketMindAI - Discover the Best Business Tools',
         description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
         keywords: 'business tools, productivity, software comparison',
         canonical: '',
@@ -97,7 +97,7 @@ export const useBlogSEO = (blog) => {
         image: blog.featured_image || '',
         type: 'article',
         article: true,
-        author: blog.author_name || 'MarketMind Team',
+        author: blog.author_name || 'MarketMindAI Team',
         publishedTime: blog.published_at || blog.created_at,
         modifiedTime: blog.updated_at,
         jsonLd: (blog.json_ld && Object.keys(blog.json_ld).length > 0) ? blog.json_ld : generateArticleSchema(blog),
@@ -108,9 +108,9 @@ export const useBlogSEO = (blog) => {
     } catch (error) {
       console.error('Error generating blog SEO data:', error);
       return {
-        title: blog.title ? `${blog.title} | MarketMind` : 'Blog Post | MarketMind',
+        title: blog.title ? `${blog.title} | MarketMindAI` : 'Blog Post | MarketMindAI',
         description: blog.excerpt || 'Read this insightful blog post.',
-        keywords: 'blog, article, MarketMind',
+        keywords: 'blog, article, MarketMindAI',
         canonical: `/blogs/${blog.slug}`,
         image: blog.featured_image || '',
         type: 'article'
@@ -124,7 +124,7 @@ export const useToolSEO = (tool) => {
   return useMemo(() => {
     if (!tool) {
       return {
-        title: 'MarketMind - Discover the Best Business Tools',
+        title: 'MarketMindAI - Discover the Best Business Tools',
         description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
         keywords: 'business tools, productivity, software comparison',
         canonical: '',
@@ -156,7 +156,7 @@ export const useToolSEO = (tool) => {
     } catch (error) {
       console.error('Error generating tool SEO data:', error);
       return {
-        title: tool.name ? `${tool.name} - Review & Pricing | MarketMind` : 'Business Tool | MarketMind',
+        title: tool.name ? `${tool.name} - Review & Pricing | MarketMindAI` : 'Business Tool | MarketMindAI',
         description: tool.short_description || tool.description || 'Discover this amazing business tool.',
         keywords: 'business tool, software, productivity',
         canonical: `/tools/${tool.slug}`,
