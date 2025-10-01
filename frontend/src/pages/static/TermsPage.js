@@ -37,7 +37,7 @@ const TermsPage = () => {
                 Terms of Service
               </h1>
               <p className="text-lg text-gray-600 mb-4">
-                Please read these terms carefully before using MarketMind AI. They govern your use of our platform and services.
+                Please read these terms carefully before using MarketMindAI. They govern your use of our platform and services.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
                 <div className="flex items-center">
@@ -102,12 +102,12 @@ const TermsPage = () => {
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
                 <p className="text-gray-600 mb-4">
-                  Welcome to MarketMind AI. These Terms of Service ("Terms") constitute a legally binding agreement between you 
-                  and MarketMind AI ("Company," "we," "our," or "us") regarding your use of our platform, website, and services 
+                  Welcome to MarketMindAI. These Terms of Service ("Terms") constitute a legally binding agreement between you 
+                  and MarketMindAI ("Company," "we," "our," or "us") regarding your use of our platform, website, and services 
                   (collectively, the "Service").
                 </p>
                 <p className="text-gray-600">
-                  By accessing or using MarketMind AI, you agree to be bound by these Terms and our Privacy Policy. 
+                  By accessing or using MarketMindAI, you agree to be bound by these Terms and our Privacy Policy. 
                   If you disagree with any part of these terms, you may not access or use our Service.
                 </p>
               </section>
@@ -116,7 +116,7 @@ const TermsPage = () => {
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Description of Service</h2>
                 <p className="text-gray-600 mb-4">
-                  MarketMind AI provides a platform for discovering, comparing, and reviewing business tools and software solutions. Our services include:
+                  MarketMindAI provides a platform for discovering, comparing, and reviewing business tools and software solutions. Our services include:
                 </p>
                 <ul className="text-gray-600 mb-6 space-y-2">
                   <li>• Tool discovery and comparison features</li>
@@ -185,7 +185,7 @@ const TermsPage = () => {
 
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">4.3 Content Ownership and License</h3>
                 <p className="text-gray-600">
-                  You retain ownership of content you submit but grant MarketMind AI a worldwide, royalty-free license to use, 
+                  You retain ownership of content you submit but grant MarketMindAI a worldwide, royalty-free license to use, 
                   display, and distribute your content in connection with the Service. This license continues even if you 
                   stop using the Service, though you may request content removal.
                 </p>
@@ -197,7 +197,7 @@ const TermsPage = () => {
                 
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">5.1 Our Intellectual Property</h3>
                 <p className="text-gray-600 mb-4">
-                  The Service, including its design, functionality, algorithms, and original content, is owned by MarketMind AI 
+                  The Service, including its design, functionality, algorithms, and original content, is owned by MarketMindAI 
                   and protected by intellectual property laws. You may not copy, modify, distribute, or create derivative works 
                   without our explicit permission.
                 </p>
@@ -246,7 +246,7 @@ const TermsPage = () => {
 
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">7.3 Limitation of Liability</h3>
                 <p className="text-gray-600">
-                  To the maximum extent permitted by law, MarketMind AI shall not be liable for any indirect, incidental, 
+                  To the maximum extent permitted by law, MarketMindAI shall not be liable for any indirect, incidental, 
                   special, consequential, or punitive damages, including but not limited to loss of profits, data, or use, 
                   incurred by you or any third party.
                 </p>
@@ -256,7 +256,7 @@ const TermsPage = () => {
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Indemnification</h2>
                 <p className="text-gray-600">
-                  You agree to indemnify, defend, and hold harmless MarketMind AI and its officers, directors, employees, 
+                  You agree to indemnify, defend, and hold harmless MarketMindAI and its officers, directors, employees, 
                   and agents from any claims, damages, or expenses arising from your use of the Service, your violation of 
                   these Terms, or your infringement of any third-party rights.
                 </p>
@@ -321,7 +321,7 @@ const TermsPage = () => {
                 
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">12.1 Entire Agreement</h3>
                 <p className="text-gray-600 mb-4">
-                  These Terms, together with our Privacy Policy, constitute the entire agreement between you and MarketMind AI 
+                  These Terms, together with our Privacy Policy, constitute the entire agreement between you and MarketMindAI 
                   regarding the Service.
                 </p>
 
@@ -347,11 +347,11 @@ const TermsPage = () => {
                     <li>• <strong>General Support:</strong> support@marketmind.ai</li>
                     <li>• <strong>Legal Inquiries:</strong> legal@marketmind.ai</li>
                     <li>• <strong>Website:</strong> Contact form at /contact</li>
-                    <li>• <strong>Address:</strong> MarketMind AI Legal Department</li>
+                    <li>• <strong>Address:</strong> MarketMindAI Legal Department</li>
                   </ul>
                 </div>
                 <p className="text-gray-600 mt-4 text-sm">
-                  Thank you for using MarketMind AI. We appreciate your compliance with these Terms and your contribution 
+                  Thank you for using MarketMindAI. We appreciate your compliance with these Terms and your contribution 
                   to our community of business professionals.
                 </p>
               </section>
