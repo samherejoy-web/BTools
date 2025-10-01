@@ -296,7 +296,7 @@ print_status "Step 9: Creating backup script..."
 
 cat > /var/www/marketmind/backup.sh << 'EOF'
 #!/bin/bash
-# Automated backup script for MarketMind AI
+# Automated backup script for MarketMindAI
 
 BACKUP_DIR="/var/www/marketmind/backups"
 DATE=$(date +%Y%m%d_%H%M%S)
