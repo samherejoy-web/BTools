@@ -85,12 +85,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {/* Company info */}
             <div className="lg:col-span-1">
-              <Link to="/" className="flex items-center mb-4">
-                <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">MM</span>
-                </div>
-                <span className="ml-2 text-xl font-bold text-gray-900">MarketMind</span>
-              </Link>
+              <Logo className="mb-4" showText={true} />
               <p className="text-gray-600 text-sm leading-relaxed mb-6">
                 Discover, compare, and choose the best tools for your business. 
                 Powered by AI insights and community reviews.
