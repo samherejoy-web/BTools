@@ -68,9 +68,11 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { name: 'Twitter', href: 'https://twitter.com/marketmindai', icon: Twitter },
-    { name: 'LinkedIn', href: 'https://linkedin.com/company/marketmind', icon: Linkedin },
-    { name: 'GitHub', href: 'https://github.com/marketmind', icon: Github },
+    { name: 'X (Twitter)', href: socialUrls.social_twitter_url, icon: Twitter },
+    { name: 'LinkedIn', href: socialUrls.social_linkedin_url, icon: Linkedin },
+    { name: 'GitHub', href: socialUrls.social_github_url, icon: Github },
+    { name: 'Discord', href: socialUrls.social_discord_url, icon: MessageSquare },
+    { name: 'Facebook', href: socialUrls.social_facebook_url, icon: Facebook },
     { name: 'Email', href: 'mailto:hello@marketmind.ai', icon: Mail },
   ];
 
