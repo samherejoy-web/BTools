@@ -46,10 +46,16 @@ const Logo = ({
       let logoUrl = response.data.site_logo_url;
       const altText = response.data.site_logo_alt_text || "MarketMind AI";
       
-      // Convert relative URL to absolute URL using the backend URL
-      if (logoUrl && logoUrl.trim() && logoUrl.startsWith('/')) {
-        const backendUrl = process.env.REACT_APP_BACKEND_URL;
-        logoUrl = `${backendUrl}${logoUrl}`;
+      // If logoUrl is the API endpoint, construct the full URL
+      if (logoUrl && logoUrl.trim()) {
+        if (logoUrl.startsWith('/api/')) {
+          const backendUrl = process.env.REACT_APP_BACKEND_URL;
+          logoUrl = `${backendUrl}${logoUrl}`;
+        } else if (logoUrl.startsWith('/')) {
+          // Handle legacy relative paths
+          const backendUrl = process.env.REACT_APP_BACKEND_URL;
+          logoUrl = `${backendUrl}${logoUrl}`;
+        }
       }
       
       setLogoData({
