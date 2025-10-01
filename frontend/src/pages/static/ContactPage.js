@@ -358,7 +358,7 @@ const ContactPage = () => {
               </div>
 
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Is MarketMind AI free to use?</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Is MarketMindAI free to use?</h3>
                 <p className="text-gray-600">
                   Yes, basic access to our tool directory and reviews is free. Premium features and advanced 
                   analytics are available with our subscription plans.
