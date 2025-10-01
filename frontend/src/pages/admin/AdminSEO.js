@@ -93,7 +93,7 @@ const AdminSEO = () => {
           json_ld: {
             "@context": "https://schema.org",
             "@type": "Blog",
-            "name": "MarketMind Blog",
+            "name": "MarketMindAI Blog",
             "description": "Expert guides and tool reviews"
           },
           meta_tags: {
