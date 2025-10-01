@@ -22,7 +22,7 @@ const STATIC_ROUTES = {
     ogType: 'website'
   },
   '/compare': {
-    title: 'Compare Business Tools - MarketMind',
+    title: 'Compare Business Tools - MarketMindAI',
     description: 'Compare up to 5 business tools side-by-side. Make informed decisions with detailed feature comparisons and user reviews.',
     keywords: 'tool comparison, software comparison, business tools, feature comparison, tool evaluation',
     ogType: 'website'
