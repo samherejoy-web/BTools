@@ -47,7 +47,7 @@ const AdminSEO = () => {
         {
           id: '1',
           page_path: '/',
-          title: 'MarketMind - Discover the Best Business Tools',
+          title: 'MarketMindAI - Discover the Best Business Tools',
           description: 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
           keywords: 'business tools, productivity, software comparison, saas tools',
           json_ld: {
