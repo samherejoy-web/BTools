@@ -281,6 +281,154 @@ const SuperAdminSettings = () => {
         </div>
       </div>
 
+      {/* Logo Management */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Image className="h-5 w-5" />
+            Site Logo Management
+          </CardTitle>
+          <p className="text-sm text-gray-600">
+            Upload and manage your site logo. Supports PNG, JPG, JPEG, SVG, and WebP formats. Max size: 2MB.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Current Logo Preview */}
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700">Current Logo</h4>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Logo size="lg" showText={true} className="border border-gray-200 bg-white p-2 rounded-lg" />
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-2">
+                  {logoData.site_logo_url ? 'Custom logo is active' : 'Using default MarketMind logo'}
+                </p>
+                {logoData.site_logo_url && (
+                  <p className="text-xs text-gray-500">
+                    Logo URL: {logoData.site_logo_url}
+                  </p>
+                )}
+              </div>
+              {logoData.site_logo_url && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDeleteLogo}
+                  disabled={saving}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete Logo
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Alt Text */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Logo Alt Text (SEO & Accessibility)
+            </label>
+            <input
+              type="text"
+              value={logoData.site_logo_alt_text}
+              onChange={(e) => setLogoData({...logoData, site_logo_alt_text: e.target.value})}
+              placeholder="Enter alt text for the logo..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <p className="text-xs text-gray-500">
+              This text is used for screen readers and when the logo fails to load.
+            </p>
+          </div>
+
+          {/* Logo Upload Section */}
+          <div className="space-y-4">
+            <h4 className="font-medium text-gray-700">Upload New Logo</h4>
+            
+            {/* File Input */}
+            <div className="space-y-3">
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp"
+                onChange={(e) => {
+                  handleFilePreview(e);
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white file:hover:bg-blue-700"
+                id="logo-upload"
+              />
+              
+              {/* Upload Info */}
+              <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
+                <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="text-sm text-blue-800">
+                  <p className="font-medium mb-1">Upload Requirements:</p>
+                  <ul className="text-xs space-y-0.5">
+                    <li>• Supported formats: PNG, JPG, JPEG, SVG, WebP</li>
+                    <li>• Maximum file size: 2MB</li>
+                    <li>• Recommended dimensions: 200×60px or similar ratio</li>
+                    <li>• Transparent background recommended for PNG files</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview Section */}
+            {logoPreview && (
+              <div className="space-y-3">
+                <h5 className="text-sm font-medium text-gray-700">Preview</h5>
+                <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg bg-white">
+                  <img
+                    src={logoPreview}
+                    alt="Logo preview"
+                    className="h-12 max-w-48 object-contain"
+                    style={{ maxHeight: '48px' }}
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-600">Preview of your new logo</p>
+                  </div>
+                  <Button
+                    onClick={(e) => {
+                      const fileInput = document.getElementById('logo-upload');
+                      handleLogoUpload({ target: fileInput });
+                    }}
+                    disabled={uploading}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    {uploading ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Logo
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* URL Method */}
+          <div className="space-y-3 border-t pt-4">
+            <h4 className="font-medium text-gray-700">Or Use Logo URL</h4>
+            <div className="space-y-2">
+              <input
+                type="url"
+                value={logoData.site_logo_url}
+                onChange={(e) => setLogoData({...logoData, site_logo_url: e.target.value})}
+                placeholder="https://example.com/logo.png"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500">
+                Enter a direct URL to your logo image. This will override any uploaded logo.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Social Media URLs */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
