@@ -213,7 +213,7 @@ const Footer = () => {
             </div>
             <div className="mt-4 md:mt-0">
               <p className="text-gray-500 text-sm">
-                Made with ❤️ for the productivity community
+                Empowering businesses with AI-driven insights
               </p>
             </div>
           </div>
