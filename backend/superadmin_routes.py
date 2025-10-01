@@ -1665,7 +1665,7 @@ async def upload_logo(
             )
             db.add(alt_setting)
         else:
-            alt_setting.value = alt_text or "MarketMind AI Logo"
+            alt_setting.value = alt_text or "MarketMindAI Logo"
             alt_setting.updated_at = datetime.utcnow()
         
         db.commit()
