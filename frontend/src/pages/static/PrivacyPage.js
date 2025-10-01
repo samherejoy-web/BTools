@@ -13,11 +13,11 @@ const PrivacyPage = () => {
   return (
     <>
       <Helmet>
-        <title>Privacy Policy - MarketMind AI | Data Protection & User Privacy</title>
-        <meta name="description" content="Learn how MarketMind AI protects your privacy and handles your personal data. Comprehensive privacy policy covering data collection, usage, and your rights." />
+        <title>Privacy Policy - MarketMindAI | Data Protection & User Privacy</title>
+        <meta name="description" content="Learn how MarketMindAI protects your privacy and handles your personal data. Comprehensive privacy policy covering data collection, usage, and your rights." />
         <meta name="keywords" content="privacy policy, data protection, user privacy, GDPR, CCPA, data security, personal information" />
-        <meta property="og:title" content="Privacy Policy - MarketMind AI" />
-        <meta property="og:description" content="Transparent privacy policy explaining how we protect and handle your personal data at MarketMind AI." />
+        <meta property="og:title" content="Privacy Policy - MarketMindAI" />
+        <meta property="og:description" content="Transparent privacy policy explaining how we protect and handle your personal data at MarketMindAI." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={`${process.env.REACT_APP_BACKEND_URL}/privacy`} />
       </Helmet>
@@ -79,11 +79,11 @@ const PrivacyPage = () => {
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
                 <p className="text-gray-600 mb-4">
-                  MarketMind AI ("we," "our," or "us") is committed to protecting your privacy and ensuring the security of your personal information. 
+                  MarketMindAI ("we," "our," or "us") is committed to protecting your privacy and ensuring the security of your personal information. 
                   This Privacy Policy explains how we collect, use, share, and protect your information when you use our platform, website, and services.
                 </p>
                 <p className="text-gray-600">
-                  By using MarketMind AI, you consent to the practices described in this policy. If you do not agree with this policy, 
+                  By using MarketMindAI, you consent to the practices described in this policy. If you do not agree with this policy, 
                   please do not use our services.
                 </p>
               </section>
@@ -228,7 +228,7 @@ const PrivacyPage = () => {
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">9. International Data Transfers</h2>
                 <p className="text-gray-600">
-                  MarketMind AI operates globally, and your information may be transferred to and processed in countries 
+                  MarketMindAI operates globally, and your information may be transferred to and processed in countries 
                   other than your residence. We ensure appropriate safeguards are in place to protect your information 
                   according to applicable privacy laws and international standards.
                 </p>
@@ -238,7 +238,7 @@ const PrivacyPage = () => {
               <section className="mb-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Children's Privacy</h2>
                 <p className="text-gray-600">
-                  MarketMind AI is not intended for use by individuals under the age of 16. We do not knowingly collect 
+                  MarketMindAI is not intended for use by individuals under the age of 16. We do not knowingly collect 
                   personal information from children under 16. If we become aware that we have collected such information, 
                   we will take steps to delete it promptly.
                 </p>
@@ -257,7 +257,7 @@ const PrivacyPage = () => {
                   <li>• Updates to the "Last updated" date at the top of this policy</li>
                 </ul>
                 <p className="text-gray-600">
-                  Your continued use of MarketMind AI after changes become effective constitutes acceptance of the updated policy.
+                  Your continued use of MarketMindAI after changes become effective constitutes acceptance of the updated policy.
                 </p>
               </section>
 
