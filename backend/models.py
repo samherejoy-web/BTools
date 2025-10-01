@@ -186,7 +186,7 @@ class BlogComment(Base):
     blog = relationship("Blog", back_populates="comments")
     user = relationship("User")
     parent = relationship("BlogComment", remote_side=[id])
-    replies = relationship("BlogComment", cascade="all, delete-orphan")
+    replies = relationship("BlogComment", cascade="all, delete-orphan", overlaps="parent")
 
 class BlogLike(Base):
     __tablename__ = "blog_likes"
