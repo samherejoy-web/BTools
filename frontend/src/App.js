@@ -149,6 +149,31 @@ function App() {
               </ProtectedRoute>
             } />
             
+            {/* Static Pages */}
+            <Route path="/about" element={
+              <Layout>
+                <AboutPage />
+              </Layout>
+            } />
+            
+            <Route path="/contact" element={
+              <Layout>
+                <ContactPage />
+              </Layout>
+            } />
+            
+            <Route path="/privacy" element={
+              <Layout>
+                <PrivacyPage />
+              </Layout>
+            } />
+            
+            <Route path="/terms" element={
+              <Layout>
+                <TermsPage />
+              </Layout>
+            } />
+            
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
