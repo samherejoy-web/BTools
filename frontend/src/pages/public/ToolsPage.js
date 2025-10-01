@@ -123,7 +123,7 @@ const ToolsPage = () => {
 
   // Generate SEO data
   const seoTitle = selectedCategory 
-    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Tools - MarketMind`
+    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Tools - MarketMindAI`
     : 'Business Tools Directory - Find & Compare the Best Software Tools';
   
   const seoDescription = selectedCategory
