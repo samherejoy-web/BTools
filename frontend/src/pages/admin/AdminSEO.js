@@ -97,7 +97,7 @@ const AdminSEO = () => {
             "description": "Expert guides and tool reviews"
           },
           meta_tags: {
-            "og:title": "Expert Guides & Tool Reviews - MarketMind Blog",
+            "og:title": "Expert Guides & Tool Reviews - MarketMindAI Blog",
             "og:description": "Read expert guides and in-depth tool reviews",
             "og:type": "blog"
           },
