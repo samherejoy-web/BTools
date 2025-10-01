@@ -300,7 +300,7 @@ const SuperAdminSettings = () => {
               <Logo size="lg" showText={true} className="border border-gray-200 bg-white p-2 rounded-lg" />
               <div className="flex-1">
                 <p className="text-sm text-gray-600 mb-2">
-                  {logoData.site_logo_url ? 'Custom logo is active' : 'Using default MarketMind logo'}
+                  {logoData.site_logo_url ? 'Custom logo is active' : 'Using default MarketMindAI logo'}
                 </p>
                 {logoData.site_logo_url && (
                   <p className="text-xs text-gray-500">
