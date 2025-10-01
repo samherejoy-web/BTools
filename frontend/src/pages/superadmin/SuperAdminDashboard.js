@@ -522,6 +522,12 @@ const SuperAdminDashboard = () => {
         </Card>
       </div>
 
+      {/* Contacts and Newsletter Management */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Contacts & Newsletter</h2>
+        <ContactsAndNewsletter />
+      </div>
+
       {/* Recent Activity */}
       <Card className="border-0 shadow-sm">
           <CardHeader className="pb-4">
