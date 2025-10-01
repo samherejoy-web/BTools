@@ -329,6 +329,14 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
+            
+            <Route path="/superadmin/settings" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminSettings />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
           </Routes>
           
           <Toaster position="top-right" />
