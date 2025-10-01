@@ -1,0 +1,119 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import apiClient from '../../utils/apiClient';
+
+const Logo = ({ 
+  className = "", 
+  linkClassName = "", 
+  showText = true, 
+  textClassName = "",
+  size = "default" // default, sm, lg
+}) => {
+  const [logoData, setLogoData] = useState({
+    logoUrl: null,
+    altText: "MarketMind AI",
+    loading: true
+  });
+
+  // Size configurations
+  const sizeConfig = {
+    sm: {
+      container: "h-6 w-6",
+      text: "text-lg",
+      textMargin: "ml-1"
+    },
+    default: {
+      container: "h-8 w-8", 
+      text: "text-xl",
+      textMargin: "ml-2"
+    },
+    lg: {
+      container: "h-12 w-12",
+      text: "text-2xl", 
+      textMargin: "ml-3"
+    }
+  };
+
+  const config = sizeConfig[size] || sizeConfig.default;
+
+  useEffect(() => {
+    fetchLogoData();
+  }, []);
+
+  const fetchLogoData = async () => {
+    try {
+      const response = await apiClient.get('/public/site-settings');
+      const logoUrl = response.data.site_logo_url;
+      const altText = response.data.site_logo_alt_text || "MarketMind AI";
+      
+      setLogoData({
+        logoUrl: logoUrl && logoUrl.trim() ? logoUrl : null,
+        altText,
+        loading: false
+      });
+    } catch (error) {
+      console.error('Error fetching logo data:', error);
+      setLogoData({
+        logoUrl: null,
+        altText: "MarketMind AI",
+        loading: false
+      });
+    }
+  };
+
+  // Loading state
+  if (logoData.loading) {
+    return (
+      <div className={`flex items-center ${className}`}>
+        <div className={`${config.container} bg-gray-200 rounded-lg animate-pulse`}></div>
+        {showText && (
+          <div className={`${config.textMargin} h-6 w-32 bg-gray-200 rounded animate-pulse`}></div>
+        )}
+      </div>
+    );
+  }
+
+  const logoContent = (
+    <div className={`flex items-center ${className}`}>
+      {logoData.logoUrl ? (
+        // Custom logo
+        <img
+          src={logoData.logoUrl}
+          alt={logoData.altText}
+          className={`${config.container} object-contain`}
+          style={{ maxHeight: config.container.includes('h-6') ? '24px' : config.container.includes('h-12') ? '48px' : '32px' }}
+          loading="eager"
+          onError={(e) => {
+            console.error('Logo failed to load, falling back to default');
+            setLogoData(prev => ({ ...prev, logoUrl: null }));
+          }}
+        />
+      ) : (
+        // Default fallback logo
+        <div className={`${config.container} bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center`}>
+          <span className="text-white font-bold text-sm">MM</span>
+        </div>
+      )}
+      
+      {showText && (
+        <span className={`${config.textMargin} ${config.text} font-bold text-gray-900 ${textClassName}`}>
+          MarketMind
+        </span>
+      )}
+    </div>
+  );
+
+  // If no linkClassName provided, return just the content without Link wrapper
+  if (!linkClassName && !linkClassName === '') {
+    return logoContent;
+  }
+
+  // Wrap in Link component
+  return (
+    <Link to="/" className={`flex-shrink-0 ${linkClassName}`}>
+      {logoContent}
+    </Link>
+  );
+};
+
+export default Logo;
