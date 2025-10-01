@@ -178,7 +178,7 @@ const Footer = () => {
                 Community
               </h3>
               <ul className="space-y-3">
-                {footerLinks.community.map((item) => (
+                {footerLinks.community.filter(item => item.href && item.href.trim()).map((item) => (
                   <li key={item.name}>
                     {item.external ? (
                       <a
