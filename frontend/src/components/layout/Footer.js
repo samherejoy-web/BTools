@@ -187,19 +187,12 @@ const Footer = () => {
               </p>
             </div>
             <div className="mt-4 md:mt-0 md:ml-6">
-              <form className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                />
-                <button
-                  type="submit"
-                  className="btn-primary whitespace-nowrap"
-                >
-                  Subscribe
-                </button>
-              </form>
+              <NewsletterForm 
+                source="footer"
+                placeholder="Enter your email"
+                buttonText="Subscribe"
+                buttonClassName="btn-primary"
+              />
             </div>
           </div>
         </div>
