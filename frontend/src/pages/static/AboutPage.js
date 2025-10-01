@@ -11,11 +11,11 @@ const AboutPage = () => {
   return (
     <>
       <Helmet>
-        <title>About MarketMind AI - Leading B2B Tool Discovery Platform</title>
-        <meta name="description" content="Learn about MarketMind AI, the premier platform for discovering, comparing, and choosing the best business tools. AI-powered insights, community reviews, and expert analysis." />
+        <title>About MarketMindAI - Leading B2B Tool Discovery Platform</title>
+        <meta name="description" content="Learn about MarketMindAI, the premier platform for discovering, comparing, and choosing the best business tools. AI-powered insights, community reviews, and expert analysis." />
         <meta name="keywords" content="about marketmind, b2b tools, business software, tool discovery, ai insights, productivity tools, software reviews" />
-        <meta property="og:title" content="About MarketMind AI - Leading B2B Tool Discovery Platform" />
-        <meta property="og:description" content="Discover how MarketMind AI is revolutionizing business tool discovery with AI-powered insights and community-driven reviews." />
+        <meta property="og:title" content="About MarketMindAI - Leading B2B Tool Discovery Platform" />
+        <meta property="og:description" content="Discover how MarketMindAI is revolutionizing business tool discovery with AI-powered insights and community-driven reviews." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={`${process.env.REACT_APP_BACKEND_URL}/about`} />
       </Helmet>
@@ -26,7 +26,7 @@ const AboutPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">MarketMind AI</span>
+                About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">MarketMindAI</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 We're revolutionizing how businesses discover, evaluate, and choose the right tools 
@@ -45,7 +45,7 @@ const AboutPage = () => {
                   Our Mission
                 </h2>
                 <p className="text-lg text-gray-600 mb-6">
-                  At MarketMind AI, we believe that choosing the right business tools shouldn't be overwhelming or time-consuming. 
+                  At MarketMindAI, we believe that choosing the right business tools shouldn't be overwhelming or time-consuming. 
                   Our mission is to simplify the tool discovery process by providing comprehensive, AI-enhanced comparisons and 
                   authentic user reviews in one centralized platform.
                 </p>
@@ -139,7 +139,7 @@ const AboutPage = () => {
             
             <div className="prose prose-lg mx-auto text-gray-600">
               <p className="text-xl leading-relaxed mb-8">
-                MarketMind AI was born from a simple observation: businesses were spending countless hours researching 
+                MarketMindAI was born from a simple observation: businesses were spending countless hours researching 
                 and comparing tools, often making decisions based on incomplete information or outdated reviews.
               </p>
               
@@ -151,7 +151,7 @@ const AboutPage = () => {
               </p>
               
               <p className="mb-6">
-                Today, MarketMind AI serves thousands of businesses worldwide, from innovative startups to established 
+                Today, MarketMindAI serves thousands of businesses worldwide, from innovative startups to established 
                 enterprises. Our platform has become the go-to resource for professionals seeking data-driven insights 
                 about business tools, helping them make smarter decisions that drive growth and efficiency.
               </p>
@@ -172,7 +172,7 @@ const AboutPage = () => {
               Ready to Discover Your Perfect Business Tools?
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of professionals who trust MarketMind AI to guide their tool selection decisions.
+              Join thousands of professionals who trust MarketMindAI to guide their tool selection decisions.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
