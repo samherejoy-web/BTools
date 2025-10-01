@@ -97,7 +97,7 @@ const Footer = () => {
               
               {/* Social links */}
               <div className="flex space-x-4">
-                {socialLinks.map((item) => {
+                {socialLinks.filter(item => item.href && item.href.trim()).map((item) => {
                   const Icon = item.icon;
                   return (
                     <a
