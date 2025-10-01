@@ -7,6 +7,7 @@ import {
   Linkedin,
   ExternalLink
 } from 'lucide-react';
+import NewsletterForm from '../Newsletter/NewsletterForm';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
