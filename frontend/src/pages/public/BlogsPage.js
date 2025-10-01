@@ -25,6 +25,7 @@ import StructuredData, { generateBreadcrumbSchema } from '../../components/SEO/S
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
+import NewsletterForm from '../../components/Newsletter/NewsletterForm';
 
 const BlogsPage = () => {
   const [blogs, setBlogs] = useState([]);
