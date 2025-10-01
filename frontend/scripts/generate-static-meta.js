@@ -16,7 +16,7 @@ const STATIC_ROUTES = {
     ogType: 'website'
   },
   '/blogs': {
-    title: 'Business Tool Reviews & Guides - MarketMind Blog',
+    title: 'Business Tool Reviews & Guides - MarketMindAI Blog',
     description: 'Read in-depth reviews, guides, and insights about the latest business tools and productivity software. Stay updated with industry trends.',
     keywords: 'tool reviews, software guides, business productivity, tech blog, AI content, software insights',
     ogType: 'website'
