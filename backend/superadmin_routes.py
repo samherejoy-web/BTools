@@ -1402,3 +1402,232 @@ async def get_dashboard_analytics(
             status_code=500, 
             detail=f"Failed to fetch dashboard analytics: {str(e)}"
         )
+
+# Export Functionality for Newsletter Subscribers and Contact Submissions
+@router.get("/api/superadmin/export/newsletter-subscribers")
+async def export_newsletter_subscribers(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Export newsletter subscribers as CSV"""
+    try:
+        from fastapi.responses import Response
+        
+        # Get all newsletter subscribers
+        subscribers = db.query(NewsletterSubscription).order_by(desc(NewsletterSubscription.subscribed_at)).all()
+        
+        # Create CSV content
+        csv_content = "Email,Status,Source,Subscribed At,Unsubscribed At\n"
+        
+        for subscriber in subscribers:
+            unsubscribed_date = subscriber.unsubscribed_at.isoformat() if subscriber.unsubscribed_at else ""
+            csv_content += f'"{subscriber.email}","{subscriber.status}","{subscriber.source}","{subscriber.subscribed_at.isoformat()}","{unsubscribed_date}"\n'
+        
+        # Return CSV file
+        return Response(
+            content=csv_content,
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f"attachment; filename=newsletter_subscribers_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to export newsletter subscribers: {str(e)}")
+
+@router.get("/api/superadmin/export/contact-submissions")
+async def export_contact_submissions(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Export contact form submissions as CSV"""
+    try:
+        from fastapi.responses import Response
+        
+        # Get all contact submissions
+        submissions = db.query(ContactSubmission).order_by(desc(ContactSubmission.created_at)).all()
+        
+        # Create CSV content
+        csv_content = "Name,Email,Company,Subject,Message,Inquiry Type,Status,Created At,Updated At\n"
+        
+        for submission in submissions:
+            # Escape quotes and commas in content
+            name = submission.name.replace('"', '""') if submission.name else ""
+            email = submission.email.replace('"', '""') if submission.email else ""
+            company = submission.company.replace('"', '""') if submission.company else ""
+            subject = submission.subject.replace('"', '""') if submission.subject else ""
+            message = submission.message.replace('"', '""').replace('\n', ' ').replace('\r', ' ') if submission.message else ""
+            
+            csv_content += f'"{name}","{email}","{company}","{subject}","{message}","{submission.inquiry_type}","{submission.status}","{submission.created_at.isoformat()}","{submission.updated_at.isoformat()}"\n'
+        
+        # Return CSV file
+        return Response(
+            content=csv_content,
+            media_type="text/csv", 
+            headers={
+                "Content-Disposition": f"attachment; filename=contact_submissions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to export contact submissions: {str(e)}")
+
+# Site Settings Management
+class SiteSettingCreate(BaseModel):
+    key: str
+    value: str
+    description: Optional[str] = None
+
+class SiteSettingUpdate(BaseModel):
+    value: str
+    description: Optional[str] = None
+
+@router.get("/api/superadmin/settings")
+async def get_site_settings(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Get all site settings"""
+    
+    settings = db.query(SiteSettings).all()
+    
+    return [
+        {
+            "id": setting.id,
+            "key": setting.key,
+            "value": setting.value,
+            "description": setting.description,
+            "created_at": setting.created_at,
+            "updated_at": setting.updated_at
+        } for setting in settings
+    ]
+
+@router.post("/api/superadmin/settings")
+async def create_site_setting(
+    setting: SiteSettingCreate,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Create new site setting"""
+    
+    # Check if setting already exists
+    existing_setting = db.query(SiteSettings).filter(SiteSettings.key == setting.key).first()
+    if existing_setting:
+        raise HTTPException(status_code=400, detail="Setting with this key already exists")
+    
+    db_setting = SiteSettings(
+        id=str(uuid.uuid4()),
+        key=setting.key,
+        value=setting.value,
+        description=setting.description
+    )
+    
+    db.add(db_setting)
+    db.commit()
+    db.refresh(db_setting)
+    
+    return {"message": "Setting created successfully", "setting_id": db_setting.id}
+
+@router.put("/api/superadmin/settings/{setting_key}")
+async def update_site_setting(
+    setting_key: str,
+    setting_update: SiteSettingUpdate,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Update site setting by key"""
+    
+    setting = db.query(SiteSettings).filter(SiteSettings.key == setting_key).first()
+    if not setting:
+        # Create new setting if it doesn't exist
+        setting = SiteSettings(
+            id=str(uuid.uuid4()),
+            key=setting_key,
+            value=setting_update.value,
+            description=setting_update.description
+        )
+        db.add(setting)
+    else:
+        # Update existing setting
+        setting.value = setting_update.value
+        if setting_update.description is not None:
+            setting.description = setting_update.description
+        setting.updated_at = datetime.utcnow()
+    
+    db.commit()
+    
+    return {"message": "Setting updated successfully"}
+
+@router.delete("/api/superadmin/settings/{setting_key}")
+async def delete_site_setting(
+    setting_key: str,
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Delete site setting"""
+    
+    setting = db.query(SiteSettings).filter(SiteSettings.key == setting_key).first()
+    if not setting:
+        raise HTTPException(status_code=404, detail="Setting not found")
+    
+    db.delete(setting)
+    db.commit()
+    
+    return {"message": "Setting deleted successfully"}
+
+@router.post("/api/superadmin/settings/initialize-social-urls") 
+async def initialize_social_urls(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Initialize default social media URL settings"""
+    
+    default_settings = [
+        {"key": "social_twitter_url", "value": "https://twitter.com/marketmindai", "description": "X (Twitter) profile URL"},
+        {"key": "social_linkedin_url", "value": "https://linkedin.com/company/marketmind", "description": "LinkedIn company page URL"},
+        {"key": "social_github_url", "value": "https://github.com/marketmind", "description": "GitHub organization URL"},
+        {"key": "social_discord_url", "value": "https://discord.gg/marketmind", "description": "Discord community server URL"},
+        {"key": "social_facebook_url", "value": "https://facebook.com/marketmindai", "description": "Facebook page URL"},
+    ]
+    
+    created_count = 0
+    
+    for setting_data in default_settings:
+        # Check if setting already exists
+        existing = db.query(SiteSettings).filter(SiteSettings.key == setting_data["key"]).first()
+        if not existing:
+            db_setting = SiteSettings(
+                id=str(uuid.uuid4()),
+                key=setting_data["key"],
+                value=setting_data["value"],
+                description=setting_data["description"]
+            )
+            db.add(db_setting)
+            created_count += 1
+    
+    db.commit()
+    
+    return {
+        "message": f"Initialized {created_count} social media URL settings",
+        "created_count": created_count
+    }
+
+# Public endpoint to get site settings (for frontend)
+@router.get("/api/public/site-settings")
+async def get_public_site_settings(db: Session = Depends(get_db)):
+    """Get public site settings (non-sensitive settings only)"""
+    
+    # Only return social media URLs and other public settings
+    public_keys = [
+        "social_twitter_url",
+        "social_linkedin_url", 
+        "social_github_url",
+        "social_discord_url",
+        "social_facebook_url"
+    ]
+    
+    settings = db.query(SiteSettings).filter(SiteSettings.key.in_(public_keys)).all()
+    
+    return {
+        setting.key: setting.value for setting in settings
+    }
