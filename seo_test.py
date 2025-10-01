@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 class SEOTester:
-    def __init__(self, base_url="https://logo-manager-1.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://brand-visual-sync.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
