@@ -1,28 +1,19 @@
 import requests
 import sys
 import json
-import uuid
+import os
 from datetime import datetime
-try:
-    from PIL import Image
-except ImportError:
-    Image = None
 
-class MarketMindAPITester:
-    def __init__(self, base_url="https://logo-manager-1.preview.emergentagent.com/api"):
+class LogoManagementTester:
+    def __init__(self, base_url="https://logo-manager-1.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
-        self.user_id = None
-        self.current_user_role = None
         self.tests_run = 0
         self.tests_passed = 0
-        self.failed_tests = []
-        self.created_resources = {
-            'users': [],
-            'tools': [],
-            'categories': [],
-            'blogs': [],
-            'reviews': []
+        self.errors = []
+        self.superadmin_credentials = {
+            "email": "superadmin@marketmind.com",
+            "password": "SuperAdmin123!"
         }
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, description=None):
