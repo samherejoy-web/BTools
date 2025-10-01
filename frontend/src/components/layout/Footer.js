@@ -14,6 +14,30 @@ import apiClient from '../../utils/apiClient';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [socialUrls, setSocialUrls] = useState({
+    social_twitter_url: 'https://twitter.com/marketmindai',
+    social_linkedin_url: 'https://linkedin.com/company/marketmind',
+    social_github_url: 'https://github.com/marketmind',
+    social_discord_url: 'https://discord.gg/marketmind',
+    social_facebook_url: 'https://facebook.com/marketmindai'
+  });
+
+  useEffect(() => {
+    fetchSocialUrls();
+  }, []);
+
+  const fetchSocialUrls = async () => {
+    try {
+      const response = await apiClient.get('/public/site-settings');
+      setSocialUrls(prev => ({
+        ...prev,
+        ...response.data
+      }));
+    } catch (error) {
+      console.error('Error fetching social URLs:', error);
+      // Keep default URLs if fetch fails
+    }
+  };
 
   const footerLinks = {
     product: [
