@@ -64,7 +64,9 @@ def create_seed_data():
                 hashed_password=get_password_hash("password123"),
                 full_name=f"Test User {i+1}",
                 role="user",
-                bio=f"I'm test user {i+1}, passionate about productivity tools and technology."
+                bio=f"I'm test user {i+1}, passionate about productivity tools and technology.",
+                is_email_verified=True,
+                is_active=True
             )
             users.append(user)
             db.add(user)
