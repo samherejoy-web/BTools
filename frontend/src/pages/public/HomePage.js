@@ -394,7 +394,7 @@ const HomePage = () => {
             Ready to Find Your Perfect Tools?
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of businesses who trust MarketMind to make better tool decisions.
+            Join thousands of businesses who trust MarketMindAI to make better tool decisions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
