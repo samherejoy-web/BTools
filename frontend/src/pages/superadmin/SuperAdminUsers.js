@@ -254,9 +254,21 @@ const SuperAdminUsers = () => {
           <p className="text-gray-600 mt-1">Manage platform users, roles, and permissions</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            onClick={handleExportNewsletterSubscribers}
+            className="flex items-center gap-2"
+          >
             <Download className="h-4 w-4" />
-            Export
+            Export Newsletter
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={handleExportContactSubmissions}
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export Contacts
           </Button>
           <Button 
             onClick={() => setShowCreateModal(true)}
