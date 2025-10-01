@@ -228,7 +228,7 @@ const Footer = () => {
           <div className="md:flex md:items-center md:justify-between">
             <div className="flex items-center space-x-6">
               <p className="text-gray-500 text-sm">
-                © {currentYear} MarketMind AI. All rights reserved.
+                © {currentYear} MarketMindAI. All rights reserved.
               </p>
             </div>
             <div className="mt-4 md:mt-0">
