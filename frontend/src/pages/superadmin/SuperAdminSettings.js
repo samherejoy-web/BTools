@@ -167,7 +167,7 @@ const SuperAdminSettings = () => {
   };
 
   const handleDeleteLogo = async () => {
-    if (!window.confirm('Are you sure you want to delete the current logo? This will revert to the default MarketMind logo.')) {
+    if (!window.confirm('Are you sure you want to delete the current logo? This will revert to the default MarketMindAI logo.')) {
       return;
     }
 
