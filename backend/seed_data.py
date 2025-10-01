@@ -34,7 +34,9 @@ def create_seed_data():
             hashed_password=get_password_hash("admin123"),
             full_name="Super Administrator",
             role="superadmin",
-            bio="Platform super administrator"
+            bio="Platform super administrator",
+            is_email_verified=True,
+            is_active=True
         )
         db.add(superadmin)
         
