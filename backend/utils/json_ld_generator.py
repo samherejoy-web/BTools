@@ -41,7 +41,7 @@ class JSONLDGenerator:
             } if tool.get('rating') and tool.get('review_count', 0) > 0 else None,
             "provider": {
                 "@type": "Organization",
-                "name": "MarketMind",
+                "name": "MarketMindAI",
                 "url": cls.BASE_URL
             },
             "datePublished": tool.get('created_at', '').isoformat() if tool.get('created_at') else None,
@@ -82,7 +82,7 @@ class JSONLDGenerator:
             },
             "publisher": {
                 "@type": "Organization",
-                "name": "MarketMind",
+                "name": "MarketMindAI",
                 "url": cls.BASE_URL,
                 "logo": {
                     "@type": "ImageObject",
