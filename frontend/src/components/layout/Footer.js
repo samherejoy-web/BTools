@@ -10,6 +10,7 @@ import {
   Facebook
 } from 'lucide-react';
 import NewsletterForm from '../Newsletter/NewsletterForm';
+import Logo from '../ui/Logo';
 import apiClient from '../../utils/apiClient';
 
 const Footer = () => {
