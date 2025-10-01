@@ -3,6 +3,11 @@ import { Helmet } from 'react-helmet-async';
 import { Users, Target, Award, Lightbulb, TrendingUp, Zap } from 'lucide-react';
 
 const AboutPage = () => {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <Helmet>
