@@ -27,7 +27,7 @@ This guide provides step-by-step instructions to deploy your MarketMind applicat
 ### ✅ **Current Configuration Analysis**
 Your current setup:
 ```
-Frontend URL: https://codebase-contact-fix.preview.emergentagent.com
+Frontend URL: https://super-admin-tools.preview.emergentagent.com
 Database: SQLite (needs upgrade for production)
 Secret Key: Placeholder (needs secure generation)
 CORS: Wildcard (*) - needs restriction
