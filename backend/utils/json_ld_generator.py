@@ -121,7 +121,7 @@ class JSONLDGenerator:
     
     @classmethod
     def generate_organization_json_ld(cls) -> Dict[str, Any]:
-        """Generate JSON-LD for the MarketMind organization"""
+        """Generate JSON-LD for the MarketMindAI organization"""
         return {
             "@context": "https://schema.org",
             "@type": "Organization",
