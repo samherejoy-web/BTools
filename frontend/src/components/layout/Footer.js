@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Mail, 
   Twitter, 
   Github, 
   Linkedin,
-  ExternalLink
+  ExternalLink,
+  MessageSquare,
+  Facebook
 } from 'lucide-react';
 import NewsletterForm from '../Newsletter/NewsletterForm';
+import apiClient from '../../utils/apiClient';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
