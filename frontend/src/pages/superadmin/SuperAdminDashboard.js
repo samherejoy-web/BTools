@@ -621,7 +621,7 @@ const SuperAdminDashboard = () => {
               className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
               onClick={() => navigate('/superadmin/tools')}
             >
-              <Settings className="h-5 w-5" />
+              <Wrench className="h-5 w-5" />
               Manage Tools
             </Button>
             <Button 
