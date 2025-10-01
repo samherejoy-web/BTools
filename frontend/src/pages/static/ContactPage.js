@@ -344,7 +344,7 @@ const ContactPage = () => {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
               <p className="text-lg text-gray-600">
-                Find quick answers to common questions about MarketMind AI
+                Find quick answers to common questions about MarketMindAI
               </p>
             </div>
 
