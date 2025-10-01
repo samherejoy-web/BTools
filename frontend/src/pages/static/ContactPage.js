@@ -122,7 +122,7 @@ const ContactPage = () => {
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 We're here to help you succeed. Reach out for support, partnerships, 
-                or to learn more about how MarketMind AI can transform your business tool discovery process.
+                or to learn more about how MarketMindAI can transform your business tool discovery process.
               </p>
             </div>
           </div>
