@@ -77,7 +77,7 @@ const AdminSEO = () => {
             "description": "Comprehensive directory of business tools"
           },
           meta_tags: {
-            "og:title": "Business Tools Directory - MarketMind",
+            "og:title": "Business Tools Directory - MarketMindAI",
             "og:description": "Browse our comprehensive directory of business tools",
             "og:type": "website"
           },
