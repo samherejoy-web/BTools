@@ -229,7 +229,7 @@ class ToolComment(Base):
     tool = relationship("Tool", back_populates="comments")
     user = relationship("User")
     parent = relationship("ToolComment", remote_side=[id])
-    replies = relationship("ToolComment", cascade="all, delete-orphan")
+    replies = relationship("ToolComment", cascade="all, delete-orphan", overlaps="parent")
 
 class ToolLike(Base):
     __tablename__ = "tool_likes"
