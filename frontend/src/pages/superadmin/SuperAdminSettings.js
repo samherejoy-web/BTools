@@ -100,6 +100,14 @@ const SuperAdminSettings = () => {
           description: getFieldDescription(key)
         });
       }
+
+      // Update logo alt text if changed
+      if (logoData.site_logo_alt_text !== settings.site_logo_alt_text) {
+        await apiClient.put('/superadmin/settings/site_logo_alt_text', {
+          value: logoData.site_logo_alt_text,
+          description: 'Alt text for site logo (SEO and accessibility)'
+        });
+      }
       
       toast.success('Settings updated successfully');
       fetchSettings();
@@ -108,6 +116,82 @@ const SuperAdminSettings = () => {
       toast.error('Failed to save settings');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleLogoUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Please upload a valid image file (PNG, JPG, JPEG, SVG, WebP)');
+      return;
+    }
+
+    // Validate file size (2MB limit)
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSize) {
+      toast.error(`File too large. Maximum size is 2MB. Your file is ${(file.size / (1024*1024)).toFixed(2)}MB`);
+      return;
+    }
+
+    try {
+      setUploading(true);
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('alt_text', logoData.site_logo_alt_text || 'MarketMind AI Logo');
+
+      const response = await apiClient.post('/superadmin/settings/upload-logo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      toast.success('Logo uploaded successfully!');
+      fetchSettings(); // Refresh settings to get new logo URL
+      
+      // Clear the preview
+      setLogoPreview(null);
+      
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      toast.error(error.response?.data?.detail || 'Failed to upload logo');
+    } finally {
+      setUploading(false);
+      // Clear the file input
+      event.target.value = '';
+    }
+  };
+
+  const handleDeleteLogo = async () => {
+    if (!window.confirm('Are you sure you want to delete the current logo? This will revert to the default MarketMind logo.')) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await apiClient.delete('/superadmin/settings/delete-logo');
+      toast.success('Logo deleted successfully');
+      fetchSettings(); // Refresh settings
+    } catch (error) {
+      console.error('Error deleting logo:', error);
+      toast.error('Failed to delete logo');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleFilePreview = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
