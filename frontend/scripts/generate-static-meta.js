@@ -10,7 +10,7 @@ const STATIC_ROUTES = {
     ogType: 'website'
   },
   '/tools': {
-    title: 'Business Tools Directory - MarketMind',
+    title: 'Business Tools Directory - MarketMindAI',
     description: 'Browse our comprehensive directory of business tools. Filter by category, pricing, and features to find the perfect software for your needs.',
     keywords: 'business tools directory, software catalog, SaaS tools, productivity software, tool comparison',
     ogType: 'website'
