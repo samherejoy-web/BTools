@@ -658,16 +658,14 @@ const BlogDetailPage = () => {
                         <p className="text-sm text-gray-600 mb-4">
                           Get the latest insights delivered to your inbox
                         </p>
-                        <div className="space-y-3">
-                          <input
-                            type="email"
-                            placeholder="Enter your email"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                          />
-                          <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-purple-700">
-                            Subscribe
-                          </Button>
-                        </div>
+                        <NewsletterForm 
+                          source="blog"
+                          placeholder="Enter your email"
+                          buttonText="Subscribe"
+                          className="space-y-3"
+                          inputClassName="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          buttonClassName="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white"
+                        />
                       </div>
                     </CardContent>
                   </Card>
