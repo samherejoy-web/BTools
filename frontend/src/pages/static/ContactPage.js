@@ -103,11 +103,11 @@ const ContactPage = () => {
   return (
     <>
       <Helmet>
-        <title>Contact MarketMind AI - Get Support & Business Inquiries</title>
-        <meta name="description" content="Contact MarketMind AI for business inquiries, partnership opportunities, technical support, and general questions. We're here to help you succeed." />
-        <meta name="keywords" content="contact marketmind, support, business inquiries, partnerships, customer service, help center" />
-        <meta property="og:title" content="Contact MarketMind AI - Get Support & Business Inquiries" />
-        <meta property="og:description" content="Reach out to MarketMind AI for support, partnerships, or any questions about our platform." />
+        <title>Contact MarketMindAI - Get Support & Business Inquiries</title>
+        <meta name="description" content="Contact MarketMindAI for business inquiries, partnership opportunities, technical support, and general questions. We're here to help you succeed." />
+        <meta name="keywords" content="contact marketmindai, support, business inquiries, partnerships, customer service, help center" />
+        <meta property="og:title" content="Contact MarketMindAI - Get Support & Business Inquiries" />
+        <meta property="og:description" content="Reach out to MarketMindAI for support, partnerships, or any questions about our platform." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={`${process.env.REACT_APP_BACKEND_URL}/contact`} />
       </Helmet>
