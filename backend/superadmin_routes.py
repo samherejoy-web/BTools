@@ -1167,7 +1167,7 @@ async def generate_json_ld_data(
                         'tags': blog.tags or [],
                         'like_count': blog.like_count,
                         'comment_count': len(blog.comments) if blog.comments else 0,
-                        'author_name': blog.author.full_name if blog.author else 'MarketMind Team'
+                        'author_name': blog.author.full_name if blog.author else 'MarketMindAI Team'
                     }
                     
                     blog.json_ld = JSONLDGenerator.generate_blog_json_ld(blog_data)
