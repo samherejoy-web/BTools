@@ -48,7 +48,7 @@ function generateMetaTags(route, routeData) {
     <meta property="og:title" content="${routeData.title}" />
     <meta property="og:description" content="${routeData.description}" />
     <meta property="og:url" content="${currentUrl}" />
-    <meta property="og:site_name" content="MarketMind" />
+    <meta property="og:site_name" content="MarketMindAI" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:image" content="${imageUrl}" />
     <meta property="og:image:width" content="1200" />
