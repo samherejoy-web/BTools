@@ -35,19 +35,66 @@ const ContactPage = () => {
     setLoading(true);
     
     try {
-      // Here you would typically send the form data to your backend
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      toast.success('Thank you for your message! We\'ll get back to you within 24 hours.');
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        subject: '',
-        message: '',
-        inquiry_type: 'general'
+      // Validate required fields
+      if (!formData.name.trim()) {
+        toast.error('Please enter your name');
+        return;
+      }
+      if (!formData.email.trim()) {
+        toast.error('Please enter your email address');
+        return;
+      }
+      if (!formData.subject.trim()) {
+        toast.error('Please enter a subject');
+        return;
+      }
+      if (!formData.message.trim()) {
+        toast.error('Please enter your message');
+        return;
+      }
+
+      // Submit to backend API
+      const response = await apiClient.post('/contact', {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        company: formData.company.trim() || null,
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        inquiry_type: formData.inquiry_type
       });
+
+      if (response.data.success) {
+        toast.success(response.data.message || 'Thank you for your message! We\'ll get back to you within 24 hours.');
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          subject: '',
+          message: '',
+          inquiry_type: 'general'
+        });
+      } else {
+        throw new Error(response.data.message || 'Failed to send message');
+      }
     } catch (error) {
-      toast.error('There was an error sending your message. Please try again.');
+      console.error('Contact form error:', error);
+      
+      // Handle validation errors from backend
+      if (error.response?.status === 422 && error.response?.data?.detail) {
+        const errorDetails = error.response.data.detail;
+        if (Array.isArray(errorDetails)) {
+          errorDetails.forEach(detail => {
+            toast.error(`${detail.loc[1]}: ${detail.msg}`);
+          });
+        } else {
+          toast.error(errorDetails);
+        }
+      } else if (error.response?.data?.detail) {
+        toast.error(error.response.data.detail);
+      } else {
+        toast.error('There was an error sending your message. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
