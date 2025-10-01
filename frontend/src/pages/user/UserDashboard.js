@@ -290,7 +290,7 @@ const UserDashboard = () => {
                   <BookOpen className="h-4 w-4 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Welcome to MarketMind!</p>
+                  <p className="text-sm font-medium text-gray-900">Welcome to MarketMindAI!</p>
                   <p className="text-xs text-gray-500">Start by exploring tools or writing your first blog</p>
                 </div>
               </div>
