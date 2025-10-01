@@ -112,7 +112,7 @@ const Logo = ({
       
       {showText && (
         <span className={`${config.textMargin} ${config.text} font-bold text-gray-900 ${textClassName}`}>
-          MarketMind
+          MarketMindAI
         </span>
       )}
     </div>
