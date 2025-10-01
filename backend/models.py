@@ -57,7 +57,7 @@ class Category(Base):
     
     # Relationships
     parent = relationship("Category", remote_side=[id])
-    children = relationship("Category")
+    children = relationship("Category", overlaps="parent")
     tools = relationship("Tool", secondary=tool_categories, back_populates="categories")
 
 class Tool(Base):
