@@ -125,7 +125,7 @@ function generateHtmlWithMeta(originalHtml, metaData) {
     <meta property="og:title" content="${metaData.title}" />
     <meta property="og:description" content="${metaData.description}" />
     <meta property="og:url" content="${metaData.url}" />
-    <meta property="og:site_name" content="MarketMind" />
+    <meta property="og:site_name" content="MarketMindAI" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:image" content="${metaData.image}" />
     <meta property="og:image:width" content="1200" />
