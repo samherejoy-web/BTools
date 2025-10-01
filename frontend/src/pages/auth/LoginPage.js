@@ -259,27 +259,6 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Demo Accounts */}
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <p className="text-sm text-gray-600 text-center mb-4">
-                Demo Accounts (for testing):
-              </p>
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between bg-gray-50 p-2 rounded">
-                  <span className="font-medium">Super Admin:</span>
-                  <span>superadmin@marketmind.com / admin123</span>
-                </div>
-                <div className="flex justify-between bg-gray-50 p-2 rounded">
-                  <span className="font-medium">Admin:</span>
-                  <span>admin@marketmind.com / admin123</span>
-                </div>
-                <div className="flex justify-between bg-gray-50 p-2 rounded">
-                  <span className="font-medium">User:</span>
-                  <span>user1@example.com / password123</span>
-                </div>
-              </div>
-            </div>
-
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
