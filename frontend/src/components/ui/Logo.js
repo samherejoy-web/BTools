@@ -44,7 +44,7 @@ const Logo = ({
     try {
       const response = await apiClient.get('/public/site-settings');
       let logoUrl = response.data.site_logo_url;
-      const altText = response.data.site_logo_alt_text || "MarketMind AI";
+      const altText = response.data.site_logo_alt_text || "MarketMindAI";
       
       // If logoUrl is the API endpoint, construct the full URL
       if (logoUrl && logoUrl.trim()) {
