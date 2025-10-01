@@ -23,6 +23,7 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import apiClient from '../../utils/apiClient';
 import { formatNumber, formatDate } from '../../utils/formatters';
+import ContactsAndNewsletter from '../../components/admin/ContactsAndNewsletter';
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
