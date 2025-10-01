@@ -1575,6 +1575,153 @@ async def delete_site_setting(
     
     return {"message": "Setting deleted successfully"}
 
+# Logo Management Classes
+class LogoUploadResponse(BaseModel):
+    message: str
+    logo_url: str
+    file_size: int
+    file_type: str
+
+@router.post("/api/superadmin/settings/upload-logo")
+async def upload_logo(
+    file: UploadFile = File(...),
+    alt_text: str = Form(""),
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Upload site logo with validation and optimization"""
+    
+    # Validate file type
+    allowed_types = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml', 'image/webp']
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Unsupported file type. Allowed types: {', '.join(allowed_types)}"
+        )
+    
+    # Validate file size (2MB limit)
+    max_size = 2 * 1024 * 1024  # 2MB in bytes
+    file_content = await file.read()
+    file_size = len(file_content)
+    
+    if file_size > max_size:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size allowed is 2MB. Your file is {file_size / (1024*1024):.2f}MB"
+        )
+    
+    # Reset file pointer
+    await file.seek(0)
+    
+    try:
+        # Create logos directory if it doesn't exist
+        logos_dir = "uploads/logos"
+        os.makedirs(logos_dir, exist_ok=True)
+        
+        # Generate unique filename
+        import time
+        timestamp = int(time.time())
+        file_extension = os.path.splitext(file.filename)[1].lower()
+        new_filename = f"site_logo_{timestamp}{file_extension}"
+        file_path = os.path.join(logos_dir, new_filename)
+        
+        # Save file
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Create relative URL for the logo
+        logo_url = f"/uploads/logos/{new_filename}"
+        
+        # Update site settings for logo
+        logo_setting = db.query(SiteSettings).filter(SiteSettings.key == "site_logo_url").first()
+        if not logo_setting:
+            logo_setting = SiteSettings(
+                id=str(uuid.uuid4()),
+                key="site_logo_url",
+                value=logo_url,
+                description="Site logo image URL"
+            )
+            db.add(logo_setting)
+        else:
+            # Delete old logo file if it exists
+            if logo_setting.value and logo_setting.value.startswith("/uploads/logos/"):
+                old_file_path = logo_setting.value.lstrip("/")
+                if os.path.exists(old_file_path):
+                    try:
+                        os.remove(old_file_path)
+                    except:
+                        pass  # Ignore if file doesn't exist or can't be deleted
+            logo_setting.value = logo_url
+            logo_setting.updated_at = datetime.utcnow()
+        
+        # Update alt text setting
+        alt_setting = db.query(SiteSettings).filter(SiteSettings.key == "site_logo_alt_text").first()
+        if not alt_setting:
+            alt_setting = SiteSettings(
+                id=str(uuid.uuid4()),
+                key="site_logo_alt_text",
+                value=alt_text or "MarketMind AI Logo",
+                description="Alt text for site logo (SEO and accessibility)"
+            )
+            db.add(alt_setting)
+        else:
+            alt_setting.value = alt_text or "MarketMind AI Logo"
+            alt_setting.updated_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "message": "Logo uploaded successfully",
+            "logo_url": logo_url,
+            "file_size": file_size,
+            "file_type": file.content_type
+        }
+        
+    except Exception as e:
+        # Clean up file if database operation fails
+        if 'file_path' in locals() and os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except:
+                pass
+        raise HTTPException(status_code=500, detail=f"Failed to upload logo: {str(e)}")
+
+@router.delete("/api/superadmin/settings/delete-logo")
+async def delete_logo(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Delete current site logo and revert to default"""
+    
+    try:
+        # Get current logo setting
+        logo_setting = db.query(SiteSettings).filter(SiteSettings.key == "site_logo_url").first()
+        
+        if logo_setting and logo_setting.value:
+            # Delete file if it's an uploaded logo
+            if logo_setting.value.startswith("/uploads/logos/"):
+                file_path = logo_setting.value.lstrip("/")
+                if os.path.exists(file_path):
+                    try:
+                        os.remove(file_path)
+                    except:
+                        pass  # Ignore if file can't be deleted
+            
+            # Remove logo setting
+            db.delete(logo_setting)
+        
+        # Also remove alt text setting
+        alt_setting = db.query(SiteSettings).filter(SiteSettings.key == "site_logo_alt_text").first()
+        if alt_setting:
+            db.delete(alt_setting)
+        
+        db.commit()
+        
+        return {"message": "Logo deleted successfully. Site will use default logo."}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete logo: {str(e)}")
+
 @router.post("/api/superadmin/settings/initialize-social-urls") 
 async def initialize_social_urls(
     current_superadmin: User = Depends(get_current_superadmin),
