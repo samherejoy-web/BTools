@@ -13,7 +13,7 @@ const ProductionSEOFix = ({
   canonical,
   image,
   type = 'website',
-  siteName = 'MarketMind',
+  siteName = 'MarketMindAI',
   locale = 'en_US',
   jsonLd
 }) => {
