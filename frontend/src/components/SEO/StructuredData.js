@@ -44,11 +44,11 @@ export const generateArticleSchema = (blog) => {
       "image": blog.featured_image || `${baseUrl}/api/images/og-default.jpg`,
       "author": {
         "@type": "Person",
-        "name": blog.author_name || "MarketMind Team"
+        "name": blog.author_name || "MarketMindAI Team"
       },
       "publisher": {
         "@type": "Organization",
-        "name": "MarketMind",
+        "name": "MarketMindAI",
         "logo": {
           "@type": "ImageObject",
           "url": `${baseUrl}/api/images/logo.png`
@@ -138,7 +138,7 @@ export const generateOrganizationSchema = () => {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "MarketMind",
+    "name": "MarketMindAI",
     "url": baseUrl,
     "logo": `${baseUrl}/api/images/logo.png`,
     "description": "Discover and compare the best business tools with AI-powered insights and community reviews.",
@@ -161,7 +161,7 @@ export const generateWebSiteSchema = () => {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "MarketMind",
+    "name": "MarketMindAI",
     "url": baseUrl,
     "description": "Discover and compare the best business tools",
     "potentialAction": {
@@ -174,7 +174,7 @@ export const generateWebSiteSchema = () => {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "MarketMind",
+      "name": "MarketMindAI",
       "logo": `${baseUrl}/api/images/logo.png`
     }
   };
