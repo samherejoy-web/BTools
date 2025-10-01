@@ -4,7 +4,7 @@ from sqlalchemy import desc, func, or_
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from database import get_db
-from models import User, Tool, Blog, Category, Review, SeoPage, tool_categories
+from models import User, Tool, Blog, Category, Review, SeoPage, tool_categories, NewsletterSubscription, ContactSubmission, SiteSettings
 from auth import get_current_superadmin, get_password_hash
 import uuid
 from datetime import datetime
