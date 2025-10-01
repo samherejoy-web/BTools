@@ -87,7 +87,7 @@ const AdminSEO = () => {
         {
           id: '3',
           page_path: '/blogs',
-          title: 'Expert Guides & Tool Reviews - MarketMind Blog',
+          title: 'Expert Guides & Tool Reviews - MarketMindAI Blog',
           description: 'Read expert guides, in-depth tool reviews, and comparisons to make better software decisions for your business.',
           keywords: 'tool reviews, software guides, business productivity, tech blog',
           json_ld: {
