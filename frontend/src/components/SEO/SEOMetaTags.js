@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async';
  * This component works alongside static meta generation for better SEO
  */
 const SEOMetaTags = React.memo(({
-  title = 'MarketMind - Discover the Best Business Tools',
+  title = 'MarketMindAI - Discover the Best Business Tools',
   description = 'Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews.',
   keywords = '',
   canonical = '',
@@ -18,7 +18,7 @@ const SEOMetaTags = React.memo(({
   publishedTime = '',
   modifiedTime = '',
   type = 'website',
-  siteName = 'MarketMind',
+  siteName = 'MarketMindAI',
   locale = 'en_US',
   noindex = false
 }) => {
@@ -157,8 +157,8 @@ const SEOMetaTags = React.memo(({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={defaultImage} />
       <meta name="twitter:image:alt" content={title} />
-      <meta name="twitter:site" content="@MarketMind" />
-      <meta name="twitter:creator" content="@MarketMind" />
+      <meta name="twitter:site" content="@MarketMindAI" />
+      <meta name="twitter:creator" content="@MarketMindAI" />
       
       {/* Additional SEO Meta Tags */}
       <meta name="format-detection" content="telephone=no" />
