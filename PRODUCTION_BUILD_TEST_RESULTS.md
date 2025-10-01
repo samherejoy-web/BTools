@@ -53,7 +53,7 @@ I have successfully tested the production build by serving it locally and taking
 {
   "@type": "WebSite",
   "name": "MarketMind - Discover the Best Business Tools",
-  "url": "https://super-admin-tools.preview.emergentagent.com"
+  "url": "https://logo-manager-1.preview.emergentagent.com"
 }
 ```
 ✅ **Valid WebSite schema**
