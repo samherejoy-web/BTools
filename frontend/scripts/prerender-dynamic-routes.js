@@ -22,7 +22,7 @@ function generateDynamicMetaTags(type, data) {
   const baseUrl = BACKEND_URL;
   
   if (type === 'tool') {
-    const title = data.seo_title || `${data.name} - Business Tool Review | MarketMind`;
+    const title = data.seo_title || `${data.name} - Business Tool Review | MarketMindAI`;
     const description = data.seo_description || `${data.description.substring(0, 150)}...`;
     const keywords = data.seo_keywords || `${data.name}, business tool, ${data.category}, software review`;
     const url = `${baseUrl}/tools/${data.slug}`;
