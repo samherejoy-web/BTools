@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Shield, Lock, Eye, Users, FileText, Clock } from 'lucide-react';
 
