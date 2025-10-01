@@ -74,7 +74,7 @@ const Footer = () => {
     { name: 'GitHub', href: socialUrls.social_github_url, icon: Github },
     { name: 'Discord', href: socialUrls.social_discord_url, icon: MessageSquare },
     { name: 'Facebook', href: socialUrls.social_facebook_url, icon: Facebook },
-    { name: 'Email', href: 'mailto:hello@marketmind.ai', icon: Mail },
+    { name: 'Email', href: 'mailto:hello@marketmindai.com', icon: Mail },
   ];
 
   return (
