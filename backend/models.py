@@ -242,3 +242,28 @@ class ToolLike(Base):
     # Relationships
     tool = relationship("Tool", back_populates="likes")
     user = relationship("User")
+
+# Contact and Newsletter Models
+class ContactSubmission(Base):
+    __tablename__ = "contact_submissions"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    company = Column(String)  # Optional
+    subject = Column(String, nullable=False)
+    message = Column(Text, nullable=False)
+    inquiry_type = Column(String, default="general")  # general, support, partnership, billing, feature, press
+    status = Column(String, default="new")  # new, in_progress, resolved, closed
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class NewsletterSubscription(Base):
+    __tablename__ = "newsletter_subscriptions"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    email = Column(String, nullable=False, unique=True)
+    status = Column(String, default="active")  # active, unsubscribed
+    source = Column(String, default="website")  # website, footer, blog, etc.
+    subscribed_at = Column(DateTime, default=datetime.utcnow)
+    unsubscribed_at = Column(DateTime, nullable=True)
