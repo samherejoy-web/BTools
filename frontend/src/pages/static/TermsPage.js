@@ -14,11 +14,11 @@ const TermsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Terms of Service - MarketMind AI | User Agreement & Platform Rules</title>
-        <meta name="description" content="Read MarketMind AI's Terms of Service. Understand your rights and responsibilities when using our B2B tool discovery platform." />
+        <title>Terms of Service - MarketMindAI | User Agreement & Platform Rules</title>
+        <meta name="description" content="Read MarketMindAI's Terms of Service. Understand your rights and responsibilities when using our B2B tool discovery platform." />
         <meta name="keywords" content="terms of service, user agreement, platform rules, legal terms, conditions of use, user responsibilities" />
-        <meta property="og:title" content="Terms of Service - MarketMind AI" />
-        <meta property="og:description" content="Legal terms and conditions for using the MarketMind AI platform and services." />
+        <meta property="og:title" content="Terms of Service - MarketMindAI" />
+        <meta property="og:description" content="Legal terms and conditions for using the MarketMindAI platform and services." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={`${process.env.REACT_APP_BACKEND_URL}/terms`} />
       </Helmet>
