@@ -11,7 +11,7 @@ const Logo = ({
 }) => {
   const [logoData, setLogoData] = useState({
     logoUrl: null,
-    altText: "MarketMind AI",
+    altText: "MarketMindAI",
     loading: true
   });
 
