@@ -1660,7 +1660,7 @@ async def upload_logo(
             alt_setting = SiteSettings(
                 id=str(uuid.uuid4()),
                 key="site_logo_alt_text",
-                value=alt_text or "MarketMind AI Logo",
+                value=alt_text or "MarketMindAI Logo",
                 description="Alt text for site logo (SEO and accessibility)"
             )
             db.add(alt_setting)
