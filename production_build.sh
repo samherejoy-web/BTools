@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# MarketMind AI Production Build Script
+# MarketMindAI Production Build Script
 # This script builds the application for production deployment with PostgreSQL
 
 set -e  # Exit on any error
