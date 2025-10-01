@@ -67,7 +67,7 @@ const Logo = ({
       console.error('Error fetching logo data:', error);
       setLogoData({
         logoUrl: null,
-        altText: "MarketMind AI",
+        altText: "MarketMindAI",
         loading: false
       });
     }
