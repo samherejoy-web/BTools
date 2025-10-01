@@ -91,7 +91,7 @@ const EmailVerificationPendingPage = () => {
             <div className="bg-gray-50 rounded-lg p-4 text-left">
               <h4 className="font-medium text-gray-900 mb-2">Next steps:</h4>
               <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside">
-                <li>Check your inbox for an email from MarketMind</li>
+                <li>Check your inbox for an email from MarketMindAI</li>
                 <li>Click the verification link in the email</li>
                 <li>Return here to log in to your account</li>
               </ol>
