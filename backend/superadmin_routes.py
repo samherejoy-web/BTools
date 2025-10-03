@@ -497,8 +497,21 @@ async def update_tool(
         
         setattr(tool, field, value)
     
+    # Check if tool was activated
+    was_active = tool.is_active
+    
     tool.updated_at = datetime.utcnow()
     db.commit()
+    db.refresh(tool)
+    
+    # Auto-generate static page when tool becomes active or is updated while active
+    if tool.is_active and ('is_active' in update_data or was_active):
+        try:
+            from auto_page_generator import generate_page_for_content
+            generate_page_for_content('tool', tool.id)
+            print(f"✅ Auto-generated static page for tool: {tool.slug}")
+        except Exception as e:
+            print(f"⚠️ Failed to auto-generate page for tool {tool.slug}: {e}")
     
     return {"message": "Tool updated successfully"}
 
