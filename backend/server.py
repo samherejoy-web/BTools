@@ -275,6 +275,7 @@ app.include_router(blogs_router, prefix="", tags=["blogs"])
 app.include_router(ai_blog_router, prefix="", tags=["ai-blog"])
 app.include_router(sitemap_router, prefix="", tags=["seo"])
 app.include_router(seo_router, prefix="", tags=["seo"])
+app.include_router(auto_seo_router, prefix="", tags=["auto-seo"])
 app.include_router(contact_router, prefix="", tags=["contact"])
 app.include_router(newsletter_router, prefix="", tags=["newsletter"])
 
