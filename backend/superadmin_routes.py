@@ -450,6 +450,15 @@ async def create_tool(
     db.commit()
     db.refresh(db_tool)
     
+    # Auto-generate static page for active tools
+    if db_tool.is_active:
+        try:
+            from auto_page_generator import generate_page_for_content
+            generate_page_for_content('tool', db_tool.id)
+            print(f"✅ Auto-generated static page for tool: {db_tool.slug}")
+        except Exception as e:
+            print(f"⚠️ Failed to auto-generate page for tool {db_tool.slug}: {e}")
+    
     return {"message": "Tool created successfully", "tool_id": db_tool.id}
 
 @router.put("/api/superadmin/tools/{tool_id}")
