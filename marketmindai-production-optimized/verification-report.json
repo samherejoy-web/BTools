@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-10-03T10:31:30.879Z",
+  "checks": {
+    "buildDirectory": true,
+    "indexHtml": true,
+    "serviceWorker": true,
+    "staticAssets": true,
+    "seoFiles": true,
+    "prerenderedPages": true,
+    "manifest": true
+  },
+  "issues": [],
+  "warnings": [],
+  "successRate": 100,
+  "buildStats": {
+    "totalSize": "1.87 MB",
+    "totalSizeBytes": 1962136,
+    "fileCount": 20,
+    "dirCount": 12
+  },
+  "isSuccessful": true
+}

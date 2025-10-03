@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-10-03T10:31:30.706Z",
+  "stats": {
+    "tools": {
+      "success": 1,
+      "failed": 0
+    },
+    "blogs": {
+      "success": 1,
+      "failed": 0
+    }
+  },
+  "backend_url": "https://marketmindai.com",
+  "total_pages": 2
+}

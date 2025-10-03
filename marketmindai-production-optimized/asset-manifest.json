@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.css": "https://marketmindai.com/static/css/main.740466d8.css",
+    "main.js": "https://marketmindai.com/static/js/main.6d9d9fd0.js",
+    "index.html": "https://marketmindai.com/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.740466d8.css",
+    "static/js/main.6d9d9fd0.js"
+  ]
+}
