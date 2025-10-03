@@ -169,12 +169,25 @@ async def update_blog_admin(
         
         setattr(blog, field, value)
     
-    if blog_update.status == "published" and not blog.published_at:
+    # Check if blog is being published
+    was_published = blog.status == "published"
+    is_being_published = blog_update.status == "published" and not blog.published_at
+    
+    if is_being_published:
         blog.published_at = datetime.utcnow()
     
     blog.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(blog)
+    
+    # Auto-generate static page when blog is published
+    if is_being_published or (blog_update.status == "published" and not was_published):
+        try:
+            from auto_page_generator import generate_page_for_content
+            generate_page_for_content('blog', blog.id)
+            print(f"✅ Auto-generated static page for blog: {blog.slug}")
+        except Exception as e:
+            print(f"⚠️ Failed to auto-generate page for blog {blog.slug}: {e}")
     
     return {"message": "Blog updated successfully", "blog_id": blog.id}
 
