@@ -118,7 +118,7 @@ async def get_sitemap(db: Session = Depends(get_db)):
 async def get_robots():
     """Generate robots.txt for SEO"""
     
-    base_url = os.getenv('FRONTEND_URL', 'https://marketmind.com')
+    base_url = os.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
     
     robots_content = f"""User-agent: *
 Allow: /
