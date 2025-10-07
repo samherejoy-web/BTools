@@ -180,8 +180,7 @@ async def debug_connectivity():
         "environment": {
             "DATABASE_URL": bool(os.getenv("DATABASE_URL")),
             "FRONTEND_URL": FRONTEND_URL,
-            "BACKEND_URL": BACKEND_URL,
-            "CODESPACE_NAME": CODESPACE_NAME or "Not set"
+            "API_URL": API_URL
         },
         "cors_origins": allowed_origins,
         "database_test": "failed",
