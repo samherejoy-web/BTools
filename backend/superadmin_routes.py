@@ -1846,3 +1846,36 @@ async def get_public_logo(db: Session = Depends(get_db)):
         
     except Exception as e:
         raise HTTPException(status_code=404, detail="Logo not available")
+
+
+@router.post("/api/superadmin/seo/trigger-update")
+async def trigger_seo_update(
+    current_superadmin: User = Depends(get_current_superadmin),
+    db: Session = Depends(get_db)
+):
+    """Manually trigger SEO page regeneration and sitemap update"""
+    try:
+        from scheduler import regenerate_seo_pages, generate_sitemap
+        
+        logger.info(f"Manual SEO update triggered by {current_superadmin.email}")
+        
+        # Regenerate static pages
+        page_result = regenerate_seo_pages()
+        
+        # Generate sitemap
+        sitemap_result = generate_sitemap()
+        
+        return {
+            "message": "SEO update completed successfully",
+            "pages_regenerated": {
+                "tools": page_result.get('tools', 0),
+                "blogs": page_result.get('blogs', 0)
+            },
+            "sitemap_generated": sitemap_result,
+            "triggered_by": current_superadmin.email,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Manual SEO update failed: {e}")
+        raise HTTPException(status_code=500, detail=f"SEO update failed: {str(e)}")
