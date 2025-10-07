@@ -1,81 +1,333 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://marketmind.com/</loc>
+        <loc>https://marketmindai.com/</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools</loc>
+        <loc>https://marketmindai.com/tools</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/blogs</loc>
+        <loc>https://marketmindai.com/blogs</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/compare</loc>
+        <loc>https://marketmindai.com/compare</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/login</loc>
+        <loc>https://marketmindai.com/login</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/register</loc>
+        <loc>https://marketmindai.com/register</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/blogs/hello</loc>
-        <lastmod>2025-10-04</lastmod>
+        <loc>https://marketmindai.com/blogs/top-10-productivity-tools-for-remote-teams-in-2024</loc>
+        <lastmod>2025-09-16</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools/marketmindai</loc>
-        <lastmod>2025-10-03</lastmod>
+        <loc>https://marketmindai.com/blogs/figma-vs-adobe-xd-which-design-tool-is-right-for-you</loc>
+        <lastmod>2025-09-15</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools?category=ai-machine-learning</loc>
+        <loc>https://marketmindai.com/blogs/the-rise-of-ai-tools-in-content-creation</loc>
+        <lastmod>2025-09-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/updated-test-blog-post-112057</loc>
+        <lastmod>2025-09-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/updated-test-blog-post-123750</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/updated-test-blog-post-051145</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/updated-test-blog-for-like-count-095803</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/updated-test-blog-for-like-count-095851</loc>
+        <lastmod>2025-09-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/test-blog-publishing-flow-072008</loc>
+        <lastmod>2025-09-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/medium-style-blog-test-125914</loc>
+        <lastmod>2025-09-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/test-blog-publishing-flow-081841</loc>
+        <lastmod>2025-09-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/blogs/b2b-tools-a-comprehensive-guide-for-2024</loc>
+        <lastmod>2025-09-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/notion</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/figma</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/slack</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/canva</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/chatgpt</loc>
+        <lastmod>2025-09-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/trello</loc>
+        <lastmod>2025-09-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/updated-test-tool-112046</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/updated-test-tool-123739</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/updated-test-tool-051111</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/updated-test-tool-074703</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-1</loc>
+        <lastmod>2025-09-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-2</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-1-1</loc>
+        <lastmod>2025-09-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-2-1</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-1-2</loc>
+        <lastmod>2025-09-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-2-2</loc>
+        <lastmod>2025-10-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-1-3</loc>
+        <lastmod>2025-09-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/review-test-tool-2-3</loc>
+        <lastmod>2025-09-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools/company-enhanced-tool-061612</loc>
+        <lastmod>2025-09-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools?category=productivity</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools?category=marketing-sales</loc>
+        <loc>https://marketmindai.com/tools?category=design</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools?category=productivity</loc>
+        <loc>https://marketmindai.com/tools?category=marketing</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools?category=analytics</loc>
+        <loc>https://marketmindai.com/tools?category=ai-machine-learning</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://marketmind.com/tools?category=communication</loc>
+        <loc>https://marketmindai.com/tools?category=task-management</loc>
         <lastmod>2025-10-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools?category=graphic-design</loc>
+        <lastmod>2025-10-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools?category=updated-test-category-112046</loc>
+        <lastmod>2025-10-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools?category=updated-test-category-123738</loc>
+        <lastmod>2025-10-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools?category=updated-test-category-051110</loc>
+        <lastmod>2025-10-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/tools?category=updated-test-category-074703</loc>
+        <lastmod>2025-10-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-112046</loc>
+        <lastmod>2025-09-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-112051</loc>
+        <lastmod>2025-09-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-123739</loc>
+        <lastmod>2025-09-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-123744</loc>
+        <lastmod>2025-09-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-051111</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-051120</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-074704</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://marketmindai.com/test-page-074711</loc>
+        <lastmod>2025-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
     </url>
 </urlset>
