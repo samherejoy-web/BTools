@@ -56,34 +56,58 @@ def generate_sitemap():
     try:
         import requests
         base_url = os.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
-        api_url = f"{base_url}/api/sitemap.xml"
         
-        logger.info(f"Generating sitemap from {api_url}")
+        # Try to get sitemap from API, fallback to localhost
+        api_urls = [
+            f"{base_url}/api/sitemap.xml",
+            "http://localhost:8001/api/sitemap.xml"
+        ]
         
-        # Call sitemap endpoint
-        response = requests.get(api_url, timeout=30)
+        response = None
+        for api_url in api_urls:
+            try:
+                logger.info(f"Generating sitemap from {api_url}")
+                response = requests.get(api_url, timeout=30)
+                if response.status_code == 200:
+                    break
+            except Exception as e:
+                logger.warning(f"Failed to get sitemap from {api_url}: {e}")
+                continue
         
-        if response.status_code == 200:
-            # Save sitemap to production directory
-            sitemap_path = "/var/www/marketmindai/sitemap.xml"
-            
-            # Also try to save to build directory if it exists
-            build_path = "/var/www/marketmindai/build/sitemap.xml"
-            
-            # Save to both locations
-            for path in [sitemap_path, build_path]:
-                try:
-                    directory = os.path.dirname(path)
-                    if os.path.exists(directory):
-                        with open(path, 'w', encoding='utf-8') as f:
-                            f.write(response.text)
-                        logger.info(f"Sitemap saved to {path}")
-                except Exception as e:
-                    logger.warning(f"Could not save sitemap to {path}: {e}")
-            
+        if not response or response.status_code != 200:
+            logger.error(f"Failed to generate sitemap from all sources")
+            return False
+        
+        # Detect build path
+        from auto_page_generator import FRONTEND_BUILD_PATH
+        
+        # List of possible sitemap locations
+        possible_paths = [
+            "/var/www/marketmindai/sitemap.xml",
+            "/var/www/marketmindai/build/sitemap.xml",
+            "/var/www/html/sitemap.xml",
+            os.path.join(FRONTEND_BUILD_PATH, "sitemap.xml")
+        ]
+        
+        saved_count = 0
+        # Save to all accessible locations
+        for path in possible_paths:
+            try:
+                directory = os.path.dirname(path)
+                if os.path.exists(directory) or directory == FRONTEND_BUILD_PATH:
+                    os.makedirs(directory, exist_ok=True)
+                    with open(path, 'w', encoding='utf-8') as f:
+                        f.write(response.text)
+                    logger.info(f"✅ Sitemap saved to {path}")
+                    saved_count += 1
+            except Exception as e:
+                logger.debug(f"Could not save sitemap to {path}: {e}")
+        
+        if saved_count > 0:
+            logger.info(f"Sitemap saved to {saved_count} location(s)")
             return True
         else:
-            logger.error(f"Failed to generate sitemap: HTTP {response.status_code}")
+            logger.warning("Sitemap generated but not saved to any location")
             return False
             
     except Exception as e:
