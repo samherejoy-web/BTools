@@ -66,8 +66,12 @@ def generate_sitemap():
         response = None
         for api_url in api_urls:
             try:
-                logger.info(f"Generating sitemap from {api_url}")
-                response = requests.get(api_url, timeout=30)
+                # Add cache-busting parameter
+                import time
+                cache_buster = f"nocache={int(time.time())}"
+                full_url = f"{api_url}?{cache_buster}"
+                logger.info(f"Generating sitemap from {full_url}")
+                response = requests.get(full_url, timeout=30, headers={'Cache-Control': 'no-cache'})
                 if response.status_code == 200:
                     break
             except Exception as e:
