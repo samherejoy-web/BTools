@@ -57,9 +57,8 @@ def generate_sitemap():
         import requests
         base_url = os.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
         
-        # Try to get sitemap from API, fallback to localhost
+        # Always use localhost for generating sitemap to avoid caching
         api_urls = [
-            f"{base_url}/api/sitemap.xml",
             "http://localhost:8001/api/sitemap.xml"
         ]
         
