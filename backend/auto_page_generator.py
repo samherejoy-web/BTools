@@ -78,33 +78,46 @@ def generate_meta_tags(content_type, data):
     return None
 
 def create_html_page(template_html, meta_data):
-    """Create HTML page with proper meta tags"""
-    meta_tags = f"""
-    <title>{meta_data['title']}</title>
-    <meta name="description" content="{meta_data['description']}" />
-    <meta name="keywords" content="{meta_data['keywords']}" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
-    <link rel="canonical" href="{meta_data['url']}" />
+    """Create HTML page with proper meta tags - Inject right after <head>"""
+    
+    # Escape quotes in meta content
+    def escape_attr(text):
+        if not text:
+            return ""
+        return str(text).replace('"', '&quot;').replace('\n', ' ').replace('\r', ' ')
+    
+    title = escape_attr(meta_data['title'])
+    description = escape_attr(meta_data['description'])
+    keywords = escape_attr(meta_data['keywords'])
+    url = escape_attr(meta_data['url'])
+    image = escape_attr(meta_data['image'])
+    page_type = escape_attr(meta_data['type'])
+    
+    # SEO meta tags to inject - these will override React Helmet for crawlers
+    seo_injection = f'''
+    <!-- Page-specific SEO Meta Tags (for crawlers) -->
+    <title>{title}</title>
+    <meta name="description" content="{description}" />
+    <meta name="keywords" content="{keywords}" />
+    <link rel="canonical" href="{url}" />
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:type" content="{meta_data['type']}" />
-    <meta property="og:title" content="{meta_data['title']}" />
-    <meta property="og:description" content="{meta_data['description']}" />
-    <meta property="og:url" content="{meta_data['url']}" />
-    <meta property="og:image" content="{meta_data['image']}" />
+    <meta property="og:type" content="{page_type}" />
+    <meta property="og:title" content="{title}" />
+    <meta property="og:description" content="{description}" />
+    <meta property="og:url" content="{url}" />
+    <meta property="og:image" content="{image}" />
+    <meta property="og:site_name" content="MarketMindAI" />
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{meta_data['title']}" />
-    <meta name="twitter:description" content="{meta_data['description']}" />
-    <meta name="twitter:image" content="{meta_data['image']}" />
-    """
+    <meta name="twitter:title" content="{title}" />
+    <meta name="twitter:description" content="{description}" />
+    <meta name="twitter:image" content="{image}" />
+    '''
     
-    # Replace the default title with enhanced meta tags
-    updated_html = template_html.replace(
-        '<title>MarketMindAI - Discover the Best Business Tools</title>',
-        meta_tags.strip()
-    )
+    # Inject right after <head> tag for better crawler visibility
+    updated_html = template_html.replace('<head>', f'<head>{seo_injection}', 1)
     
     return updated_html
 
