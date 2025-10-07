@@ -12,8 +12,8 @@ router = APIRouter()
 async def get_sitemap(db: Session = Depends(get_db)):
     """Generate sitemap.xml for better SEO indexing"""
     
-    # Get base URL from environment
-    base_url = os.getenv('FRONTEND_URL', 'https://marketmind.com')
+    # Get base URL from environment - Default to marketmindai.com
+    base_url = os.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
     
     # Get all published blogs
     blogs = db.query(Blog).filter(Blog.status == 'published').all()
