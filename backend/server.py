@@ -137,6 +137,9 @@ else:
 # Start the trending updater background task
 start_trending_updater()
 
+# Start the SEO updater background task (page generation + sitemap)
+start_seo_updater()
+
 # Enhanced health check endpoint with database connectivity
 @app.get("/api/health")
 async def health_check():
