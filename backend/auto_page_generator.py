@@ -10,9 +10,30 @@ from datetime import datetime
 from models import Blog, Tool
 from database import SessionLocal
 
-# Configuration
-FRONTEND_BUILD_PATH = "/var/www/marketmindai/build"  # Adjust for your deployment
-BACKEND_URL = "https://marketmindai.com"
+# Configuration - Auto-detect production path
+import os as os_mod
+
+def get_build_path():
+    """Auto-detect the frontend build path"""
+    possible_paths = [
+        "/var/www/marketmindai/build",
+        "/var/www/marketmindai",
+        "/var/www/html",
+        "/app/marketmindai-production-optimized",
+        "/app/frontend/build"
+    ]
+    
+    for path in possible_paths:
+        if os_mod.path.exists(path):
+            # Check if index.html exists
+            if os_mod.path.exists(os_mod.path.join(path, 'index.html')):
+                return path
+    
+    # Default fallback
+    return "/var/www/marketmindai/build"
+
+FRONTEND_BUILD_PATH = get_build_path()
+BACKEND_URL = os_mod.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
 
 def generate_meta_tags(content_type, data):
     """Generate meta tags for dynamic content"""
