@@ -6,7 +6,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy import create_engine, text
 from database import get_db, engine
 from models import Base
-from scheduler import start_trending_updater
+from scheduler import start_trending_updater, start_seo_updater
 import os
 import logging
 import traceback
