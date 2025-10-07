@@ -87,74 +87,30 @@ async def log_requests(request: Request, call_next):
         raise
 
 # Get environment variables
-FRONTEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'http://localhost:3000')
-BACKEND_URL = os.getenv('API_URL', 'http://localhost:8001')
-CODESPACE_NAME = os.getenv('CODESPACE_NAME', '')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+API_URL = os.getenv('API_URL', 'http://localhost:8001')
+CORS_ORIGINS_ENV = os.getenv('CORS_ORIGINS', '')
 
-# Enhanced CORS middleware with comprehensive origins
+# Parse CORS origins from environment variable
+cors_origins_from_env = [origin.strip() for origin in CORS_ORIGINS_ENV.split(',') if origin.strip()]
+
+# CORS Configuration - Strict for production security
 allowed_origins = [
+    # Production domain
+    "https://marketmindai.com",
+    "http://marketmindai.com",
+    
     # Local development
     "http://localhost:3000",
-    "https://localhost:3000",
     "http://localhost:8001",
-    "https://localhost:8001",
     "http://127.0.0.1:3000",
-    "https://127.0.0.1:3000",
-    
-    # Environment variables
-    FRONTEND_URL,
-    BACKEND_URL,
-    
-    # Wildcard for development (NOT for production)
-    "*"
+    "http://127.0.0.1:8001",
 ]
 
-# Add codespace-specific origins
-if CODESPACE_NAME:
-    allowed_origins.extend([
-        f"https://{CODESPACE_NAME}-3000.app.github.dev",
-        f"https://{CODESPACE_NAME}-8001.app.github.dev",
-        f"https://{CODESPACE_NAME}-3000.preview.app.github.dev",
-        f"https://{CODESPACE_NAME}-8001.preview.app.github.dev",
-    ])
-
-# Add all emergentagent.com subdomains
-allowed_origins.extend([
-    "https://fictional-happiness-jjgp7p5p4gp4hq9rw-3000.app.github.dev",
-    "https://fictional-happiness-jjgp7p5p4gp4hq9rw-8001.app.github.dev",
-    "https://cors-fix-14.preview.emergentagent.com",
-    "https://psychic-space-potato-x54gpgwg9pw626rpp-3000.app.github.dev",
-    "https://psychic-space-potato-x54gpgwg9pw626rpp-8001.app.github.dev",
-    "https://cors-fix-14.preview.emergentagent.com"
-])
-
-# Enhanced dynamic pattern matching for any github.dev and emergentagent.com domains
-import re
-@app.middleware("http")
-async def dynamic_cors(request: Request, call_next):
-    origin = request.headers.get('origin')
-    
-    if origin:
-        # Allow all emergentagent.com subdomains
-        if re.match(r'https://.*\.emergentagent\.com$', origin):
-            logger.info(f"Allowing emergentagent.com origin: {origin}")
-            if origin not in allowed_origins:
-                allowed_origins.append(origin)
-        
-        # Allow all github.dev subdomains
-        if re.match(r'https://.*\.github\.dev$', origin):
-            logger.info(f"Allowing github.dev origin: {origin}")
-            if origin not in allowed_origins:
-                allowed_origins.append(origin)
-        
-        # Allow all app.github.dev subdomains 
-        if re.match(r'https://.*\.app\.github\.dev$', origin):
-            logger.info(f"Allowing app.github.dev origin: {origin}")
-            if origin not in allowed_origins:
-                allowed_origins.append(origin)
-    
-    response = await call_next(request)
-    return response
+# Add origins from environment variable if specified
+if cors_origins_from_env:
+    allowed_origins.extend(cors_origins_from_env)
+    logger.info(f"Added CORS origins from environment: {cors_origins_from_env}")
 
 # Remove duplicates and None values
 allowed_origins = list(set(filter(None, allowed_origins)))
