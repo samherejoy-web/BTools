@@ -402,6 +402,18 @@ async def create_tool(
 ):
     """Create new tool"""
     
+    # Validate URL format if provided
+    if tool.url and not validate_url_format(tool.url):
+        raise HTTPException(status_code=400, detail="Invalid URL format")
+    
+    # Check URL uniqueness if provided
+    if tool.url and not check_url_uniqueness(db, tool.url):
+        raise HTTPException(status_code=400, detail="A tool with this URL already exists")
+    
+    # Normalize and add protocol to URL if missing
+    if tool.url:
+        tool.url = add_protocol_if_missing(tool.url)
+    
     # Generate slug
     slug = generate_slug(tool.name)
     counter = 1
