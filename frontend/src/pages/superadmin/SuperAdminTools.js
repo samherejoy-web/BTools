@@ -219,6 +219,7 @@ const SuperAdminTools = () => {
         pros: formData.pros ? formData.pros.split(',').map(p => p.trim()) : [],
         cons: formData.cons ? formData.cons.split(',').map(c => c.trim()) : [],
         // Parse JSON fields
+        pricing_details: parseJsonField(formData.pricing_details),
         company_funding: parseJsonField(formData.company_funding),
         company_founders: parseJsonField(formData.company_founders)
       };
