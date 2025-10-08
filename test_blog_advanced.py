@@ -6,7 +6,7 @@ from datetime import datetime
 
 class AdvancedBlogTester:
     def __init__(self):
-        self.base_url = "https://cors-fix-14.preview.emergentagent.com/api"
+        self.base_url = "https://static-page-gen.preview.emergentagent.com/api"
         self.token = None
         
     def login(self):

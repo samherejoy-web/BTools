@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 class ComprehensiveCommentTester:
-    def __init__(self, base_url="https://cors-fix-14.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://static-page-gen.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None

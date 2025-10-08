@@ -53,7 +53,7 @@ I have successfully tested the production build by serving it locally and taking
 {
   "@type": "WebSite",
   "name": "MarketMind - Discover the Best Business Tools",
-  "url": "https://cors-fix-14.preview.emergentagent.com"
+  "url": "https://static-page-gen.preview.emergentagent.com"
 }
 ```
 ✅ **Valid WebSite schema**
