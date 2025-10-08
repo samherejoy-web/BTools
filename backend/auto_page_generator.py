@@ -328,6 +328,44 @@ def on_blog_published(blog_id):
     """Call this when a blog is published"""
     return generate_page_for_content('blog', blog_id)
 
+def generate_location_pages():
+    """Generate location-based pages for all tools and categories"""
+    try:
+        db = SessionLocal()
+        
+        # Get active tools, categories, and locations
+        tools = db.query(Tool).filter(Tool.is_active == True).all()
+        categories = db.query(Category).all()
+        locations = db.query(Location).filter(Location.is_active == True).all()
+        
+        tool_location_count = 0
+        category_location_count = 0
+        
+        # Generate tool + location pages
+        for tool in tools:
+            for location in locations:
+                if generate_page_for_content('tool_location', tool.id, location.id):
+                    tool_location_count += 1
+        
+        # Generate category + location pages
+        for category in categories:
+            for location in locations:
+                if generate_page_for_content('category_location', category.id, location.id):
+                    category_location_count += 1
+        
+        db.close()
+        
+        print(f"✅ Generated {tool_location_count} tool-location pages and {category_location_count} category-location pages")
+        return {
+            'tool_locations': tool_location_count,
+            'category_locations': category_location_count,
+            'total_locations': len(locations)
+        }
+        
+    except Exception as e:
+        print(f"❌ Error generating location pages: {e}")
+        return {'tool_locations': 0, 'category_locations': 0}
+
 def regenerate_all_pages():
     """Regenerate all pages (useful for bulk updates)"""
     try:
@@ -347,14 +385,23 @@ def regenerate_all_pages():
             if generate_page_for_content('blog', blog.id):
                 blog_count += 1
         
+        # Regenerate location-based pages
+        location_results = generate_location_pages()
+        
         db.close()
         
-        print(f"✅ Regenerated {tool_count} tool pages and {blog_count} blog pages")
-        return {'tools': tool_count, 'blogs': blog_count}
+        total_pages = tool_count + blog_count + location_results.get('tool_locations', 0) + location_results.get('category_locations', 0)
+        print(f"✅ Regenerated {total_pages} total pages")
+        
+        return {
+            'tools': tool_count, 
+            'blogs': blog_count,
+            'location_pages': location_results
+        }
         
     except Exception as e:
         print(f"❌ Error regenerating pages: {e}")
-        return {'tools': 0, 'blogs': 0}
+        return {'tools': 0, 'blogs': 0, 'location_pages': {}}
 
 if __name__ == "__main__":
     # Test the system
