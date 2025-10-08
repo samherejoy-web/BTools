@@ -14,6 +14,7 @@ import csv
 import io
 import re
 from utils.json_ld_generator import JSONLDGenerator, auto_generate_json_ld_for_existing_content
+from utils.url_normalizer import normalize_url, check_url_uniqueness, validate_url_format, add_protocol_if_missing
 
 router = APIRouter()
 
