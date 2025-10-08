@@ -18,7 +18,8 @@ import {
   Filter,
   Download,
   Cog,
-  Wrench
+  Wrench,
+  Map
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
