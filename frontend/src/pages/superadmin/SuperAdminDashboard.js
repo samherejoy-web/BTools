@@ -640,6 +640,13 @@ const SuperAdminDashboard = () => {
               SEO Management
             </Button>
             <Button 
+              className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800"
+              onClick={() => navigate('/superadmin/sitemap')}
+            >
+              <Map className="h-5 w-5" />
+              Sitemap & Locations
+            </Button>
+            <Button 
               className="h-16 flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800"
               onClick={() => navigate('/superadmin/categories')}
             >
