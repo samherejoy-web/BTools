@@ -7,7 +7,7 @@ import json
 import requests
 from pathlib import Path
 from datetime import datetime
-from models import Blog, Tool
+from models import Blog, Tool, Location, Category
 from database import SessionLocal
 
 # Configuration - Auto-detect production path
