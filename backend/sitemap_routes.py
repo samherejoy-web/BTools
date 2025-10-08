@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Blog, Tool, Category, SeoPage
+from models import Blog, Tool, Category, SeoPage, SitemapEntry, Location
 from datetime import datetime
 import os
 
