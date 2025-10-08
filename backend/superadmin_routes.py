@@ -487,6 +487,19 @@ async def update_tool(
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
     
+    # Validate URL format if provided and changed
+    if tool_update.url is not None:
+        if tool_update.url and not validate_url_format(tool_update.url):
+            raise HTTPException(status_code=400, detail="Invalid URL format")
+        
+        # Check URL uniqueness if provided and changed
+        if tool_update.url and not check_url_uniqueness(db, tool_update.url, exclude_tool_id=tool_id):
+            raise HTTPException(status_code=400, detail="A tool with this URL already exists")
+        
+        # Normalize and add protocol to URL if missing
+        if tool_update.url:
+            tool_update.url = add_protocol_if_missing(tool_update.url)
+    
     # Update fields
     update_data = tool_update.dict(exclude_unset=True)
     
