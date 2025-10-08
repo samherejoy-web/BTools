@@ -27,6 +27,7 @@ from email_verification_routes import get_email_verification_routes
 from contact_routes import router as contact_router
 from newsletter_routes import router as newsletter_router
 from auto_seo_routes import router as auto_seo_router
+from sitemap_management_routes import router as sitemap_management_router
 
 # Configure logging
 import os
