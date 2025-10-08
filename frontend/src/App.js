@@ -331,10 +331,18 @@ function App() {
               </ProtectedRoute>
             } />
             
-            <Route path="/superadmin/settings" element={
+            <Route path="/superladmin/settings" element={
               <ProtectedRoute allowedRoles={['superadmin']}>
                 <DashboardLayout>
                   <SuperAdminSettings />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/superadmin/sitemap" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminSitemapManager />
                 </DashboardLayout>
               </ProtectedRoute>
             } />
