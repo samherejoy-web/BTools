@@ -27,6 +27,9 @@ async def get_sitemap(db: Session = Depends(get_db)):
     # Get SEO pages
     seo_pages = db.query(SeoPage).all()
     
+    # Get active sitemap entries (location-based URLs)
+    sitemap_entries = db.query(SitemapEntry).filter(SitemapEntry.is_active == True).all()
+    
     # Build sitemap XML
     sitemap_content = '''<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'''
