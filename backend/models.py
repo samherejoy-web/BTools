@@ -277,3 +277,36 @@ class SiteSettings(Base):
     description = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class Location(Base):
+    __tablename__ = "locations"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)  # e.g., "New York", "USA"
+    slug = Column(String, nullable=False, unique=True)  # e.g., "new-york", "usa"
+    type = Column(String, nullable=False)  # "city" or "country"
+    country_code = Column(String)  # ISO country code for cities
+    is_active = Column(Boolean, default=True)
+    seo_title_template = Column(String)  # Template like "Best {tool_name} for {location_name}"
+    seo_description_template = Column(String)  # Template for meta description
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class SitemapEntry(Base):
+    __tablename__ = "sitemap_entries"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    url_path = Column(String, nullable=False, unique=True)  # e.g., "/tools/slack/new-york"
+    page_type = Column(String, nullable=False)  # "tool_location", "blog_location", "static"
+    tool_id = Column(String, ForeignKey('tools.id'), nullable=True)
+    location_id = Column(String, ForeignKey('locations.id'), nullable=True)
+    priority = Column(Float, default=0.5)  # SEO priority 0.0-1.0
+    change_frequency = Column(String, default="weekly")  # always, hourly, daily, weekly, monthly, yearly, never
+    is_active = Column(Boolean, default=True)
+    last_modified = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    tool = relationship("Tool")
+    location = relationship("Location")
