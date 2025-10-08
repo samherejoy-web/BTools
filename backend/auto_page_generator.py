@@ -168,7 +168,7 @@ def create_html_page(template_html, meta_data):
     
     return updated_html
 
-def generate_page_for_content(content_type, content_id):
+def generate_page_for_content(content_type, content_id, location_id=None):
     """Generate static page for new content"""
     try:
         # Get template HTML
@@ -183,10 +183,24 @@ def generate_page_for_content(content_type, content_id):
         # Get content data from database
         db = SessionLocal()
         
-        if content_type == 'tool':
+        location_dict = None
+        if location_id:
+            location = db.query(Location).filter(Location.id == location_id).first()
+            if location:
+                location_dict = {
+                    'name': location.name,
+                    'slug': location.slug,
+                    'type': location.type,
+                    'seo_title_template': location.seo_title_template,
+                    'seo_description_template': location.seo_description_template
+                }
+        
+        if content_type == 'tool' or content_type == 'tool_location':
             content = db.query(Tool).filter(Tool.id == content_id).first()
-        elif content_type == 'blog':
+        elif content_type == 'blog' or content_type == 'blog_location':
             content = db.query(Blog).filter(Blog.id == content_id).first()
+        elif content_type == 'category_location':
+            content = db.query(Category).filter(Category.id == content_id).first()
         else:
             return False
         
@@ -209,7 +223,7 @@ def generate_page_for_content(content_type, content_id):
         }
         
         # Generate meta data
-        meta_data = generate_meta_tags(content_type, content_dict)
+        meta_data = generate_meta_tags(content_type, content_dict, location_dict)
         if not meta_data:
             return False
         
@@ -217,17 +231,25 @@ def generate_page_for_content(content_type, content_id):
         final_html = create_html_page(template_html, meta_data)
         
         # Create directory and save file
-        page_dir = os.path.join(FRONTEND_BUILD_PATH, f"{content_type}s", content.slug)
+        if location_dict:
+            # Location-specific page
+            page_dir = os.path.join(FRONTEND_BUILD_PATH, f"{content_type.replace('_location', '')}s", content.slug, location_dict['slug'])
+            page_url = f"/{content_type.replace('_location', '')}s/{content.slug}/{location_dict['slug']}"
+        else:
+            # Regular page
+            page_dir = os.path.join(FRONTEND_BUILD_PATH, f"{content_type}s", content.slug)
+            page_url = f"/{content_type}s/{content.slug}"
+        
         os.makedirs(page_dir, exist_ok=True)
         
         page_path = os.path.join(page_dir, 'index.html')
         with open(page_path, 'w', encoding='utf-8') as f:
             f.write(final_html)
         
-        print(f"✅ Generated page: /{content_type}s/{content.slug}")
+        print(f"✅ Generated page: {page_url}")
         
         # Log generation
-        log_page_generation(content_type, content.slug, meta_data['title'])
+        log_page_generation(content_type, page_url, meta_data['title'])
         
         db.close()
         return True
