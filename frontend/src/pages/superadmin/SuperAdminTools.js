@@ -178,6 +178,7 @@ const SuperAdminTools = () => {
       logo_url: tool?.logo_url || '',
       screenshot_url: tool?.screenshot_url || '',
       pricing_type: tool?.pricing_type || 'free',
+      pricing_details: tool?.pricing_details ? JSON.stringify(tool.pricing_details, null, 2) : '',
       features: tool?.features?.join(', ') || '',
       pros: tool?.pros?.join(', ') || '',
       cons: tool?.cons?.join(', ') || '',
