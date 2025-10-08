@@ -313,6 +313,18 @@ const SuperAdminTools = () => {
               </div>
 
               <div>
+                <label className="block text-sm font-medium mb-1">Pricing Details (JSON)</label>
+                <textarea
+                  value={formData.pricing_details}
+                  onChange={(e) => setFormData({...formData, pricing_details: e.target.value})}
+                  rows={4}
+                  placeholder='{"plans": [{"name": "Basic", "price": "$9/month", "features": ["Feature 1", "Feature 2"]}, {"name": "Pro", "price": "$29/month", "features": ["All Basic features", "Feature 3", "Feature 4"]}]}'
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                />
+                <p className="text-xs text-gray-500 mt-1">Enter pricing details in JSON format</p>
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium mb-1">Categories</label>
                 <select
                   multiple
