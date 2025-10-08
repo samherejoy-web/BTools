@@ -35,11 +35,58 @@ def get_build_path():
 FRONTEND_BUILD_PATH = get_build_path()
 BACKEND_URL = os_mod.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
 
-def generate_meta_tags(content_type, data):
+def generate_meta_tags(content_type, data, location_data=None):
     """Generate meta tags for dynamic content"""
     base_url = BACKEND_URL
     
-    if content_type == 'tool':
+    if content_type == 'tool_location':
+        # Generate meta tags for tool + location pages
+        tool_name = data.get('name', 'Business Tool')
+        location_name = location_data.get('name', 'Location')
+        description = data.get('description', '')[:100]
+        
+        title_template = location_data.get('seo_title_template', 'Best {tool_name} for {location_name} | MarketMindAI')
+        desc_template = location_data.get('seo_description_template', 'Discover the top {tool_name} tools for {location_name}. Compare features, pricing, and reviews.')
+        
+        title = title_template.format(tool_name=tool_name, location_name=location_name)
+        meta_description = desc_template.format(tool_name=tool_name, location_name=location_name, description=description)
+        keywords = f"{tool_name}, {location_name}, business tool, software, review"
+        url = f"{base_url}/tools/{data.get('slug')}/{location_data.get('slug')}"
+        image = data.get('logo_url') or f"{base_url}/api/images/tools/{data.get('slug')}.jpg"
+        
+        return {
+            'title': title[:60],  # Limit to 60 chars
+            'description': meta_description[:160],  # Limit to 160 chars
+            'keywords': keywords,
+            'url': url,
+            'image': image,
+            'type': 'article'
+        }
+    
+    elif content_type == 'category_location':
+        # Generate meta tags for category + location pages
+        category_name = data.get('name', 'Business Tools')
+        location_name = location_data.get('name', 'Location')
+        
+        title_template = location_data.get('seo_title_template', 'Best {tool_name} for {location_name} | MarketMindAI')
+        desc_template = location_data.get('seo_description_template', 'Discover the top {tool_name} tools for {location_name}. Compare features, pricing, and reviews.')
+        
+        title = title_template.format(tool_name=category_name, location_name=location_name)
+        meta_description = desc_template.format(tool_name=category_name, location_name=location_name, description=f"Browse {category_name.lower()} tools")
+        keywords = f"{category_name}, {location_name}, business tools, software, comparison"
+        url = f"{base_url}/tools/{data.get('slug')}/{location_data.get('slug')}"
+        image = f"{base_url}/api/images/categories/{data.get('slug')}.jpg"
+        
+        return {
+            'title': title[:60],
+            'description': meta_description[:160],
+            'keywords': keywords,
+            'url': url,
+            'image': image,
+            'type': 'website'
+        }
+    
+    elif content_type == 'tool':
         name = data.get('name', 'Business Tool')
         description = data.get('description', '')[:150]
         title = data.get('seo_title') or f"{name} Review - Features & Pricing | MarketMindAI"
