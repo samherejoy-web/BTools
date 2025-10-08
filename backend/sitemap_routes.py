@@ -107,6 +107,17 @@ async def get_sitemap(db: Session = Depends(get_db)):
         <priority>0.6</priority>
     </url>'''
     
+    # Add location-based sitemap entries
+    for entry in sitemap_entries:
+        last_mod = entry.last_modified.strftime('%Y-%m-%d')
+        sitemap_content += f'''
+    <url>
+        <loc>{base_url}{entry.url_path}</loc>
+        <lastmod>{last_mod}</lastmod>
+        <changefreq>{entry.change_frequency}</changefreq>
+        <priority>{entry.priority}</priority>
+    </url>'''
+    
     sitemap_content += '''
 </urlset>'''
     
