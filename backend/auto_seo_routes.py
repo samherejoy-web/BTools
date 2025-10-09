@@ -2,7 +2,8 @@
 Auto SEO Routes for MarketMindAI
 API endpoints to trigger automatic static page generation
 """
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, Request
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from database import get_db
 from auth import get_current_user
@@ -14,6 +15,11 @@ from auto_page_generator import (
 )
 from models import User, Blog, Tool
 import logging
+import asyncio
+import json
+import uuid
+from datetime import datetime
+from typing import Dict, Any
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
