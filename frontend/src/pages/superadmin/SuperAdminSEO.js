@@ -100,14 +100,67 @@ const SuperAdminSEO = () => {
     try {
       setStaticPageLoading(true);
       const response = await apiClient.post('/seo/regenerate-all');
-      toast.success(response.data.message);
-      toast.info(response.data.note);
-      fetchGenerationStats();
+      
+      if (response.data.task_id) {
+        // Start real-time progress tracking
+        setShowProgressModal(true);
+        startProgressTracking(response.data.task_id);
+        toast.success('Page regeneration started - tracking progress...');
+      } else {
+        toast.success(response.data.message);
+      }
     } catch (error) {
       console.error('Error regenerating all pages:', error);
       toast.error('Failed to regenerate all pages');
-    } finally {
       setStaticPageLoading(false);
+    }
+  };
+
+  const startProgressTracking = (taskId) => {
+    // Close existing connection if any
+    if (eventSource) {
+      eventSource.close();
+    }
+
+    // Create new EventSource for real-time updates
+    const es = new EventSource(`${process.env.REACT_APP_BACKEND_URL}/seo/regenerate-stream/${taskId}`);
+    
+    es.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        setProgressData(data);
+        
+        // If task completed, close connection and update stats
+        if (data.status === 'completed' || data.status === 'failed') {
+          setTimeout(() => {
+            setStaticPageLoading(false);
+            fetchGenerationStats();
+            es.close();
+            setEventSource(null);
+          }, 2000); // Keep modal open for 2 seconds to show final results
+        }
+      } catch (err) {
+        console.error('Error parsing progress data:', err);
+      }
+    };
+
+    es.onerror = (error) => {
+      console.error('EventSource error:', error);
+      setStaticPageLoading(false);
+      es.close();
+      setEventSource(null);
+      toast.error('Lost connection to progress tracker');
+    };
+
+    setEventSource(es);
+  };
+
+  const closeProgressModal = () => {
+    setShowProgressModal(false);
+    setProgressData(null);
+    if (eventSource) {
+      eventSource.close();
+      setEventSource(null);
     }
   };
 
