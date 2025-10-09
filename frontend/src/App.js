@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Toaster } from './components/ui/sonner';
+import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 
 // Layout Components
 import Navbar from './components/layout/Navbar';
