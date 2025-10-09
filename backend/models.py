@@ -310,3 +310,14 @@ class SitemapEntry(Base):
     # Relationships
     tool = relationship("Tool")
     location = relationship("Location")
+
+class FreeTool(Base):
+    __tablename__ = "free_tools"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    link = Column(String, nullable=False)
+    description = Column(Text)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
