@@ -163,20 +163,32 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Resources links */}
+            {/* Free Tools links */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-                Resources
+                Free Tools
               </h3>
               <ul className="space-y-3">
-                {footerLinks.resources.map((item) => (
+                {footerLinks.freeTools.map((item) => (
                   <li key={item.name}>
-                    <Link
-                      to={item.href}
-                      className="text-gray-600 hover:text-gray-900 text-sm transition-colors duration-200"
-                    >
-                      {item.name}
-                    </Link>
+                    {item.external ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-600 hover:text-gray-900 text-sm transition-colors duration-200 inline-flex items-center"
+                      >
+                        {item.name}
+                        <ExternalLink className="ml-1 h-3 w-3" />
+                      </a>
+                    ) : (
+                      <Link
+                        to={item.href}
+                        className="text-gray-600 hover:text-gray-900 text-sm transition-colors duration-200"
+                      >
+                        {item.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
