@@ -24,6 +24,130 @@ from typing import Dict, Any
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+# Global progress tracking
+progress_store: Dict[str, Dict[str, Any]] = {}
+
+class ProgressTracker:
+    def __init__(self, task_id: str):
+        self.task_id = task_id
+        self.progress = {
+            "task_id": task_id,
+            "status": "starting",
+            "current_step": "",
+            "total_steps": 0,
+            "completed_steps": 0,
+            "percentage": 0,
+            "tools_processed": 0,
+            "blogs_processed": 0,
+            "pages_generated": 0,
+            "errors": [],
+            "warnings": [],
+            "start_time": datetime.now().isoformat(),
+            "end_time": None,
+            "duration": None
+        }
+        progress_store[task_id] = self.progress
+    
+    def update_status(self, status: str, step: str = None, percentage: int = None):
+        self.progress["status"] = status
+        if step:
+            self.progress["current_step"] = step
+        if percentage is not None:
+            self.progress["percentage"] = min(100, max(0, percentage))
+        progress_store[self.task_id] = self.progress
+    
+    def increment_progress(self, tools: int = 0, blogs: int = 0, pages: int = 0):
+        self.progress["tools_processed"] += tools
+        self.progress["blogs_processed"] += blogs  
+        self.progress["pages_generated"] += pages
+        self.progress["completed_steps"] += 1
+        
+        if self.progress["total_steps"] > 0:
+            self.progress["percentage"] = int((self.progress["completed_steps"] / self.progress["total_steps"]) * 100)
+        
+        progress_store[self.task_id] = self.progress
+    
+    def add_error(self, error_msg: str):
+        self.progress["errors"].append({"message": error_msg, "timestamp": datetime.now().isoformat()})
+        progress_store[self.task_id] = self.progress
+    
+    def add_warning(self, warning_msg: str):
+        self.progress["warnings"].append({"message": warning_msg, "timestamp": datetime.now().isoformat()})
+        progress_store[self.task_id] = self.progress
+    
+    def complete(self, status: str = "completed"):
+        self.progress["status"] = status
+        self.progress["end_time"] = datetime.now().isoformat()
+        self.progress["percentage"] = 100
+        
+        # Calculate duration
+        start = datetime.fromisoformat(self.progress["start_time"])
+        end = datetime.fromisoformat(self.progress["end_time"])
+        duration = end - start
+        self.progress["duration"] = str(duration).split('.')[0]  # Remove microseconds
+        
+        progress_store[self.task_id] = self.progress
+
+def regenerate_all_pages_with_progress(task_id: str, db: Session):
+    """Enhanced page regeneration with progress tracking"""
+    tracker = ProgressTracker(task_id)
+    
+    try:
+        # Get all active tools and published blogs
+        tools = db.query(Tool).filter(Tool.is_active == True).all()
+        blogs = db.query(Blog).filter(Blog.status == 'published').all()
+        
+        total_items = len(tools) + len(blogs)
+        tracker.progress["total_steps"] = total_items
+        tracker.update_status("processing", f"Found {len(tools)} tools and {len(blogs)} blogs to process", 0)
+        
+        # Process tools
+        tracker.update_status("processing", "Processing tools...", 5)
+        for i, tool in enumerate(tools):
+            try:
+                tracker.update_status("processing", f"Generating page for tool: {tool.name}")
+                generate_page_for_content('tool', tool.id)
+                tracker.increment_progress(tools=1, pages=1)
+                
+                # Small delay to make progress visible
+                import time
+                time.sleep(0.1)
+                
+            except Exception as e:
+                tracker.add_error(f"Failed to generate page for tool {tool.name}: {str(e)}")
+                tracker.increment_progress(tools=1)
+        
+        # Process blogs  
+        tracker.update_status("processing", "Processing blogs...", 50)
+        for i, blog in enumerate(blogs):
+            try:
+                tracker.update_status("processing", f"Generating page for blog: {blog.title}")
+                generate_page_for_content('blog', blog.id)
+                tracker.increment_progress(blogs=1, pages=1)
+                
+                # Small delay to make progress visible
+                import time
+                time.sleep(0.1)
+                
+            except Exception as e:
+                tracker.add_error(f"Failed to generate page for blog {blog.title}: {str(e)}")
+                tracker.increment_progress(blogs=1)
+        
+        # Cleanup phase
+        tracker.update_status("processing", "Cleaning up outdated pages...", 95)
+        try:
+            cleanup_old_pages()
+        except Exception as e:
+            tracker.add_warning(f"Cleanup completed with warnings: {str(e)}")
+        
+        # Complete
+        tracker.complete("completed")
+        
+    except Exception as e:
+        logger.error(f"Fatal error during regeneration: {e}")
+        tracker.add_error(f"Fatal error: {str(e)}")
+        tracker.complete("failed")
+
 @router.post("/api/seo/generate-page/{content_type}/{content_id}")
 async def generate_static_page(
     content_type: str,
