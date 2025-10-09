@@ -82,6 +82,59 @@ const SuperAdminSEO = () => {
     }
   };
 
+  const fetchGenerationStats = async () => {
+    try {
+      const response = await apiClient.get('/seo/generation-stats');
+      setGenerationStats(response.data);
+    } catch (error) {
+      console.error('Error fetching generation stats:', error);
+      toast.error('Failed to load generation stats');
+    }
+  };
+
+  const handleRegenerateAllPages = async () => {
+    try {
+      setStaticPageLoading(true);
+      const response = await apiClient.post('/seo/regenerate-all');
+      toast.success(response.data.message);
+      toast.info(response.data.note);
+      fetchGenerationStats();
+    } catch (error) {
+      console.error('Error regenerating all pages:', error);
+      toast.error('Failed to regenerate all pages');
+    } finally {
+      setStaticPageLoading(false);
+    }
+  };
+
+  const handleCleanupPages = async () => {
+    try {
+      setStaticPageLoading(true);
+      const response = await apiClient.post('/seo/cleanup-pages');
+      toast.success(response.data.message);
+      fetchGenerationStats();
+    } catch (error) {
+      console.error('Error cleaning up pages:', error);
+      toast.error('Failed to cleanup pages');
+    } finally {
+      setStaticPageLoading(false);
+    }
+  };
+
+  const handleGenerateSinglePage = async (contentType, contentId) => {
+    try {
+      setStaticPageLoading(true);
+      const response = await apiClient.post(`/seo/generate-page/${contentType}/${contentId}`);
+      toast.success(response.data.message);
+      fetchGenerationStats();
+    } catch (error) {
+      console.error('Error generating single page:', error);
+      toast.error('Failed to generate page');
+    } finally {
+      setStaticPageLoading(false);
+    }
+  };
+
   const handleGenerateTemplates = async (pageType, count = 10) => {
     try {
       setBulkUpdateLoading(true);
