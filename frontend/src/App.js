@@ -109,6 +109,9 @@ function App() {
   // Create helmet context for better SSR support and production optimization
   const helmetContext = {};
   
+  // Enable global keyboard navigation (arrow keys for scrolling)
+  useKeyboardNavigation();
+  
   return (
     <HelmetProvider context={helmetContext}>
       <AuthProvider>
