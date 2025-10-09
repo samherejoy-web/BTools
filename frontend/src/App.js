@@ -56,6 +56,7 @@ import AboutPage from './pages/static/AboutPage';
 import ContactPage from './pages/static/ContactPage';
 import PrivacyPage from './pages/static/PrivacyPage';
 import TermsPage from './pages/static/TermsPage';
+import FreeToolsPage from './pages/public/FreeToolsPage';
 
 import './App.css';
 
