@@ -174,6 +174,14 @@ const SuperAdminSEO = () => {
     }
   };
 
+  // Enable ESC key to close progress modal when it's open and task is completed/failed
+  useEscapeKey(() => {
+    if (showProgressModal && progressData && 
+        (progressData.status === 'completed' || progressData.status === 'failed')) {
+      closeProgressModal();
+    }
+  }, showProgressModal);
+
   const handleCleanupPages = async () => {
     try {
       setStaticPageLoading(true);
