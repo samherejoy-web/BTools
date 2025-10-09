@@ -239,6 +239,7 @@ app.include_router(auto_seo_router, prefix="", tags=["auto-seo"])
 app.include_router(sitemap_management_router, prefix="", tags=["sitemap-management"])
 app.include_router(contact_router, prefix="", tags=["contact"])
 app.include_router(newsletter_router, prefix="", tags=["newsletter"])
+app.include_router(free_tools_router, prefix="", tags=["free-tools"])
 
 # Create uploads directory if it doesn't exist
 os.makedirs("uploads", exist_ok=True)
