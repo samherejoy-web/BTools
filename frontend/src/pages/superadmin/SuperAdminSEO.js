@@ -44,6 +44,8 @@ const SuperAdminSEO = () => {
     seo_description: '',
     seo_keywords: ''
   });
+  const [staticPageLoading, setStaticPageLoading] = useState(false);
+  const [generationStats, setGenerationStats] = useState(null);
 
   useEffect(() => {
     fetchSeoOverview();
