@@ -65,12 +65,14 @@ const Footer = () => {
       { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
     ],
-    resources: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'API Documentation', href: '/api-docs' },
-      { name: 'Submit a Tool', href: '/submit-tool' },
-      { name: 'Partnerships', href: '/partnerships' },
-    ],
+    freeTools: [
+      ...freeTools.slice(0, 3).map(tool => ({ 
+        name: tool.name, 
+        href: tool.link, 
+        external: true 
+      })),
+      { name: 'See More Free Tools', href: '/freetools', external: false },
+    ].filter(Boolean),
     community: [
       { name: 'Discord', href: socialUrls.social_discord_url, external: true, icon: MessageSquare },
       { name: 'X (Twitter)', href: socialUrls.social_twitter_url, external: true, icon: Twitter },
