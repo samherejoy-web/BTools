@@ -56,6 +56,15 @@ const SuperAdminSEO = () => {
     fetchGenerationStats();
   }, [selectedIssueType, selectedSeverity]);
 
+  // Cleanup EventSource on unmount
+  useEffect(() => {
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
+  }, [eventSource]);
+
   const fetchSeoOverview = async () => {
     try {
       setLoading(true);
