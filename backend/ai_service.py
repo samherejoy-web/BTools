@@ -13,8 +13,8 @@ class AIService:
         if not groq_api_key:
             raise ValueError("GROQ_API_KEY environment variable is not set")
         self.client = Groq(api_key=groq_api_key)
-        # Using mixtral-8x7b-32768 for better availability and performance
-        self.model = "mixtral-8x7b-32768"
+        # Using llama-3.1-8b-instant for fast and reliable responses
+        self.model = "llama-3.1-8b-instant"
     
     def generate_blog_content(self, topic: str, keywords: List[str] = [], target_length: str = "medium") -> Dict[str, Any]:
         """Generate comprehensive blog content using AI"""
