@@ -46,6 +46,9 @@ const SuperAdminSEO = () => {
   });
   const [staticPageLoading, setStaticPageLoading] = useState(false);
   const [generationStats, setGenerationStats] = useState(null);
+  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [progressData, setProgressData] = useState(null);
+  const [eventSource, setEventSource] = useState(null);
 
   useEffect(() => {
     fetchSeoOverview();
