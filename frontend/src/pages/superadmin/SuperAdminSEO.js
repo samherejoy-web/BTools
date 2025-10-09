@@ -50,6 +50,7 @@ const SuperAdminSEO = () => {
   useEffect(() => {
     fetchSeoOverview();
     fetchSeoIssues();
+    fetchGenerationStats();
   }, [selectedIssueType, selectedSeverity]);
 
   const fetchSeoOverview = async () => {
