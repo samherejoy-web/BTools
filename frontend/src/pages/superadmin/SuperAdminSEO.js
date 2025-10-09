@@ -27,6 +27,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 const SuperAdminSEO = () => {
   const [seoOverview, setSeoOverview] = useState(null);
