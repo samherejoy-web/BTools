@@ -132,7 +132,7 @@ const SuperAdminSEO = () => {
     }
 
     // Create new EventSource for real-time updates
-    const es = new EventSource(`${process.env.REACT_APP_BACKEND_URL}/seo/regenerate-stream/${taskId}`);
+    const es = new EventSource(`${process.env.REACT_APP_BACKEND_URL}/api/seo/regenerate-stream/${taskId}`);
     
     es.onmessage = (event) => {
       try {
