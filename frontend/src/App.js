@@ -46,6 +46,7 @@ import SuperAdminBlogs from './pages/superadmin/SuperAdminBlogs';
 import SuperAdminSEO from './pages/superadmin/SuperAdminSEO';
 import SuperAdminSettings from './pages/superadmin/SuperAdminSettings';
 import SuperAdminSitemapManager from './pages/superadmin/SuperAdminSitemapManager';
+import SuperAdminFreeTools from './pages/superadmin/SuperAdminFreeTools';
 
 // SEO Tools
 import SEOToolsPage from './pages/seo/SEOToolsPage';
