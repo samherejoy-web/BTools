@@ -178,6 +178,12 @@ function App() {
               </Layout>
             } />
             
+            <Route path="/freetools" element={
+              <Layout>
+                <FreeToolsPage />
+              </Layout>
+            } />
+            
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
