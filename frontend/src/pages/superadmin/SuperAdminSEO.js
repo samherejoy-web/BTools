@@ -321,11 +321,12 @@ const SuperAdminSEO = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="issues" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="issues">SEO Issues</TabsTrigger>
           <TabsTrigger value="tools">Tools Management</TabsTrigger>
           <TabsTrigger value="blogs">Blogs Management</TabsTrigger>
           <TabsTrigger value="automation">Automation</TabsTrigger>
+          <TabsTrigger value="static-pages">Static Pages</TabsTrigger>
         </TabsList>
 
         <TabsContent value="issues" className="space-y-6">
