@@ -906,6 +906,180 @@ const SuperAdminSEO = () => {
           </div>
         </div>
       )}
+
+      {/* Real-time Progress Modal */}
+      {showProgressModal && progressData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[80vh] overflow-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold flex items-center gap-3">
+                <Layout className="h-6 w-6" />
+                Static Page Regeneration Progress
+              </h2>
+              {(progressData.status === 'completed' || progressData.status === 'failed') && (
+                <Button variant="outline" onClick={closeProgressModal}>
+                  Close
+                </Button>
+              )}
+            </div>
+
+            {/* Status Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-4 mb-4">
+                <div className={`h-4 w-4 rounded-full ${
+                  progressData.status === 'completed' ? 'bg-green-500' :
+                  progressData.status === 'failed' ? 'bg-red-500' :
+                  'bg-blue-500 animate-pulse'
+                }`}></div>
+                <span className="text-lg font-semibold capitalize">
+                  {progressData.status === 'processing' ? 'In Progress' : progressData.status}
+                </span>
+                <span className="text-gray-500">
+                  Task ID: {progressData.task_id.split('-')[0]}...
+                </span>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
+                <div 
+                  className={`h-3 rounded-full transition-all duration-300 ${
+                    progressData.status === 'completed' ? 'bg-green-500' :
+                    progressData.status === 'failed' ? 'bg-red-500' : 'bg-blue-500'
+                  }`}
+                  style={{ width: `${progressData.percentage}%` }}
+                ></div>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>{progressData.current_step}</span>
+                <span>{progressData.percentage}%</span>
+              </div>
+            </div>
+
+            {/* Statistics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-blue-50 p-4 rounded-lg text-center">
+                <p className="text-2xl font-bold text-blue-600">{progressData.tools_processed}</p>
+                <p className="text-sm text-blue-800">Tools Processed</p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg text-center">
+                <p className="text-2xl font-bold text-purple-600">{progressData.blogs_processed}</p>
+                <p className="text-sm text-purple-800">Blogs Processed</p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg text-center">
+                <p className="text-2xl font-bold text-green-600">{progressData.pages_generated}</p>
+                <p className="text-sm text-green-800">Pages Generated</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg text-center">
+                <p className="text-2xl font-bold text-gray-600">
+                  {progressData.completed_steps}/{progressData.total_steps}
+                </p>
+                <p className="text-sm text-gray-800">Items Complete</p>
+              </div>
+            </div>
+
+            {/* Time Information */}
+            <div className="mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Started</p>
+                  <p className="text-sm text-gray-800">
+                    {new Date(progressData.start_time).toLocaleTimeString()}
+                  </p>
+                </div>
+                {progressData.end_time && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Completed</p>
+                    <p className="text-sm text-gray-800">
+                      {new Date(progressData.end_time).toLocaleTimeString()}
+                    </p>
+                  </div>
+                )}
+                {progressData.duration && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Duration</p>
+                    <p className="text-sm text-gray-800">{progressData.duration}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Errors and Warnings */}
+            {(progressData.errors.length > 0 || progressData.warnings.length > 0) && (
+              <div className="space-y-4">
+                {progressData.errors.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-red-700 mb-2 flex items-center gap-2">
+                      <XCircle className="h-4 w-4" />
+                      Errors ({progressData.errors.length})
+                    </h3>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 max-h-32 overflow-auto">
+                      {progressData.errors.map((error, index) => (
+                        <div key={index} className="text-sm text-red-800 mb-1">
+                          <span className="font-mono text-xs text-red-600">
+                            {new Date(error.timestamp).toLocaleTimeString()}
+                          </span>
+                          {' - '}
+                          {error.message}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {progressData.warnings.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-yellow-700 mb-2 flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4" />
+                      Warnings ({progressData.warnings.length})
+                    </h3>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 max-h-32 overflow-auto">
+                      {progressData.warnings.map((warning, index) => (
+                        <div key={index} className="text-sm text-yellow-800 mb-1">
+                          <span className="font-mono text-xs text-yellow-600">
+                            {new Date(warning.timestamp).toLocaleTimeString()}
+                          </span>
+                          {' - '}
+                          {warning.message}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Final Summary */}
+            {progressData.status === 'completed' && (
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <h3 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5" />
+                  Regeneration Complete!
+                </h3>
+                <div className="text-sm text-green-700 space-y-1">
+                  <p>✅ Successfully processed {progressData.tools_processed} tools and {progressData.blogs_processed} blogs</p>
+                  <p>✅ Generated {progressData.pages_generated} static pages</p>
+                  <p>✅ Completed in {progressData.duration}</p>
+                  {progressData.errors.length === 0 && (
+                    <p>✅ No errors encountered during regeneration</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {progressData.status === 'failed' && (
+              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <h3 className="font-semibold text-red-800 mb-2 flex items-center gap-2">
+                  <XCircle className="h-5 w-5" />
+                  Regeneration Failed
+                </h3>
+                <p className="text-sm text-red-700">
+                  The regeneration process encountered fatal errors. Please check the error details above and try again.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
