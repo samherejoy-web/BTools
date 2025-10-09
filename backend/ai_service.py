@@ -8,8 +8,12 @@ load_dotenv()
 
 class AIService:
     def __init__(self):
-        self.client = Groq(api_key="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")
-        self.model = "openai/gpt-oss-20b"
+        # Use API key from environment variable
+        groq_api_key = os.getenv('GROQ_API_KEY')
+        if not groq_api_key:
+            raise ValueError("GROQ_API_KEY environment variable is not set")
+        self.client = Groq(api_key=groq_api_key)
+        self.model = "llama-3.3-70b-versatile"
     
     def generate_blog_content(self, topic: str, keywords: List[str] = [], target_length: str = "medium") -> Dict[str, Any]:
         """Generate comprehensive blog content using AI"""
