@@ -197,28 +197,89 @@ async def generate_static_page(
 @router.post("/api/seo/regenerate-all")
 async def regenerate_all_static_pages(
     background_tasks: BackgroundTasks,
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    """Regenerate all static pages (admin only)"""
+    """Regenerate all static pages with progress tracking (superadmin only)"""
     
     if current_user.role != 'superadmin':
         raise HTTPException(status_code=403, detail="Superadmin access required")
     
     try:
-        # Trigger regeneration in background
-        background_tasks.add_task(regenerate_all_pages)
+        # Generate unique task ID
+        task_id = str(uuid.uuid4())
         
-        logger.info(f"Full page regeneration requested by {current_user.email}")
+        # Trigger regeneration in background with progress tracking
+        background_tasks.add_task(regenerate_all_pages_with_progress, task_id, db)
+        
+        logger.info(f"Full page regeneration requested by {current_user.email} - Task ID: {task_id}")
         
         return {
-            "message": "Full static page regeneration started",
+            "message": "Full static page regeneration started with progress tracking",
+            "task_id": task_id,
             "status": "processing",
-            "note": "This may take several minutes depending on content volume"
+            "progress_url": f"/api/seo/regenerate-progress/{task_id}"
         }
         
     except Exception as e:
         logger.error(f"Error starting full regeneration: {e}")
         raise HTTPException(status_code=500, detail="Regeneration failed to start")
+
+@router.get("/api/seo/regenerate-progress/{task_id}")
+async def get_regeneration_progress(task_id: str):
+    """Get current progress of regeneration task"""
+    
+    if task_id not in progress_store:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    return progress_store[task_id]
+
+@router.get("/api/seo/regenerate-stream/{task_id}")
+async def stream_regeneration_progress(task_id: str, request: Request):
+    """Stream regeneration progress via Server-Sent Events"""
+    
+    async def event_stream():
+        try:
+            while True:
+                # Check if client disconnected
+                if await request.is_disconnected():
+                    break
+                
+                # Get current progress
+                if task_id in progress_store:
+                    progress = progress_store[task_id]
+                    
+                    # Send progress update
+                    yield f"data: {json.dumps(progress)}\n\n"
+                    
+                    # If task completed, send final update and close
+                    if progress["status"] in ["completed", "failed"]:
+                        await asyncio.sleep(1)  # Give client time to process final update
+                        break
+                else:
+                    # Task not found
+                    yield f"data: {json.dumps({'error': 'Task not found'})}\n\n"
+                    break
+                
+                # Wait before next update
+                await asyncio.sleep(0.5)
+                
+        except asyncio.CancelledError:
+            # Client disconnected
+            pass
+        except Exception as e:
+            logger.error(f"Error in SSE stream: {e}")
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+    
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "text/event-stream",
+        }
+    )
 
 @router.post("/api/seo/cleanup-pages")
 async def cleanup_outdated_pages(
