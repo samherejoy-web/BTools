@@ -22,6 +22,7 @@ const Footer = () => {
     social_discord_url: 'https://discord.gg/marketmind',
     social_facebook_url: 'https://facebook.com/marketmindai'
   });
+  const [freeTools, setFreeTools] = useState([]);
 
   useEffect(() => {
     fetchSocialUrls();
