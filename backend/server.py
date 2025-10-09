@@ -28,6 +28,7 @@ from contact_routes import router as contact_router
 from newsletter_routes import router as newsletter_router
 from auto_seo_routes import router as auto_seo_router
 from sitemap_management_routes import router as sitemap_management_router
+from free_tools_routes import router as free_tools_router
 
 # Configure logging
 import os
