@@ -631,6 +631,153 @@ const SuperAdminSEO = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="static-pages" className="space-y-6">
+          <Card className="border-0 shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Layout className="h-5 w-5" />
+                Static Page Generation Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Generation Stats */}
+              {generationStats && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-600">{generationStats.tools?.with_pages || 0}</p>
+                    <p className="text-sm text-gray-600">Tool Pages Generated</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-purple-600">{generationStats.blogs?.with_pages || 0}</p>
+                    <p className="text-sm text-gray-600">Blog Pages Generated</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500">Last Updated</p>
+                    <p className="text-sm font-medium">{generationStats.last_updated || 'Never'}</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Regenerate All Pages */}
+                <div className="p-6 border border-gray-200 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <RefreshCw className="h-5 w-5" />
+                    Regenerate All Static Pages
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Regenerate all static HTML pages for tools and blogs. This may take several minutes.
+                  </p>
+                  <Button
+                    onClick={handleRegenerateAllPages}
+                    disabled={staticPageLoading}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    {staticPageLoading ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Regenerating...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Regenerate All Pages
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {/* Cleanup Pages */}
+                <div className="p-6 border border-gray-200 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Trash2 className="h-5 w-5" />
+                    Cleanup Outdated Pages
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Remove static pages for deleted or inactive content to keep the build clean.
+                  </p>
+                  <Button
+                    onClick={handleCleanupPages}
+                    disabled={staticPageLoading}
+                    variant="outline"
+                    className="border-yellow-200 text-yellow-700 hover:bg-yellow-50"
+                  >
+                    {staticPageLoading ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Cleaning...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Cleanup Pages
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                {/* Generation Stats & Tools */}
+                <div className="p-6 border border-gray-200 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <BarChart3 className="h-5 w-5" />
+                      Page Generation Statistics
+                    </h3>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={fetchGenerationStats}
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Refresh Stats
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-4">
+                    View detailed statistics about generated static pages and their performance.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button
+                      size="sm"
+                      onClick={fetchGenerationStats}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      View Stats
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Report (Coming Soon)
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Manual Page Generation */}
+                <div className="p-6 border border-gray-200 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Zap className="h-5 w-5" />
+                    Manual Page Generation
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Generate static pages for specific content items. Use this for new content or when individual pages need updating.
+                  </p>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p className="text-sm text-yellow-800">
+                      <strong>Note:</strong> Individual page generation is typically handled automatically when content is created or updated. 
+                      Use the regenerate all option above if you need to update multiple pages.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
 
       {/* Bulk Update Modal */}
