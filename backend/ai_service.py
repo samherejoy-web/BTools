@@ -201,8 +201,7 @@ class AIService:
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.3,
                 max_completion_tokens=4096,
-                top_p=1,
-                reasoning_effort="medium"
+                top_p=1
             )
             
             response_content = completion.choices[0].message.content
