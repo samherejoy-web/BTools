@@ -26,6 +26,7 @@ const Footer = () => {
 
   useEffect(() => {
     fetchSocialUrls();
+    fetchFreeTools();
   }, []);
 
   const fetchSocialUrls = async () => {
