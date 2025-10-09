@@ -354,6 +354,14 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
+            
+            <Route path="/superadmin/free-tools" element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <DashboardLayout>
+                  <SuperAdminFreeTools />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
           </Routes>
           
           <Toaster position="top-right" />
