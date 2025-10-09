@@ -42,6 +42,16 @@ const Footer = () => {
     }
   };
 
+  const fetchFreeTools = async () => {
+    try {
+      const response = await apiClient.get('/free-tools?limit=3');
+      setFreeTools(response.data || []);
+    } catch (error) {
+      console.error('Error fetching free tools:', error);
+      // Keep empty array if fetch fails
+    }
+  };
+
   const footerLinks = {
     product: [
       { name: 'Browse Tools', href: '/tools' },
