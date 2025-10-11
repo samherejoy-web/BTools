@@ -96,30 +96,24 @@ CORS_ORIGINS_ENV = os.getenv('CORS_ORIGINS', '')
 # Parse CORS origins from environment variable
 cors_origins_from_env = [origin.strip() for origin in CORS_ORIGINS_ENV.split(',') if origin.strip()]
 
-# CORS Configuration - Strict for production security
-allowed_origins = [
-    # Production domain
-    "https://marketmindai.com",
-    "http://marketmindai.com",
-    
-    # Preview/Staging domains
-    "https://origin-policy-sync.preview.emergentagent.com",
-    
-    # Local development
-    "http://localhost:3000",
-    "http://localhost:8001",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8001",
-]
+# CORS Configuration - Production ready
+# Start with origins from environment variable
+allowed_origins = []
 
-# Add origins from environment variable if specified
 if cors_origins_from_env:
     allowed_origins.extend(cors_origins_from_env)
-    logger.info(f"Added CORS origins from environment: {cors_origins_from_env}")
+    logger.info(f"CORS origins from environment: {cors_origins_from_env}")
+else:
+    # Fallback to default allowed origins if env var is not set
+    allowed_origins = [
+        "https://marketmindai.com",
+        "http://localhost:3000",
+    ]
+    logger.info("Using default CORS origins")
 
 # Remove duplicates and None values
 allowed_origins = list(set(filter(None, allowed_origins)))
-logger.info(f"Allowed CORS origins: {allowed_origins}")
+logger.info(f"Final allowed CORS origins: {allowed_origins}")
 
 app.add_middleware(
     CORSMiddleware,
