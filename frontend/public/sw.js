@@ -63,6 +63,17 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip POST, PUT, DELETE requests (authentication, mutations)
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Skip authentication and mutation endpoints
+  const skipPatterns = ['/api/auth/', '/api/login', '/api/register', '/api/newsletter/'];
+  if (skipPatterns.some(pattern => url.pathname.includes(pattern))) {
+    return;
+  }
+
   // API Routes - Cache First with Background Update
   if (url.pathname.startsWith('/api/')) {
     const isCacheable = CACHEABLE_API_ROUTES.some(route => 
