@@ -369,6 +369,149 @@ async def create_custom_sitemap_entry(
     return {"message": "Custom sitemap entry created successfully", "entry_id": db_entry.id}
 
 # Bulk Operations
+@router.post("/api/admin/sitemap/save-to-production")
+async def save_sitemap_to_production(
+    current_admin = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    """Save sitemap.xml directly to production directory /www/wwwroot/marketmindai.com/"""
+    
+    try:
+        import os
+        from datetime import datetime
+        
+        # Get production path
+        production_path = "/www/wwwroot/marketmindai.com"
+        
+        # Check if production path exists
+        if not os.path.exists(production_path):
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Production path does not exist: {production_path}"
+            )
+        
+        # Get base URL from environment
+        base_url = os.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
+        
+        # Get all published blogs
+        blogs = db.query(Blog).filter(Blog.status == 'published').all()
+        
+        # Get all active tools
+        tools = db.query(Tool).filter(Tool.is_active).all()
+        
+        # Get all categories
+        categories = db.query(Category).all()
+        
+        # Get active sitemap entries (location-based URLs)
+        sitemap_entries = db.query(SitemapEntry).filter(SitemapEntry.is_active == True).all()
+        
+        # Build sitemap XML
+        sitemap_content = '''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'''
+        
+        # Add homepage
+        sitemap_content += f'''
+    <url>
+        <loc>{base_url}/</loc>
+        <lastmod>{datetime.now().strftime('%Y-%m-%d')}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>'''
+        
+        # Add main pages
+        main_pages = [
+            ('/tools', 'daily', '0.9'),
+            ('/blogs', 'daily', '0.9'),
+            ('/compare', 'weekly', '0.7'),
+            ('/about', 'monthly', '0.6'),
+            ('/contact', 'monthly', '0.6'),
+            ('/privacy', 'yearly', '0.3'),
+            ('/terms', 'yearly', '0.3')
+        ]
+        
+        for page, changefreq, priority in main_pages:
+            sitemap_content += f'''
+    <url>
+        <loc>{base_url}{page}</loc>
+        <lastmod>{datetime.now().strftime('%Y-%m-%d')}</lastmod>
+        <changefreq>{changefreq}</changefreq>
+        <priority>{priority}</priority>
+    </url>'''
+        
+        # Add blogs
+        for blog in blogs:
+            last_mod = (blog.updated_at.strftime('%Y-%m-%d') if blog.updated_at 
+                       else blog.created_at.strftime('%Y-%m-%d'))
+            sitemap_content += f'''
+    <url>
+        <loc>{base_url}/blogs/{blog.slug}</loc>
+        <lastmod>{last_mod}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>'''
+        
+        # Add tools
+        for tool in tools:
+            last_mod = (tool.updated_at.strftime('%Y-%m-%d') if tool.updated_at 
+                       else tool.created_at.strftime('%Y-%m-%d'))
+            sitemap_content += f'''
+    <url>
+        <loc>{base_url}/tools/{tool.slug}</loc>
+        <lastmod>{last_mod}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>'''
+        
+        # Add categories
+        for category in categories:
+            sitemap_content += f'''
+    <url>
+        <loc>{base_url}/tools?category={category.slug}</loc>
+        <lastmod>{datetime.now().strftime('%Y-%m-%d')}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>'''
+        
+        # Add location-based sitemap entries
+        for entry in sitemap_entries:
+            last_mod = entry.last_modified.strftime('%Y-%m-%d')
+            sitemap_content += f'''
+    <url>
+        <loc>{base_url}{entry.url_path}</loc>
+        <lastmod>{last_mod}</lastmod>
+        <changefreq>{entry.change_frequency}</changefreq>
+        <priority>{entry.priority}</priority>
+    </url>'''
+        
+        sitemap_content += '''
+</urlset>'''
+        
+        # Save to production directory
+        sitemap_path = os.path.join(production_path, 'sitemap.xml')
+        with open(sitemap_path, 'w', encoding='utf-8') as f:
+            f.write(sitemap_content)
+        
+        # Count entries
+        total_urls = len(blogs) + len(tools) + len(categories) + len(sitemap_entries) + len(main_pages) + 1  # +1 for homepage
+        
+        return {
+            "message": "Sitemap.xml saved successfully to production directory",
+            "path": sitemap_path,
+            "total_urls": total_urls,
+            "breakdown": {
+                "homepage": 1,
+                "main_pages": len(main_pages),
+                "blogs": len(blogs),
+                "tools": len(tools),
+                "categories": len(categories),
+                "location_pages": len(sitemap_entries)
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save sitemap: {str(e)}")
+
 @router.post("/api/admin/locations/bulk-create")
 async def bulk_create_locations(
     locations_data: List[LocationCreate],
