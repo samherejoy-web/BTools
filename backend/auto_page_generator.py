@@ -14,8 +14,9 @@ from database import SessionLocal
 import os as os_mod
 
 def get_build_path():
-    """Auto-detect the frontend build path"""
+    """Auto-detect the frontend build path - Production path prioritized"""
     possible_paths = [
+        "/www/wwwroot/marketmindai.com",  # Production path (highest priority)
         "/var/www/marketmindai/build",
         "/var/www/marketmindai",
         "/var/www/html",
@@ -29,8 +30,8 @@ def get_build_path():
             if os_mod.path.exists(os_mod.path.join(path, 'index.html')):
                 return path
     
-    # Default fallback
-    return "/var/www/marketmindai/build"
+    # Default fallback to production
+    return "/www/wwwroot/marketmindai.com"
 
 FRONTEND_BUILD_PATH = get_build_path()
 BACKEND_URL = os_mod.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
