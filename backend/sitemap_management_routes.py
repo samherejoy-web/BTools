@@ -512,6 +512,61 @@ async def save_sitemap_to_production(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save sitemap: {str(e)}")
 
+@router.post("/api/admin/sitemap/save-robots-txt")
+async def save_robots_to_production(
+    current_admin = Depends(get_current_admin)
+):
+    """Save robots.txt directly to production directory /www/wwwroot/marketmindai.com/"""
+    
+    try:
+        import os
+        
+        # Get production path
+        production_path = "/www/wwwroot/marketmindai.com"
+        
+        # Check if production path exists
+        if not os.path.exists(production_path):
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Production path does not exist: {production_path}"
+            )
+        
+        base_url = os.getenv('FRONTEND_URL', 'https://marketmindai.com').rstrip('/')
+        
+        robots_content = f"""User-agent: *
+Allow: /
+
+# Disallow admin and dashboard areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /superadmin/
+Disallow: /api/
+
+# Allow specific API endpoints that should be crawled
+Allow: /api/blogs/
+Allow: /api/tools/
+
+# Sitemap location
+Sitemap: {base_url}/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+"""
+        
+        # Save to production directory
+        robots_path = os.path.join(production_path, 'robots.txt')
+        with open(robots_path, 'w', encoding='utf-8') as f:
+            f.write(robots_content)
+        
+        return {
+            "message": "robots.txt saved successfully to production directory",
+            "path": robots_path,
+            "content_preview": robots_content[:200] + "..."
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save robots.txt: {str(e)}")
+
 @router.post("/api/admin/locations/bulk-create")
 async def bulk_create_locations(
     locations_data: List[LocationCreate],
