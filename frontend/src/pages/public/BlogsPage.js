@@ -534,7 +534,7 @@ const BlogsPage = () => {
                   buttonText="Subscribe"
                   className="flex gap-3"
                   inputClassName="flex-1 px-4 py-2 rounded-lg text-gray-900 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-white/50"
-                  buttonClassName="bg-white text-purple-600 hover:bg-gray-100"
+                  buttonClassName="!bg-white !text-purple-600 hover:!bg-purple-50 font-semibold"
                 />
               </div>
             </CardContent>
