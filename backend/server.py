@@ -208,19 +208,28 @@ async def debug_connectivity():
 # Enhanced CORS preflight endpoint
 @app.options("/api/{path:path}")
 async def cors_preflight(path: str, request: Request):
-    origin = request.headers.get('origin', '*')
+    origin = request.headers.get('origin', '')
     
-    return Response(
-        content="",
-        headers={
-            "Access-Control-Allow-Origin": origin,
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, Origin, X-Requested-With",
-            "Access-Control-Allow-Credentials": "true",
-            "Access-Control-Max-Age": "86400",
-            "Vary": "Origin"
-        }
-    )
+    # Only allow origins that are in our allowed list
+    if origin in allowed_origins:
+        return Response(
+            content="",
+            headers={
+                "Access-Control-Allow-Origin": origin,
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, Origin, X-Requested-With",
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Max-Age": "86400",
+                "Vary": "Origin"
+            }
+        )
+    else:
+        # Return 403 for disallowed origins
+        logger.warning(f"CORS preflight rejected for origin: {origin}")
+        return Response(
+            content="Origin not allowed",
+            status_code=403
+        )
 
 # Include route modules
 app.include_router(superadmin_router, prefix="", tags=["superadmin"])
