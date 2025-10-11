@@ -53,7 +53,7 @@ I have successfully tested the production build by serving it locally and taking
 {
   "@type": "WebSite",
   "name": "MarketMind - Discover the Best Business Tools",
-  "url": "https://prod-ready-build.preview.emergentagent.com"
+  "url": "https://origin-policy-sync.preview.emergentagent.com"
 }
 ```
 ✅ **Valid WebSite schema**
