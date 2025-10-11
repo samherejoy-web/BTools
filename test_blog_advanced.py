@@ -6,7 +6,7 @@ from datetime import datetime
 
 class AdvancedBlogTester:
     def __init__(self):
-        self.base_url = "https://realtime-sync-debug.preview.emergentagent.com/api"
+        self.base_url = "https://market-sync-2.preview.emergentagent.com/api"
         self.token = None
         
     def login(self):

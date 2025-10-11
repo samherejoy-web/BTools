@@ -103,7 +103,7 @@ allowed_origins = [
     "http://marketmindai.com",
     
     # Preview/Staging domains
-    "https://realtime-sync-debug.preview.emergentagent.com",
+    "https://market-sync-2.preview.emergentagent.com",
     
     # Local development
     "http://localhost:3000",
