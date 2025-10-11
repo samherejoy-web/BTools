@@ -363,6 +363,7 @@ async def get_generation_stats(current_user: User = Depends(get_current_user)):
             "tools": {"total": 0, "with_pages": 0},
             "blogs": {"total": 0, "with_pages": 0},
             "build_path": FRONTEND_BUILD_PATH,
+            "build_path_exists": os.path.exists(FRONTEND_BUILD_PATH),
             "last_updated": None
         }
         
@@ -391,3 +392,35 @@ async def get_generation_stats(current_user: User = Depends(get_current_user)):
     except Exception as e:
         logger.error(f"Error getting generation stats: {e}")
         raise HTTPException(status_code=500, detail="Stats retrieval failed")
+
+@router.get("/api/seo/build-path-info")
+async def get_build_path_info(current_user: User = Depends(get_current_user)):
+    """Get information about the current build path configuration"""
+    
+    try:
+        import os
+        from auto_page_generator import FRONTEND_BUILD_PATH, get_build_path
+        
+        production_path = "/www/wwwroot/marketmindai.com"
+        
+        return {
+            "current_build_path": FRONTEND_BUILD_PATH,
+            "production_path": production_path,
+            "paths_checked": [
+                "/www/wwwroot/marketmindai.com",
+                "/var/www/marketmindai/build",
+                "/var/www/marketmindai",
+                "/var/www/html",
+                "/app/marketmindai-production-optimized",
+                "/app/frontend/build"
+            ],
+            "current_path_exists": os.path.exists(FRONTEND_BUILD_PATH),
+            "production_path_exists": os.path.exists(production_path),
+            "current_path_has_index": os.path.exists(os.path.join(FRONTEND_BUILD_PATH, 'index.html')),
+            "production_path_has_index": os.path.exists(os.path.join(production_path, 'index.html')) if os.path.exists(production_path) else False,
+            "note": "Pages and sitemap will be generated to the detected build path. Production path is prioritized."
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting build path info: {e}")
+        raise HTTPException(status_code=500, detail="Build path info retrieval failed")
