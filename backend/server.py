@@ -107,6 +107,7 @@ else:
     # Fallback to default allowed origins if env var is not set
     allowed_origins = [
         "https://marketmindai.com",
+        "https://www.marketmindai.com",
         "http://localhost:3000",
     ]
     logger.info("Using default CORS origins")
