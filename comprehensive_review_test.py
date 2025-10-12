@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 
 class ComprehensiveReviewTester:
-    def __init__(self, base_url="https://origin-policy-sync.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://domain-update.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
