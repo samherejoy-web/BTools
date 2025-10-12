@@ -193,17 +193,17 @@ print_status "Step 7: Nginx Configuration..."
 cat > /etc/nginx/sites-available/marketmind << 'EOF'
 server {
     listen 80;
-    server_name yourdomain.com www.yourdomain.com;
+    server_name marketmindai.com www.marketmindai.com;
     return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name yourdomain.com www.yourdomain.com;
+    server_name marketmindai.com www.marketmindai.com;
 
     # SSL Configuration (update with your certificate paths)
-    ssl_certificate /etc/ssl/certs/yourdomain.com.crt;
-    ssl_certificate_key /etc/ssl/private/yourdomain.com.key;
+    ssl_certificate /etc/ssl/certs/marketmindai.com.crt;
+    ssl_certificate_key /etc/ssl/private/marketmindai.com.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384;
 
