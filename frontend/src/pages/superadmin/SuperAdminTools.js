@@ -615,18 +615,28 @@ const SuperAdminTools = () => {
                     value={formData.linkedin_url}
                     onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
                     placeholder="https://linkedin.com/company/..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      validationErrors.linkedin_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
                   />
+                  {validationErrors.linkedin_url && (
+                    <p className="text-red-600 text-xs mt-1">{validationErrors.linkedin_url}</p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Logo Thumbnail URL (Google Drive)</label>
+                  <label className="block text-sm font-medium mb-1">Logo Thumbnail URL</label>
                   <input
                     type="url"
                     value={formData.logo_thumbnail_url}
                     onChange={(e) => setFormData({...formData, logo_thumbnail_url: e.target.value})}
-                    placeholder="https://drive.google.com/uc?id=..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="https://example.com/thumbnail.png"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      validationErrors.logo_thumbnail_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
                   />
+                  {validationErrors.logo_thumbnail_url && (
+                    <p className="text-red-600 text-xs mt-1">{validationErrors.logo_thumbnail_url}</p>
+                  )}
                 </div>
                 <div className="lg:col-span-2">
                   <label className="block text-sm font-medium mb-1">About Company</label>
