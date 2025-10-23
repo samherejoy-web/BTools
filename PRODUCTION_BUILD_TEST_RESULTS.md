@@ -53,7 +53,7 @@ I have successfully tested the production build by serving it locally and taking
 {
   "@type": "WebSite",
   "name": "MarketMind - Discover the Best Business Tools",
-  "url": "https://domain-update.preview.emergentagent.com"
+  "url": "https://blank-screen-solver.preview.emergentagent.com"
 }
 ```
 ✅ **Valid WebSite schema**
