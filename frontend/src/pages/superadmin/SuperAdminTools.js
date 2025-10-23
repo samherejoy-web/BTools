@@ -496,8 +496,10 @@ const SuperAdminTools = () => {
                   value={formData.features}
                   onChange={(e) => setFormData({...formData, features: e.target.value})}
                   rows={3}
+                  placeholder="Feature 1, Feature 2, Feature 3"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+                <p className="text-xs text-gray-500 mt-1">Separate features with commas</p>
               </div>
 
               <div>
@@ -506,8 +508,10 @@ const SuperAdminTools = () => {
                   value={formData.pros}
                   onChange={(e) => setFormData({...formData, pros: e.target.value})}
                   rows={2}
+                  placeholder="Easy to use, Great UI, Fast performance"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+                <p className="text-xs text-gray-500 mt-1">Separate pros with commas</p>
               </div>
 
               <div>
@@ -516,8 +520,10 @@ const SuperAdminTools = () => {
                   value={formData.cons}
                   onChange={(e) => setFormData({...formData, cons: e.target.value})}
                   rows={2}
+                  placeholder="Expensive, Limited features, Learning curve"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+                <p className="text-xs text-gray-500 mt-1">Separate cons with commas</p>
               </div>
 
               <div className="space-y-2">
