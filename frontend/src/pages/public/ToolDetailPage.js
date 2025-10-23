@@ -736,28 +736,30 @@ const ToolDetailPage = () => {
                     <CardTitle>Pricing Plans</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {tool.pricing_details && typeof tool.pricing_details === 'object' ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {tool.pricing_details && typeof tool.pricing_details === 'object' && Object.keys(tool.pricing_details).length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {Object.entries(tool.pricing_details).map(([tier, price]) => (
-                          <div key={tier} className="p-4 border border-gray-200 rounded-lg">
-                            <h4 className="font-semibold text-gray-900 capitalize mb-2">{tier}</h4>
-                            <p className="text-2xl font-bold text-blue-600 mb-3">{price}</p>
+                          <div key={tier} className="p-5 border-2 border-gray-200 rounded-xl hover:border-blue-400 hover:shadow-lg transition-all duration-200 flex flex-col">
+                            <h4 className="font-bold text-lg text-gray-900 capitalize mb-3">{tier}</h4>
+                            <p className="text-xl font-semibold text-blue-600 mb-4 break-words flex-grow">{price}</p>
                             <Button 
-                              className="w-full" 
-                              variant={tier === 'free' ? 'outline' : 'default'}
+                              className="w-full mt-auto" 
+                              variant={tier.toLowerCase() === 'free' ? 'outline' : 'default'}
                               onClick={() => window.open(tool.url, '_blank')}
                             >
-                              {tier === 'free' ? 'Get Started Free' : 'Choose Plan'}
+                              {tier.toLowerCase() === 'free' ? 'Get Started Free' : 'Choose Plan'}
                             </Button>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8">
-                        <p className="text-gray-600 mb-4">Pricing information not available</p>
-                        <Button onClick={() => window.open(tool.url, '_blank')}>
-                          Visit Website for Pricing
-                        </Button>
+                      <div className="text-center py-12">
+                        <div className="bg-gray-50 rounded-lg p-8 max-w-md mx-auto">
+                          <p className="text-gray-600 mb-4">Pricing information not available</p>
+                          <Button onClick={() => window.open(tool.url, '_blank')}>
+                            Visit Website for Pricing
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </CardContent>
