@@ -420,15 +420,42 @@ const SuperAdminTools = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Pricing Details (JSON)</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium">Pricing Details (JSON)</label>
+                  <button
+                    type="button"
+                    onClick={() => validateJsonField('pricing_details', formData.pricing_details)}
+                    className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Validate JSON
+                  </button>
+                </div>
                 <textarea
                   value={formData.pricing_details}
-                  onChange={(e) => setFormData({...formData, pricing_details: e.target.value})}
+                  onChange={(e) => {
+                    setFormData({...formData, pricing_details: e.target.value});
+                    validateJsonField('pricing_details', e.target.value);
+                  }}
                   rows={4}
-                  placeholder='{"plans": [{"name": "Basic", "price": "$9/month", "features": ["Feature 1", "Feature 2"]}, {"name": "Pro", "price": "$29/month", "features": ["All Basic features", "Feature 3", "Feature 4"]}]}'
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                  placeholder='{"free": "Free tier", "basic": "$9/month", "pro": "$29/month"}'
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
+                    validationErrors.pricing_details ? 'border-red-500 bg-red-50' : 
+                    jsonValidation.pricing_details === 'valid' ? 'border-green-500 bg-green-50' :
+                    jsonValidation.pricing_details ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
                 />
-                <p className="text-xs text-gray-500 mt-1">Enter pricing details in JSON format</p>
+                {validationErrors.pricing_details && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.pricing_details}</p>
+                )}
+                {jsonValidation.pricing_details && jsonValidation.pricing_details !== 'valid' && (
+                  <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.pricing_details}</p>
+                )}
+                {jsonValidation.pricing_details === 'valid' && formData.pricing_details && (
+                  <p className="text-green-600 text-xs mt-1">✓ Valid JSON format</p>
+                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Example: {`{"free": "Free tier", "basic": "$9/month", "pro": "$29/month"}`}
+                </p>
               </div>
 
               <div>
