@@ -675,15 +675,42 @@ const SuperAdminTools = () => {
                   </p>
                 </div>
                 <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Company Founders (JSON)</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium">Company Founders (JSON)</label>
+                    <button
+                      type="button"
+                      onClick={() => validateJsonField('company_founders', formData.company_founders)}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Validate JSON
+                    </button>
+                  </div>
                   <textarea
                     value={formData.company_founders}
-                    onChange={(e) => setFormData({...formData, company_founders: e.target.value})}
+                    onChange={(e) => {
+                      setFormData({...formData, company_founders: e.target.value});
+                      validateJsonField('company_founders', e.target.value);
+                    }}
                     rows={3}
                     placeholder='[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]'
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
+                      validationErrors.company_founders ? 'border-red-500 bg-red-50' : 
+                      jsonValidation.company_founders === 'valid' ? 'border-green-500 bg-green-50' :
+                      jsonValidation.company_founders ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
                   />
-                  <p className="text-xs text-gray-500 mt-1">Enter valid JSON array format</p>
+                  {validationErrors.company_founders && (
+                    <p className="text-red-600 text-xs mt-1">{validationErrors.company_founders}</p>
+                  )}
+                  {jsonValidation.company_founders && jsonValidation.company_founders !== 'valid' && (
+                    <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.company_founders}</p>
+                  )}
+                  {jsonValidation.company_founders === 'valid' && formData.company_founders && (
+                    <p className="text-green-600 text-xs mt-1">✓ Valid JSON array format</p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Example: {`[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]`}
+                  </p>
                 </div>
               </div>
             </div>
