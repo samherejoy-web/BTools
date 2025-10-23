@@ -190,38 +190,134 @@ const SuperAdminTools = () => {
       seo_keywords: tool?.seo_keywords || '',
       // New company-related fields
       linkedin_url: tool?.linkedin_url || '',
-      company_funding: tool?.company_funding ? JSON.stringify(tool.company_funding) : '',
+      company_funding: tool?.company_funding ? JSON.stringify(tool.company_funding, null, 2) : '',
       company_news: tool?.company_news || '',
       company_location: tool?.company_location || '',
-      company_founders: tool?.company_founders ? JSON.stringify(tool.company_founders) : '',
+      company_founders: tool?.company_founders ? JSON.stringify(tool.company_founders, null, 2) : '',
       about: tool?.about || '',
       started_on: tool?.started_on || '',
       logo_thumbnail_url: tool?.logo_thumbnail_url || ''
     });
 
+    const [validationErrors, setValidationErrors] = useState({});
+    const [jsonValidation, setJsonValidation] = useState({
+      pricing_details: null,
+      company_funding: null,
+      company_founders: null
+    });
+
+    // Validate JSON field in real-time
+    const validateJsonField = (fieldName, value) => {
+      if (!value || value.trim() === '') {
+        setJsonValidation(prev => ({ ...prev, [fieldName]: 'valid' }));
+        return true;
+      }
+      try {
+        JSON.parse(value);
+        setJsonValidation(prev => ({ ...prev, [fieldName]: 'valid' }));
+        return true;
+      } catch (e) {
+        setJsonValidation(prev => ({ ...prev, [fieldName]: e.message }));
+        return false;
+      }
+    };
+
+    // Validate URL format
+    const validateUrl = (url) => {
+      if (!url || url.trim() === '') return true;
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    // Validate date format (YYYY-MM-DD or YYYY)
+    const validateDate = (date) => {
+      if (!date || date.trim() === '') return true;
+      const yearPattern = /^\d{4}$/;
+      const fullDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+      return yearPattern.test(date) || fullDatePattern.test(date);
+    };
+
     const handleSubmit = (e) => {
       e.preventDefault();
       
+      const errors = {};
+
+      // Validate required fields
+      if (!formData.name || formData.name.trim() === '') {
+        errors.name = 'Tool name is required';
+      }
+
+      // Validate URLs
+      if (formData.url && !validateUrl(formData.url)) {
+        errors.url = 'Invalid URL format. Must start with http:// or https://';
+      }
+      if (formData.logo_url && !validateUrl(formData.logo_url)) {
+        errors.logo_url = 'Invalid URL format';
+      }
+      if (formData.screenshot_url && !validateUrl(formData.screenshot_url)) {
+        errors.screenshot_url = 'Invalid URL format';
+      }
+      if (formData.linkedin_url && !validateUrl(formData.linkedin_url)) {
+        errors.linkedin_url = 'Invalid URL format';
+      }
+      if (formData.logo_thumbnail_url && !validateUrl(formData.logo_thumbnail_url)) {
+        errors.logo_thumbnail_url = 'Invalid URL format';
+      }
+
+      // Validate date
+      if (formData.started_on && !validateDate(formData.started_on)) {
+        errors.started_on = 'Invalid date format. Use YYYY or YYYY-MM-DD (e.g., 2020 or 2020-01-15)';
+      }
+
       // Helper function to parse JSON fields safely
-      const parseJsonField = (field) => {
+      const parseJsonField = (field, fieldName) => {
         if (!field || field.trim() === '') return null;
         try {
-          return JSON.parse(field);
+          const parsed = JSON.parse(field);
+          return parsed;
         } catch (e) {
-          console.warn(`Invalid JSON in field: ${field}`);
+          errors[fieldName] = `Invalid JSON format: ${e.message}`;
           return null;
         }
       };
       
+      // Parse and validate JSON fields
+      const pricingDetails = parseJsonField(formData.pricing_details, 'pricing_details');
+      const companyFunding = parseJsonField(formData.company_funding, 'company_funding');
+      const companyFounders = parseJsonField(formData.company_founders, 'company_founders');
+
+      // Validate company_funding structure if provided
+      if (companyFunding && typeof companyFunding !== 'object') {
+        errors.company_funding = 'Must be a valid JSON object with keys like "amount", "round", "date"';
+      }
+
+      // Validate company_founders structure if provided
+      if (companyFounders && !Array.isArray(companyFounders)) {
+        errors.company_founders = 'Must be a valid JSON array of objects with "name" and "role" keys';
+      }
+
+      // If there are validation errors, show them and prevent submission
+      if (Object.keys(errors).length > 0) {
+        setValidationErrors(errors);
+        toast.error('Please fix validation errors before submitting');
+        return;
+      }
+
+      setValidationErrors({});
+      
       const submitData = {
         ...formData,
-        features: formData.features ? formData.features.split(',').map(f => f.trim()) : [],
-        pros: formData.pros ? formData.pros.split(',').map(p => p.trim()) : [],
-        cons: formData.cons ? formData.cons.split(',').map(c => c.trim()) : [],
+        features: formData.features ? formData.features.split(',').map(f => f.trim()).filter(f => f) : [],
+        pros: formData.pros ? formData.pros.split(',').map(p => p.trim()).filter(p => p) : [],
+        cons: formData.cons ? formData.cons.split(',').map(c => c.trim()).filter(c => c) : [],
         // Parse JSON fields
-        pricing_details: parseJsonField(formData.pricing_details),
-        company_funding: parseJsonField(formData.company_funding),
-        company_founders: parseJsonField(formData.company_founders)
+        pricing_details: pricingDetails,
+        company_funding: companyFunding,
+        company_founders: companyFounders
       };
       onSubmit(submitData);
     };
