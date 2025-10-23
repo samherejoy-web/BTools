@@ -535,14 +535,18 @@ const ToolDetailPage = () => {
                     <CardTitle>Key Features</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {tool.features?.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-                          <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                          <span className="text-gray-800 font-medium">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
+                    {Array.isArray(tool.features) && tool.features.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {tool.features.filter(f => f && typeof f === 'string').map((feature, index) => (
+                          <div key={index} className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
+                            <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                            <span className="text-gray-800 font-medium">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 text-center py-8">No features listed yet</p>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
