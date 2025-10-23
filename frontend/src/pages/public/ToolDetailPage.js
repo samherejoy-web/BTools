@@ -492,14 +492,14 @@ const ToolDetailPage = () => {
                   </Card>
                 )}
 
-                {tool.pros?.length > 0 && (
+                {Array.isArray(tool.pros) && tool.pros.length > 0 && (
                   <Card className="border-0 shadow-sm">
                     <CardHeader>
                       <CardTitle className="text-green-700">Pros</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
-                        {tool.pros.map((pro, index) => (
+                        {tool.pros.filter(pro => pro && typeof pro === 'string').map((pro, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                             <span className="text-gray-700">{pro}</span>
@@ -510,14 +510,14 @@ const ToolDetailPage = () => {
                   </Card>
                 )}
 
-                {tool.cons?.length > 0 && (
+                {Array.isArray(tool.cons) && tool.cons.length > 0 && (
                   <Card className="border-0 shadow-sm">
                     <CardHeader>
                       <CardTitle className="text-red-700">Cons</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
-                        {tool.cons.map((con, index) => (
+                        {tool.cons.filter(con => con && typeof con === 'string').map((con, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <XCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
                             <span className="text-gray-700">{con}</span>
