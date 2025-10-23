@@ -389,8 +389,14 @@ const SuperAdminTools = () => {
                   type="url"
                   value={formData.logo_url}
                   onChange={(e) => setFormData({...formData, logo_url: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://example.com/logo.png"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    validationErrors.logo_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
                 />
+                {validationErrors.logo_url && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.logo_url}</p>
+                )}
               </div>
 
               <div>
@@ -399,8 +405,14 @@ const SuperAdminTools = () => {
                   type="url"
                   value={formData.screenshot_url}
                   onChange={(e) => setFormData({...formData, screenshot_url: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://example.com/screenshot.png"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    validationErrors.screenshot_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
                 />
+                {validationErrors.screenshot_url && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.screenshot_url}</p>
+                )}
               </div>
             </div>
 
