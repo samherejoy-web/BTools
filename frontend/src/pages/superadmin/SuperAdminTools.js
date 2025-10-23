@@ -337,9 +337,14 @@ const SuperAdminTools = () => {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
                   required
                 />
+                {validationErrors.name && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.name}</p>
+                )}
               </div>
 
               <div>
