@@ -637,15 +637,42 @@ const SuperAdminTools = () => {
                   />
                 </div>
                 <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Company Funding (JSON)</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium">Company Funding (JSON)</label>
+                    <button
+                      type="button"
+                      onClick={() => validateJsonField('company_funding', formData.company_funding)}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Validate JSON
+                    </button>
+                  </div>
                   <textarea
                     value={formData.company_funding}
-                    onChange={(e) => setFormData({...formData, company_funding: e.target.value})}
+                    onChange={(e) => {
+                      setFormData({...formData, company_funding: e.target.value});
+                      validateJsonField('company_funding', e.target.value);
+                    }}
                     rows={3}
                     placeholder='{"amount": "10M", "round": "Series A", "date": "2023-01-01"}'
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
+                      validationErrors.company_funding ? 'border-red-500 bg-red-50' : 
+                      jsonValidation.company_funding === 'valid' ? 'border-green-500 bg-green-50' :
+                      jsonValidation.company_funding ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
                   />
-                  <p className="text-xs text-gray-500 mt-1">Enter valid JSON format</p>
+                  {validationErrors.company_funding && (
+                    <p className="text-red-600 text-xs mt-1">{validationErrors.company_funding}</p>
+                  )}
+                  {jsonValidation.company_funding && jsonValidation.company_funding !== 'valid' && (
+                    <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.company_funding}</p>
+                  )}
+                  {jsonValidation.company_funding === 'valid' && formData.company_funding && (
+                    <p className="text-green-600 text-xs mt-1">✓ Valid JSON format</p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Example: {`{"amount": "10M", "round": "Series A", "date": "2023-01-01"}`}
+                  </p>
                 </div>
                 <div className="lg:col-span-2">
                   <label className="block text-sm font-medium mb-1">Company Founders (JSON)</label>
