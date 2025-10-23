@@ -389,17 +389,17 @@ const ToolDetailPage = () => {
                   <CardTitle className="text-lg">Pricing Details</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {tool.pricing_details && typeof tool.pricing_details === 'object' ? (
+                  {tool.pricing_details && typeof tool.pricing_details === 'object' && Object.keys(tool.pricing_details).length > 0 ? (
                     <div className="space-y-3">
                       {Object.entries(tool.pricing_details).map(([tier, price]) => (
-                        <div key={tier} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
-                          <span className="font-medium capitalize text-gray-700">{tier}</span>
-                          <span className="text-gray-900 font-semibold">{price}</span>
+                        <div key={tier} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 py-2 border-b border-gray-100 last:border-0">
+                          <span className="font-medium capitalize text-gray-700 text-sm">{tier}</span>
+                          <span className="text-gray-900 font-semibold text-sm break-words">{price}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-600">Pricing information not available</p>
+                    <p className="text-gray-600 text-sm">Pricing information not available</p>
                   )}
                 </CardContent>
               </Card>
