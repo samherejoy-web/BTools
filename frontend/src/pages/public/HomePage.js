@@ -504,26 +504,26 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-700" aria-labelledby="cta-section">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-700" aria-labelledby="cta-section" data-testid="cta-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="cta-section" className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to Find Your Perfect Tools?
+          <h2 id="cta-section" className="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="cta-title">
+            Ready to Find Your Perfect Business Tools?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of businesses who trust MarketMindAI to make better tool decisions.
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto" data-testid="cta-description">
+            Join thousands of businesses who trust MarketMindAI to discover, compare, and choose the best software tools for their needs.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <nav className="flex flex-col sm:flex-row gap-4 justify-center" aria-label="Call to action">
             <Link to="/register">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3" data-testid="get-started-btn" aria-label="Get started free - Sign up for MarketMindAI">
                 Get Started Free
               </Button>
             </Link>
             <Link to="/tools">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3" data-testid="browse-tools-cta-btn" aria-label="Browse all business tools">
                 Browse Tools
               </Button>
             </Link>
-          </div>
+          </nav>
         </div>
       </section>
       </main>
