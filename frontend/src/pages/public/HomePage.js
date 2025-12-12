@@ -312,69 +312,72 @@ const HomePage = () => {
             </Link>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label="Featured business tools">
             {featuredTools.map((tool) => (
-              <Card key={tool.id} className="hover:shadow-lg transition-shadow duration-300">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      {tool.logo_url ? (
-                        <img
-                          src={tool.logo_url}
-                          alt={tool.name}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold">
-                            {tool.name.charAt(0)}
-                          </span>
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="font-semibold text-gray-900">
-                          {tool.name}
-                        </h3>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <div className="flex items-center">
-                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                            <span className="text-sm text-gray-600 ml-1">
-                              {formatRating(tool.rating)}
+              <article key={tool.id} role="listitem" data-testid={`featured-tool-${tool.id}`}>
+                <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        {tool.logo_url ? (
+                          <img
+                            src={tool.logo_url}
+                            alt={`${tool.name} logo`}
+                            className="w-12 h-12 rounded-lg object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center" aria-hidden="true">
+                            <span className="text-white font-bold">
+                              {tool.name.charAt(0)}
                             </span>
                           </div>
-                          <span className="text-gray-300">•</span>
-                          <span className="text-sm text-gray-600">
-                            {tool.review_count} reviews
-                          </span>
+                        )}
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {tool.name}
+                          </h3>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <div className="flex items-center" aria-label={`Rating: ${formatRating(tool.rating)} out of 5 stars`}>
+                              <Star className="h-4 w-4 text-yellow-400 fill-current" aria-hidden="true" />
+                              <span className="text-sm text-gray-600 ml-1">
+                                {formatRating(tool.rating)}
+                              </span>
+                            </div>
+                            <span className="text-gray-300" aria-hidden="true">•</span>
+                            <span className="text-sm text-gray-600">
+                              {tool.review_count} reviews
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <Badge className={`
+                        ${tool.pricing_type === 'free' ? 'bg-green-100 text-green-800' : 
+                          tool.pricing_type === 'freemium' ? 'bg-blue-100 text-blue-800' : 
+                          'bg-orange-100 text-orange-800'}
+                      `} aria-label={`Pricing: ${tool.pricing_type}`}>
+                        {tool.pricing_type}
+                      </Badge>
                     </div>
-                    <Badge className={`
-                      ${tool.pricing_type === 'free' ? 'bg-green-100 text-green-800' : 
-                        tool.pricing_type === 'freemium' ? 'bg-blue-100 text-blue-800' : 
-                        'bg-orange-100 text-orange-800'}
-                    `}>
-                      {tool.pricing_type}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {tool.short_description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      {formatNumber(tool.view_count)} views
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {tool.short_description}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center text-sm text-gray-500" aria-label={`${formatNumber(tool.view_count)} views`}>
+                        <TrendingUp className="h-4 w-4 mr-1" aria-hidden="true" />
+                        {formatNumber(tool.view_count)} views
+                      </div>
+                      <Link to={`/tools/${tool.id}`}>
+                        <Button size="sm" variant="outline" data-testid={`view-details-${tool.id}`} aria-label={`View details for ${tool.name}`}>
+                          View Details
+                        </Button>
+                      </Link>
                     </div>
-                    <Link to={`/tools/${tool.id}`}>
-                      <Button size="sm" variant="outline">
-                        View Details
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </article>
             ))}
           </div>
 
