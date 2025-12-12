@@ -260,11 +260,11 @@ const HomePage = () => {
       </section>
 
       {/* Featured Tools Section */}
-      <section className="py-16 sm:py-20 bg-gray-50">
+      <section className="py-16 sm:py-20 bg-gray-50" aria-labelledby="featured-tools-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
+          <header className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              <h2 id="featured-tools-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Featured Tools
               </h2>
               <p className="text-xl text-gray-600">
