@@ -72,7 +72,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100">
+    <nav className="bg-white shadow-sm border-b border-gray-100" role="navigation" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo and primary navigation */}
@@ -80,12 +80,13 @@ const Navbar = () => {
             <Logo linkClassName="flex items-center" showText={true} />
 
             {/* Desktop navigation */}
-            <div className="hidden md:ml-8 md:flex md:space-x-8">
+            <div className="hidden md:ml-8 md:flex md:space-x-8" role="menubar">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
                   className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                  role="menuitem"
                 >
                   {item.name}
                 </Link>
@@ -96,16 +97,19 @@ const Navbar = () => {
           {/* Search bar */}
           <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
             <div className="max-w-lg w-full lg:max-w-xs">
-              <form onSubmit={handleSearch} className="relative">
+              <form onSubmit={handleSearch} className="relative" role="search">
+                <label htmlFor="search-input" className="sr-only">Search business tools</label>
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </div>
                 <input
+                  id="search-input"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Search tools..."
+                  aria-label="Search business tools"
                 />
               </form>
             </div>
@@ -116,7 +120,7 @@ const Navbar = () => {
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu">
                     <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                       {user?.profile_image ? (
                         <img
@@ -149,7 +153,7 @@ const Navbar = () => {
                     return (
                       <DropdownMenuItem key={item.name} asChild>
                         <Link to={item.href} className="flex items-center">
-                          <Icon className="mr-2 h-4 w-4" />
+                          <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
                           {item.name}
                         </Link>
                       </DropdownMenuItem>
@@ -157,7 +161,7 @@ const Navbar = () => {
                   })}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -183,11 +187,13 @@ const Navbar = () => {
                 size="sm"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2"
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMobileMenuOpen}
               >
                 {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" />
+                  <X className="h-6 w-6" aria-hidden="true" />
                 ) : (
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-6 w-6" aria-hidden="true" />
                 )}
               </Button>
             </div>
@@ -197,7 +203,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden">
+        <div className="md:hidden" role="menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-100">
             {navigation.map((item) => (
               <Link
@@ -205,6 +211,7 @@ const Navbar = () => {
                 to={item.href}
                 className="text-gray-600 hover:text-gray-900 block px-3 py-2 text-base font-medium transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
+                role="menuitem"
               >
                 {item.name}
               </Link>
@@ -221,8 +228,9 @@ const Navbar = () => {
                         to={item.href}
                         className="text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 text-base font-medium transition-colors duration-200"
                         onClick={() => setIsMobileMenuOpen(false)}
+                        role="menuitem"
                       >
-                        <Icon className="mr-3 h-5 w-5" />
+                        <Icon className="mr-3 h-5 w-5" aria-hidden="true" />
                         {item.name}
                       </Link>
                     );
@@ -233,8 +241,9 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                     }}
                     className="text-red-600 hover:text-red-700 flex items-center px-3 py-2 text-base font-medium transition-colors duration-200 w-full text-left"
+                    role="menuitem"
                   >
-                    <LogOut className="mr-3 h-5 w-5" />
+                    <LogOut className="mr-3 h-5 w-5" aria-hidden="true" />
                     Log out
                   </button>
                 </div>
