@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Star,
@@ -42,12 +42,7 @@ const UserReviews = () => {
     cons: ''
   });
 
-  useEffect(() => {
-    fetchUserReviews();
-    fetchAvailableTools();
-  }, [selectedRating, selectedStatus]);
-
-  const fetchUserReviews = async () => {
+  const fetchUserReviews = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
