@@ -627,18 +627,9 @@ const EnhancedBlogEditor = ({
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw]}
                     components={{
-                      img: ({ node, ...props }) => (
-                        <img {...props} className="rounded-lg max-w-full h-auto my-4" />
-                      ),
-                      a: ({ node, ...props }) => (
-                        <a {...props} className="text-blue-600 hover:text-blue-800 underline" />
-                      ),
-                      code: ({ node, inline, ...props }) => 
-                        inline ? (
-                          <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono" {...props} />
-                        ) : (
-                          <code className="block bg-gray-100 p-4 rounded-md font-mono text-sm my-4" {...props} />
-                        ),
+                      img: MarkdownImage,
+                      a: MarkdownLink,
+                      code: MarkdownCode,
                     }}
                   >
                     {htmlToMarkdown(content)}
