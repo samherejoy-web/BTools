@@ -220,19 +220,19 @@ const HomePage = () => {
               Make informed decisions with AI-powered insights, verified reviews, and comprehensive feature comparisons.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <nav className="flex flex-col sm:flex-row gap-4 justify-center mb-12" aria-label="Primary actions">
               <Link to="/tools">
-                <Button size="lg" className="btn-primary text-lg px-8 py-3">
+                <Button size="lg" className="btn-primary text-lg px-8 py-3" data-testid="explore-tools-btn" aria-label="Explore all business tools">
                   Explore Tools
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Button>
               </Link>
               <Link to="/compare">
-                <Button size="lg" variant="outline" className="text-lg px-8 py-3">
+                <Button size="lg" variant="outline" className="text-lg px-8 py-3" data-testid="compare-tools-btn" aria-label="Compare business tools side by side">
                   Compare Tools
                 </Button>
               </Link>
-            </div>
+            </nav>
 
             {/* Stats */}
             <aside className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto" aria-label="Platform statistics">
