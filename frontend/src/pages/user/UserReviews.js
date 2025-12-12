@@ -58,7 +58,7 @@ const UserReviews = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedRating, selectedStatus]);
 
   const fetchAvailableTools = async () => {
     try {
@@ -75,7 +75,8 @@ const UserReviews = () => {
   useEffect(() => {
     fetchUserReviews();
     fetchAvailableTools();
-  }, [fetchUserReviews]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedRating, selectedStatus]);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
