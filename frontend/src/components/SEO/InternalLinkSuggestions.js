@@ -17,7 +17,8 @@ import {
   Lightbulb,
   RefreshCw,
   Settings,
-  Filter
+  Filter,
+  AlertCircle
 } from 'lucide-react';
 import apiClient from '../../utils/apiClient';
 
