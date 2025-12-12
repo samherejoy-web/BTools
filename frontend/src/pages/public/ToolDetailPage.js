@@ -957,8 +957,25 @@ const ToolDetailPage = () => {
             </Card>
           </div>
         </div>
+
+        {/* FAQ Section for AEO */}
+        {tool && toolFaqs.length > 0 && (
+          <section className="container mx-auto px-4 py-16" aria-labelledby="tool-faq-section" data-testid="tool-faq-section">
+            <div className="max-w-4xl mx-auto">
+              <header className="text-center mb-12">
+                <h2 id="tool-faq-section" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                  Frequently Asked Questions About {tool.name}
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Everything you need to know about {tool.name}
+                </p>
+              </header>
+              <FAQ faqs={toolFaqs} />
+            </div>
+          </section>
+        )}
       </div>
-      </div>
+      </main>
     </>
   );
 };
