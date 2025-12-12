@@ -293,24 +293,24 @@ const HomePage = () => {
       </section>
 
       {/* Featured Tools Section */}
-      <section className="py-16 sm:py-20 bg-gray-50" aria-labelledby="featured-tools-heading">
+      <section className="py-16 sm:py-20 bg-gray-50" aria-labelledby="featured-tools-heading" data-testid="featured-tools-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="flex justify-between items-center mb-12">
             <div>
-              <h2 id="featured-tools-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              <h2 id="featured-tools-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-testid="featured-tools-title">
                 Featured Tools
               </h2>
-              <p className="text-xl text-gray-600">
-                Top-rated tools trusted by thousands of businesses
+              <p className="text-xl text-gray-600" data-testid="featured-tools-description">
+                Top-rated business tools and software trusted by thousands of businesses worldwide
               </p>
             </div>
             <Link to="/tools?featured=true">
-              <Button variant="outline" className="hidden sm:flex">
+              <Button variant="outline" className="hidden sm:flex" data-testid="view-all-featured-btn" aria-label="View all featured tools">
                 View All
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
-          </div>
+          </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredTools.map((tool) => (
