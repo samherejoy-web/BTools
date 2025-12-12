@@ -80,6 +80,30 @@ const HomePage = () => {
     }
   ];
 
+  // FAQ data for AEO optimization
+  const faqs = [
+    {
+      question: "What is MarketMindAI?",
+      answer: "MarketMindAI is a comprehensive business tools discovery platform that helps you find, compare, and choose the best software tools for your business needs. We provide AI-powered insights, community reviews, and detailed comparisons across thousands of business tools."
+    },
+    {
+      question: "How does MarketMindAI compare to other tool directories?",
+      answer: "Unlike traditional directories like Crozdesk or ProductHunt, MarketMindAI combines AI-powered recommendations with community reviews, offering personalized tool suggestions based on your specific business requirements. Our platform features advanced comparison tools, real-time user feedback, and comprehensive feature breakdowns."
+    },
+    {
+      question: "Is MarketMindAI free to use?",
+      answer: "Yes! MarketMindAI is completely free for users to browse tools, read reviews, and compare options. We offer both free and premium features, with advanced analytics and personalized recommendations available for registered users."
+    },
+    {
+      question: "How are tools reviewed on MarketMindAI?",
+      answer: "Tools are reviewed through a combination of verified user reviews, expert analysis, and AI-powered evaluation. We ensure authenticity by verifying reviewers and providing both pros and cons for each tool, helping you make informed decisions."
+    },
+    {
+      question: "Can I submit my own tool to MarketMindAI?",
+      answer: "Yes! Tool vendors and developers can submit their products for listing on MarketMindAI. We review each submission to ensure quality and relevance for our community. Contact us through our submission form to get started."
+    }
+  ];
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
