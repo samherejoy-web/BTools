@@ -188,11 +188,12 @@ const HomePage = () => {
   return (
     <>
       <EnhancedSEOHead 
-        title="MarketMindAI - Business Tools Comparison & Discovery Platform | Find Best Software 2024"
-        description="Discover and compare 150+ business tools and software. Get AI-powered recommendations, read verified reviews, and find the perfect tools for your business. Compare pricing, features & alternatives."
-        keywords="business tools comparison, software comparison platform, best business software 2024, SaaS tools directory, business tool discovery, compare software tools, tool reviews, business productivity tools, software alternatives, enterprise software comparison, startup tools, B2B software directory"
+        title="MarketMindAI - Business Tools Comparison & Discovery Platform | Find Best Software 2025"
+        description="Discover, compare & choose from 150+ business tools and software. AI-powered recommendations, verified reviews, pricing comparison. Find the best business software for startups, SMBs & enterprises. Compare SaaS tools, features, pricing & alternatives."
+        keywords="business tools comparison, software comparison platform, best business tools 2024, best business tools 2025, business software directory, tool discovery platform, SaaS tools comparison, software directory, productivity tools, tool comparison, compare business software, best tools for small business, enterprise software comparison, affordable business tools, business tools for startups, B2B software directory, business productivity tools, software alternatives, marketing automation tools, project management software comparison, CRM tools comparison, keyword research tools"
         structuredData={structuredData}
         ogType="website"
+        canonical={process.env.REACT_APP_BACKEND_URL || ''}
       />
       <main className="min-h-screen">
         {/* Hero Section */}
