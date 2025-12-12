@@ -121,37 +121,132 @@ const BlogsPage = () => {
     );
   }
 
-  // Generate SEO data
-  const seoTitle = selectedCategory 
-    ? `${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory} Articles - MarketMindAI Blog`
-    : 'Expert Guides & Tool Reviews - MarketMindAI Blog';
-  
-  const seoDescription = selectedCategory
-    ? `Read expert ${categories.find(c => c.slug === selectedCategory)?.name?.toLowerCase() || selectedCategory} guides and articles. Get insights from industry experts and make better tool decisions.`
-    : 'Read expert guides, in-depth tool reviews, and comparisons to make better software decisions for your business. AI-generated content and community insights.';
-
-  const breadcrumbItems = [
-    { name: 'Home', url: '/' },
-    { name: 'Blog', url: '/blogs' }
+  // FAQ data for AEO optimization
+  const blogFaqs = [
+    {
+      question: "What types of articles and guides can I find on MarketMindAI Blog?",
+      answer: "MarketMindAI Blog features comprehensive tool reviews, software comparisons, how-to guides, productivity tips, industry insights, and expert analysis on business tools and software. We cover project management, CRM, marketing automation, design tools, development platforms, and more. Our content includes both AI-generated articles and expert-written guides to help you make informed software decisions."
+    },
+    {
+      question: "Are the blog articles on MarketMindAI written by AI or humans?",
+      answer: "We offer both AI-generated and human-written content. AI-generated articles are clearly labeled with an 'AI Generated' badge. Our AI content is carefully curated and reviewed for accuracy, while our expert-written guides provide in-depth human insights and real-world experience. You can filter by content type using the 'AI Generated' filter option."
+    },
+    {
+      question: "How often is new content published on MarketMindAI Blog?",
+      answer: "We publish new articles, guides, and tool reviews regularly, typically multiple times per week. Subscribe to our newsletter to get the latest insights delivered directly to your inbox and never miss important updates about new tools, features, and industry trends."
+    },
+    {
+      question: "Can I search for specific topics or tools in the blog?",
+      answer: "Yes! Use our search bar at the top of the page to find articles about specific tools, topics, or keywords. You can also filter by category, sort by date or popularity, and use our tags to discover related content. Our smart search helps you quickly find exactly what you're looking for."
+    },
+    {
+      question: "How do I stay updated with new blog posts and tool reviews?",
+      answer: "Subscribe to our newsletter at the bottom of this page to receive the latest articles, tool reviews, and productivity tips delivered to your inbox. You can also follow us on social media for real-time updates and engage with our community."
+    },
+    {
+      question: "Are the tool reviews and comparisons unbiased?",
+      answer: "Yes! All our tool reviews and comparisons are unbiased and based on thorough research, user feedback, and actual testing when possible. We present both pros and cons for each tool and provide transparent information to help you make informed decisions. Our goal is to provide honest, helpful content that serves our community."
+    }
   ];
 
-  if (selectedCategory) {
+  // Generate SEO data
+  const categoryName = categories.find(c => c.slug === selectedCategory)?.name;
+  const seoTitle = selectedCategory 
+    ? `${categoryName || selectedCategory} Articles & Guides - Expert ${categoryName} Insights | MarketMindAI Blog`
+    : 'Expert Guides, Tool Reviews & Comparisons - MarketMindAI Blog | Software Insights 2024';
+  
+  const seoDescription = selectedCategory
+    ? `Read expert ${(categoryName || selectedCategory).toLowerCase()} guides, tutorials, and articles. Get insights from industry experts, learn best practices, and make better tool decisions. In-depth ${(categoryName || selectedCategory).toLowerCase()} content with AI-powered recommendations.`
+    : 'Read 300+ expert guides, in-depth tool reviews, software comparisons, and productivity tips. AI-generated content and community insights to help you choose the best business tools and software for 2024. Free guides for startups, SMBs, and enterprises.';
+
+  const seoKeywords = selectedCategory
+    ? `${categoryName} guides, ${categoryName} tutorials, ${categoryName} articles, ${categoryName} tips, ${categoryName} best practices, ${categoryName} blog`
+    : 'tool reviews, software guides, business productivity, tech blog, AI content, software comparison guides, tool comparison articles, best business tools 2024, productivity tips, software tutorials, how to choose business tools, tool alternatives, software decision guides, SaaS reviews, business tool blog';
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog', href: '/blogs' }
+  ];
+
+  if (selectedCategory && categoryName) {
     breadcrumbItems.push({
-      name: categories.find(c => c.slug === selectedCategory)?.name || selectedCategory,
-      url: `/blogs?category=${selectedCategory}`
+      label: categoryName,
+      href: `/blogs?category=${selectedCategory}`
     });
   }
 
+  // Enhanced structured data
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Blog",
+        "@id": `${process.env.REACT_APP_BACKEND_URL || ''}/blogs#blog`,
+        "url": `${process.env.REACT_APP_BACKEND_URL || ''}/blogs`,
+        "name": "MarketMindAI Blog",
+        "description": seoDescription,
+        "publisher": {
+          "@type": "Organization",
+          "name": "MarketMindAI",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${process.env.REACT_APP_BACKEND_URL || ''}/logo.png`
+          }
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbItems.map((item, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "name": item.label,
+          "item": `${process.env.REACT_APP_BACKEND_URL || ''}${item.href}`
+        }))
+      },
+      {
+        "@type": "ItemList",
+        "numberOfItems": filteredBlogs.length,
+        "itemListElement": filteredBlogs.slice(0, 10).map((blog, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "BlogPosting",
+            "headline": blog.title,
+            "description": blog.excerpt,
+            "url": `${process.env.REACT_APP_BACKEND_URL || ''}/blogs/${blog.slug}`,
+            "datePublished": blog.published_at || blog.created_at,
+            "author": {
+              "@type": "Person",
+              "name": blog.author_name || "MarketMindAI Team"
+            }
+          }
+        }))
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": blogFaqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      }
+    ]
+  };
+
   return (
     <>
-      <SEOHead 
+      <EnhancedSEOHead 
         title={seoTitle}
         description={seoDescription}
-        keywords={`tool reviews, software guides, ${selectedCategory ? `${selectedCategory} articles, ` : ''}business productivity, tech blog, AI content`}
-        type="website"
+        keywords={seoKeywords}
+        structuredData={structuredData}
+        ogType="website"
+        canonical={`${process.env.REACT_APP_BACKEND_URL || ''}/blogs${selectedCategory ? `?category=${selectedCategory}` : ''}`}
       />
-      <StructuredData data={generateBreadcrumbSchema(breadcrumbItems)} />
-      <div className="min-h-screen bg-gray-50">
+      <main className="min-h-screen bg-gray-50" role="main">
         {/* Hero Section */}
         <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-purple-800 text-white py-16">
         <div className="container mx-auto px-4">
