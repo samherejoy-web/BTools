@@ -24,11 +24,6 @@ const Footer = () => {
   });
   const [freeTools, setFreeTools] = useState([]);
 
-  useEffect(() => {
-    fetchSocialUrls();
-    fetchFreeTools();
-  }, []);
-
   const fetchSocialUrls = async () => {
     try {
       const response = await apiClient.get('/public/site-settings');
@@ -51,6 +46,11 @@ const Footer = () => {
       // Keep empty array if fetch fails
     }
   };
+
+  useEffect(() => {
+    fetchSocialUrls();
+    fetchFreeTools();
+  }, []);
 
   const footerLinks = {
     product: [
