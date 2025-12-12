@@ -12,7 +12,7 @@ from datetime import datetime
 import time
 
 class AdvancedOTPTester:
-    def __init__(self, base_url="https://seo-semantic-html.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://html-syntax-fix-1.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.db_path = "/app/backend/marketmind.db"
         self.tests_run = 0

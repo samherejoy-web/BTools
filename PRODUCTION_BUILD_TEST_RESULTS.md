@@ -53,7 +53,7 @@ I have successfully tested the production build by serving it locally and taking
 {
   "@type": "WebSite",
   "name": "MarketMind - Discover the Best Business Tools",
-  "url": "https://seo-semantic-html.preview.emergentagent.com"
+  "url": "https://html-syntax-fix-1.preview.emergentagent.com"
 }
 ```
 ✅ **Valid WebSite schema**
