@@ -210,66 +210,66 @@ const HomePage = () => {
       <main className="min-h-screen" role="main">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-24 lg:py-32" aria-labelledby="hero-heading" data-testid="hero-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <header className="text-center">
-            <div className="flex justify-center mb-6">
-              <Badge className="px-4 py-2 bg-blue-100 text-blue-800 border-0" data-testid="ai-badge">
-                <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
-                Powered by AI
-              </Badge>
-            </div>
-            
-            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6" data-testid="hero-title">
-              Discover the{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Perfect Tools
-              </span>
-              {' '}for Your Business
-            </h1>
-            
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed" data-testid="hero-description">
-              Compare, review, and choose from thousands of business tools and software solutions. 
-              Make informed decisions with AI-powered insights, verified reviews, and comprehensive feature comparisons.
-            </p>
-            
-            <nav className="flex flex-col sm:flex-row gap-4 justify-center mb-12" aria-label="Primary actions">
-              <Link to="/tools">
-                <Button size="lg" className="btn-primary text-lg px-8 py-3" data-testid="explore-tools-btn" aria-label="Explore all business tools">
-                  Explore Tools
-                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-                </Button>
-              </Link>
-              <Link to="/compare">
-                <Button size="lg" variant="outline" className="text-lg px-8 py-3" data-testid="compare-tools-btn" aria-label="Compare business tools side by side">
-                  Compare Tools
-                </Button>
-              </Link>
-            </nav>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <header className="text-center">
+              <div className="flex justify-center mb-6">
+                <Badge className="px-4 py-2 bg-blue-100 text-blue-800 border-0" data-testid="ai-badge">
+                  <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
+                  Powered by AI
+                </Badge>
+              </div>
+              
+              <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6" data-testid="hero-title">
+                Discover the{' '}
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Perfect Tools
+                </span>
+                {' '}for Your Business
+              </h1>
+              
+              <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed" data-testid="hero-description">
+                Compare, review, and choose from thousands of business tools and software solutions. 
+                Make informed decisions with AI-powered insights, verified reviews, and comprehensive feature comparisons.
+              </p>
+              
+              <nav className="flex flex-col sm:flex-row gap-4 justify-center mb-12" aria-label="Primary actions">
+                <Link to="/tools">
+                  <Button size="lg" className="btn-primary text-lg px-8 py-3" data-testid="explore-tools-btn" aria-label="Explore all business tools">
+                    Explore Tools
+                    <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                  </Button>
+                </Link>
+                <Link to="/compare">
+                  <Button size="lg" variant="outline" className="text-lg px-8 py-3" data-testid="compare-tools-btn" aria-label="Compare business tools side by side">
+                    Compare Tools
+                  </Button>
+                </Link>
+              </nav>
 
-            {/* Stats */}
-            <aside className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto" aria-label="Platform statistics" data-testid="platform-stats">
-              <article className="text-center" data-testid="stat-tools">
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalTools)} tools listed`}>
-                  {formatNumber(stats.totalTools)}+
-                </div>
-                <p className="text-gray-600">Tools Listed</p>
-              </article>
-              <article className="text-center" data-testid="stat-reviews">
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalBlogs)} expert reviews`}>
-                  {formatNumber(stats.totalBlogs)}+
-                </div>
-                <p className="text-gray-600">Expert Reviews</p>
-              </article>
-              <article className="text-center" data-testid="stat-users">
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalUsers)} happy users`}>
-                  {formatNumber(stats.totalUsers)}+
-                </div>
-                <p className="text-gray-600">Happy Users</p>
-              </article>
-            </aside>
-          </header>
-        </div>
-      </section>
+              {/* Stats */}
+              <aside className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto" aria-label="Platform statistics" data-testid="platform-stats">
+                <article className="text-center" data-testid="stat-tools">
+                  <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalTools)} tools listed`}>
+                    {formatNumber(stats.totalTools)}+
+                  </div>
+                  <p className="text-gray-600">Tools Listed</p>
+                </article>
+                <article className="text-center" data-testid="stat-reviews">
+                  <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalBlogs)} expert reviews`}>
+                    {formatNumber(stats.totalBlogs)}+
+                  </div>
+                  <p className="text-gray-600">Expert Reviews</p>
+                </article>
+                <article className="text-center" data-testid="stat-users">
+                  <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalUsers)} happy users`}>
+                    {formatNumber(stats.totalUsers)}+
+                  </div>
+                  <p className="text-gray-600">Happy Users</p>
+                </article>
+              </aside>
+            </header>
+          </div>
+        </section>
 
       {/* Features Section */}
       <section className="py-16 sm:py-20 bg-white" aria-labelledby="features-heading" data-testid="features-section">
