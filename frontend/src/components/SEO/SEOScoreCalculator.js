@@ -19,6 +19,48 @@ import {
 } from 'lucide-react';
 import apiClient from '../../utils/apiClient';
 
+// Helper functions for score colors and labels
+const getScoreColor = (score) => {
+  if (score >= 80) return 'text-green-600';
+  if (score >= 60) return 'text-yellow-600';
+  if (score >= 40) return 'text-orange-600';
+  return 'text-red-600';
+};
+
+const getScoreColorClass = (score) => {
+  if (score >= 80) return 'bg-green-500';
+  if (score >= 60) return 'bg-yellow-500';
+  if (score >= 40) return 'bg-orange-500';
+  return 'bg-red-500';
+};
+
+// ScoreBar component moved outside to avoid recreation on every render
+const ScoreBar = ({ label, score, icon: Icon, description }) => (
+  <div className="space-y-2">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <Icon className="w-4 h-4 text-gray-600" />
+        <span className="text-sm font-medium">{label}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className={`text-sm font-bold ${getScoreColor(score)}`}>
+          {score.toFixed(0)}%
+        </span>
+        {score >= 80 && <CheckCircle className="w-4 h-4 text-green-500" />}
+        {score < 60 && <AlertCircle className="w-4 h-4 text-red-500" />}
+      </div>
+    </div>
+    <Progress 
+      value={score} 
+      className="h-2"
+      indicatorClassName={getScoreColorClass(score)}
+    />
+    {description && (
+      <p className="text-xs text-gray-500">{description}</p>
+    )}
+  </div>
+);
+
 const SEOScoreCalculator = ({ contentType, contentId, contentData }) => {
   const [seoScore, setSeoScore] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -48,52 +90,12 @@ const SEOScoreCalculator = ({ contentType, contentId, contentData }) => {
     }
   }, [contentType, contentId, fetchSEOScore]);
 
-  const getScoreColor = (score) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    if (score >= 40) return 'text-orange-600';
-    return 'text-red-600';
-  };
-
-  const getScoreColorClass = (score) => {
-    if (score >= 80) return 'bg-green-500';
-    if (score >= 60) return 'bg-yellow-500';
-    if (score >= 40) return 'bg-orange-500';
-    return 'bg-red-500';
-  };
-
   const getScoreLabel = (score) => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Good';
     if (score >= 40) return 'Needs Improvement';
     return 'Poor';
   };
-
-  const ScoreBar = ({ label, score, icon: Icon, description }) => (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4 text-gray-600" />
-          <span className="text-sm font-medium">{label}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className={`text-sm font-bold ${getScoreColor(score)}`}>
-            {score.toFixed(0)}%
-          </span>
-          {score >= 80 && <CheckCircle className="w-4 h-4 text-green-500" />}
-          {score < 60 && <AlertCircle className="w-4 h-4 text-red-500" />}
-        </div>
-      </div>
-      <Progress 
-        value={score} 
-        className="h-2"
-        indicatorClassName={getScoreColorClass(score)}
-      />
-      {description && (
-        <p className="text-xs text-gray-500">{description}</p>
-      )}
-    </div>
-  );
 
   if (loading) {
     return (
