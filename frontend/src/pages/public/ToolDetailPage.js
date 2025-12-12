@@ -293,11 +293,94 @@ const ToolDetailPage = () => {
     );
   }
 
+  // Enhanced structured data for tool detail page
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools' },
+    ...(tool?.categories?.[0] ? [{ label: tool.categories[0].name, href: `/tools?category=${tool.categories[0].slug}` }] : []),
+    { label: tool?.name || 'Tool', href: `/tools/${toolSlug}` }
+  ];
+
+  const enhancedStructuredData = tool ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": tool.name,
+        "description": tool.about || tool.description,
+        "url": tool.url,
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "offers": tool.pricing_details ? {
+          "@type": "AggregateOffer",
+          "priceCurrency": "USD",
+          "lowPrice": tool.pricing_type === 'free' ? "0" : undefined,
+          "highPrice": tool.pricing_type === 'free' ? "0" : undefined
+        } : undefined,
+        "aggregateRating": tool.rating ? {
+          "@type": "AggregateRating",
+          "ratingValue": tool.rating,
+          "reviewCount": tool.review_count || 0,
+          "bestRating": 5,
+          "worstRating": 1
+        } : undefined,
+        "review": reviews.slice(0, 5).map(review => ({
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": review.user_name || "Anonymous"
+          },
+          "datePublished": review.created_at,
+          "reviewBody": review.content,
+          "name": review.title,
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": review.rating,
+            "bestRating": 5,
+            "worstRating": 1
+          }
+        }))
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbItems.map((item, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "name": item.label,
+          "item": `${process.env.REACT_APP_BACKEND_URL || ''}${item.href}`
+        }))
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": toolFaqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      }
+    ]
+  } : {};
+
+  const seoTitle = tool ? `${tool.name} Review - Features, Pricing & Alternatives | MarketMindAI` : 'Tool Details';
+  const seoDescription = tool ? `${tool.short_description || tool.description} Read verified reviews, compare features, pricing plans, and find the best ${tool.name} alternatives. ${tool.rating}-star rating with ${tool.review_count} reviews.` : '';
+  const seoKeywords = tool ? `${tool.name} review, ${tool.name} pricing, ${tool.name} features, ${tool.name} alternatives, best ${tool.categories?.[0]?.name || 'business'} tools, ${tool.name} vs competitors, ${tool.categories?.[0]?.name || 'software'} comparison` : '';
+
   return (
     <>
       {/* Always render SEO data, even if tool is null */}
-      <SEOHead {...seoData} />
-      <div className="min-h-screen bg-gray-50">
+      <EnhancedSEOHead 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        structuredData={enhancedStructuredData}
+        ogType="product"
+        canonical={`${process.env.REACT_APP_BACKEND_URL || ''}/tools/${toolSlug}`}
+        ogImage={tool?.logo_url}
+      />
+      <main className="min-h-screen bg-gray-50" role="main">
         {/* Hero Section */}
         <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-8">
