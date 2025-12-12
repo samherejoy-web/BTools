@@ -112,30 +112,57 @@ const HomePage = () => {
     );
   }
 
+  // Enhanced structured data for homepage
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${process.env.REACT_APP_BACKEND_URL || ''}/#website`,
+        "url": process.env.REACT_APP_BACKEND_URL || '',
+        "name": "MarketMindAI",
+        "description": "Discover, compare, and choose the best business tools with AI-powered insights",
+        "publisher": {
+          "@id": `${process.env.REACT_APP_BACKEND_URL || ''}/#organization`
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": `${process.env.REACT_APP_BACKEND_URL || ''}/tools?q={search_term_string}`
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": `${process.env.REACT_APP_BACKEND_URL || ''}/#organization`,
+        "name": "MarketMindAI",
+        "url": process.env.REACT_APP_BACKEND_URL || '',
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${process.env.REACT_APP_BACKEND_URL || ''}/logo.png`
+        },
+        "description": "Leading B2B software comparison and discovery platform",
+        "sameAs": [
+          "https://twitter.com/marketmindai",
+          "https://linkedin.com/company/marketmind",
+          "https://github.com/marketmind"
+        ]
+      }
+    ]
+  };
+
   return (
     <>
-      <ProductionSEOFix 
-        title="MarketMindAI - Discover the Best Business Tools"
-        description="Find, compare, and choose from thousands of business tools. Make informed decisions with AI-powered insights and community reviews from 10,000+ users."
-        keywords="business tools, productivity software, SaaS tools, tool comparison, software reviews, business productivity"
-        type="website"
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          "name": "MarketMindAI",
-          "url": process.env.REACT_APP_BACKEND_URL || '',
-          "description": "Discover and compare the best business tools",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": `${process.env.REACT_APP_BACKEND_URL || ''}/tools?q={search_term_string}`
-            },
-            "query-input": "required name=search_term_string"
-          }
-        }}
+      <EnhancedSEOHead 
+        title="MarketMindAI - Business Tools Comparison & Discovery Platform | Find Best Software 2024"
+        description="Discover and compare 150+ business tools and software. Get AI-powered recommendations, read verified reviews, and find the perfect tools for your business. Compare pricing, features & alternatives."
+        keywords="business tools comparison, software comparison platform, best business software 2024, SaaS tools directory, business tool discovery, compare software tools, tool reviews, business productivity tools, software alternatives, enterprise software comparison, startup tools, B2B software directory"
+        structuredData={structuredData}
+        ogType="website"
       />
-      <div className="min-h-screen">
+      <main className="min-h-screen">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-24 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
