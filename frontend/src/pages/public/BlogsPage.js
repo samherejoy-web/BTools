@@ -439,7 +439,8 @@ const BlogsPage = () => {
         {viewMode === 'grid' ? (
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label="Blog articles grid">
             {filteredBlogs.slice(searchTerm || selectedCategory ? 0 : 1).map((blog) => (
-              <Card key={blog.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md overflow-hidden">
+              <article key={blog.id} role="listitem" data-testid={`blog-card-${blog.id}`}>
+              <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md overflow-hidden h-full">
                 <div className="aspect-video bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
                   <BookOpen className="h-8 w-8 text-purple-600" />
                 </div>
