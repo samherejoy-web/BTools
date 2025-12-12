@@ -412,53 +412,56 @@ const HomePage = () => {
             </Link>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8" role="list" aria-label="Recent blog posts">
             {recentBlogs.map((blog) => (
-              <Card key={blog.id} className="hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-0">
-                  {blog.featured_image && (
-                    <img
-                      src={blog.featured_image}
-                      alt={blog.title}
-                      className="w-full h-48 object-cover rounded-t-lg"
-                    />
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center space-x-2 mb-3">
-                      {blog.tags?.slice(0, 2).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {blog.is_ai_generated && (
-                        <Badge className="bg-purple-100 text-purple-800 text-xs">
-                          <Brain className="w-3 h-3 mr-1" />
-                          AI
-                        </Badge>
-                      )}
+              <article key={blog.id} role="listitem" data-testid={`blog-${blog.id}`}>
+                <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
+                  <CardContent className="p-0">
+                    {blog.featured_image && (
+                      <img
+                        src={blog.featured_image}
+                        alt={`Featured image for ${blog.title}`}
+                        className="w-full h-48 object-cover rounded-t-lg"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center space-x-2 mb-3">
+                        {blog.tags?.slice(0, 2).map((tag) => (
+                          <Badge key={tag} variant="secondary" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                        {blog.is_ai_generated && (
+                          <Badge className="bg-purple-100 text-purple-800 text-xs" aria-label="AI Generated content">
+                            <Brain className="w-3 h-3 mr-1" aria-hidden="true" />
+                            AI
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+                        {blog.title}
+                      </h3>
+                      
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                        {blog.excerpt}
+                      </p>
+                      
+                      <footer className="flex justify-between items-center text-sm text-gray-500">
+                        <span>By {blog.author_name}</span>
+                        <span aria-label={`Reading time: ${blog.reading_time} minutes`}>{blog.reading_time} min read</span>
+                      </footer>
+                      
+                      <Link to={`/blogs/${blog.slug}`} className="mt-4 block">
+                        <Button size="sm" variant="outline" className="w-full" data-testid={`read-blog-${blog.id}`} aria-label={`Read more about ${blog.title}`}>
+                          Read More
+                        </Button>
+                      </Link>
                     </div>
-                    
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
-                      {blog.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {blog.excerpt}
-                    </p>
-                    
-                    <div className="flex justify-between items-center text-sm text-gray-500">
-                      <span>By {blog.author_name}</span>
-                      <span>{blog.reading_time} min read</span>
-                    </div>
-                    
-                    <Link to={`/blogs/${blog.slug}`} className="mt-4 block">
-                      <Button size="sm" variant="outline" className="w-full">
-                        Read More
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </article>
             ))}
           </div>
 
