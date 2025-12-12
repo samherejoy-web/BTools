@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 class LogoManagementTester:
-    def __init__(self, base_url="https://seo-semantic-sync.preview.emergentagent.com"):
+    def __init__(self, base_url="https://html-optimize-phase.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
