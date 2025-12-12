@@ -173,7 +173,7 @@ const EnhancedBlogEditor = ({
     }
   }, [blogId, title, content, excerpt, tags, seoTitle, seoDescription, seoKeywords, jsonLd]);
 
-  // Auto-save effect with proper cleanup (now placed after function definition)
+  // Auto-save effect with proper cleanup
   useEffect(() => {
     if (!editor || !blogId || !title.trim() || !content.trim()) return;
 
@@ -182,7 +182,8 @@ const EnhancedBlogEditor = ({
     }, 3000); // Auto-save after 3 seconds of inactivity
 
     return () => clearTimeout(timer);
-  }, [editor, blogId, title, content]); // Removed handleAutoSave from dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, blogId, title, content]);
 
   // Image upload handler
   const handleImageUpload = useCallback(async (file) => {
