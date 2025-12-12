@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -25,13 +25,7 @@ const SEOScoreCalculator = ({ contentType, contentId, contentData }) => {
   const [error, setError] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  useEffect(() => {
-    if (contentType && contentId) {
-      fetchSEOScore();
-    }
-  }, [contentType, contentId]);
-
-  const fetchSEOScore = async () => {
+  const fetchSEOScore = useCallback(async () => {
     if (!contentType || !contentId) return;
     
     setLoading(true);
@@ -46,7 +40,13 @@ const SEOScoreCalculator = ({ contentType, contentId, contentData }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [contentType, contentId]);
+
+  useEffect(() => {
+    if (contentType && contentId) {
+      fetchSEOScore();
+    }
+  }, [contentType, contentId, fetchSEOScore]);
 
   const getScoreColor = (score) => {
     if (score >= 80) return 'text-green-600';
