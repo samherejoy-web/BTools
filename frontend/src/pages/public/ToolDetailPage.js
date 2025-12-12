@@ -383,153 +383,153 @@ const ToolDetailPage = () => {
       <main className="min-h-screen bg-gray-50" role="main">
         {/* Hero Section */}
         <header className="bg-white border-b" data-testid="tool-header">
-        <div className="container mx-auto px-4 py-8">
-          <nav className="mb-6" aria-label="Navigation">
-            <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4" data-testid="back-button" aria-label="Go back">
-              <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
-              Back
-            </Button>
-            {tool && <Breadcrumb items={breadcrumbItems} />}
-          </nav>
+          <div className="container mx-auto px-4 py-8">
+            <nav className="mb-6" aria-label="Navigation">
+              <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4" data-testid="back-button" aria-label="Go back">
+                <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
+                Back
+              </Button>
+              {tool && <Breadcrumb items={breadcrumbItems} />}
+            </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex-1">
-                  <div className="flex items-start gap-4 mb-4">
-                    {/* Company Logo Thumbnail */}
-                    {tool.logo_thumbnail_url && (
-                      <div className="flex-shrink-0">
-                        <img 
-                          src={tool.logo_thumbnail_url} 
-                          alt={`${tool.name} logo`}
-                          className="w-16 h-16 rounded-lg object-cover border border-gray-200"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                    )}
-                    
-                    <div className="flex-1">
-                      <h1 className="text-4xl font-bold text-gray-900 mb-2">{tool.name}</h1>
-                      <p className="text-xl text-gray-600 mb-2">{tool.short_description}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex-1">
+                    <div className="flex items-start gap-4 mb-4">
+                      {/* Company Logo Thumbnail */}
+                      {tool.logo_thumbnail_url && (
+                        <div className="flex-shrink-0">
+                          <img 
+                            src={tool.logo_thumbnail_url} 
+                            alt={`${tool.name} logo`}
+                            className="w-16 h-16 rounded-lg object-cover border border-gray-200"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      )}
                       
-                      {/* Company Info */}
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-2">
-                        {tool.company_location && (
-                          <span className="flex items-center gap-1">
-                            📍 {tool.company_location}
-                          </span>
-                        )}
-                        {tool.started_on && (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            Founded {tool.started_on}
-                          </span>
-                        )}
-                        {tool.linkedin_url && (
-                          <a 
-                            href={tool.linkedin_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 hover:text-blue-600 transition-colors"
-                          >
-                            💼 LinkedIn
-                          </a>
-                        )}
+                      <div className="flex-1">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-2">{tool.name}</h1>
+                        <p className="text-xl text-gray-600 mb-2">{tool.short_description}</p>
+                        
+                        {/* Company Info */}
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-2">
+                          {tool.company_location && (
+                            <span className="flex items-center gap-1">
+                              📍 {tool.company_location}
+                            </span>
+                          )}
+                          {tool.started_on && (
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              Founded {tool.started_on}
+                            </span>
+                          )}
+                          {tool.linkedin_url && (
+                            <a 
+                              href={tool.linkedin_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 hover:text-blue-600 transition-colors"
+                            >
+                              💼 LinkedIn
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
+                    
                     <div className="flex items-center gap-4 mb-4">
-                    <div className="flex items-center gap-2">
-                      {renderStars(tool.rating)}
-                      <span className="font-semibold text-gray-900">{tool.rating}</span>
-                      <span className="text-gray-500">({formatNumber(tool.review_count)} reviews)</span>
+                      <div className="flex items-center gap-2">
+                        {renderStars(tool.rating)}
+                        <span className="font-semibold text-gray-900">{tool.rating}</span>
+                        <span className="text-gray-500">({formatNumber(tool.review_count)} reviews)</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Eye className="h-4 w-4" />
+                        <span>{formatNumber(tool.view_count)} views</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Heart className="h-4 w-4" />
+                        <span>{formatNumber(likesCount)} likes</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <Eye className="h-4 w-4" />
-                      <span>{formatNumber(tool.view_count)} views</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <Heart className="h-4 w-4" />
-                      <span>{formatNumber(likesCount)} likes</span>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-3 mb-6">
-                    <Badge className={`${getPricingColor(tool.pricing_type)} px-3 py-1 font-medium`}>
-                      <DollarSign className="h-4 w-4 mr-1" />
-                      {tool.pricing_type}
-                    </Badge>
-                    {tool.is_featured && (
-                      <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1">
-                        ⭐ Featured
+                    <div className="flex items-center gap-3 mb-6">
+                      <Badge className={`${getPricingColor(tool.pricing_type)} px-3 py-1 font-medium`}>
+                        <DollarSign className="h-4 w-4 mr-1" />
+                        {tool.pricing_type}
                       </Badge>
-                    )}
-                    {tool.categories?.map((category) => (
-                      <Badge key={category.id} variant="secondary">
-                        {category.name}
-                      </Badge>
-                    ))}
+                      {tool.is_featured && (
+                        <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1">
+                          ⭐ Featured
+                        </Badge>
+                      )}
+                      {tool.categories?.map((category) => (
+                        <Badge key={category.id} variant="secondary">
+                          {category.name}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button 
+                    onClick={() => window.open(tool.url, '_blank')}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Visit Website
+                  </Button>
+                  <Button variant="outline" onClick={handleToggleLike}>
+                    <Heart className={`h-4 w-4 mr-2 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
+                    {isLiked ? 'Liked' : 'Like'} ({formatNumber(likesCount)})
+                  </Button>
+                  <Button variant="outline" onClick={handleToggleFavorite}>
+                    <Heart className={`h-4 w-4 mr-2 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+                    {isFavorite ? 'Saved' : 'Save'}
+                  </Button>
+                  <Button variant="outline">
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
+                  <Link to={`/compare?tools=${tool.id}`}>
+                    <Button variant="outline">
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      Compare
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Button 
-                  onClick={() => window.open(tool.url, '_blank')}
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Visit Website
-                </Button>
-                <Button variant="outline" onClick={handleToggleLike}>
-                  <Heart className={`h-4 w-4 mr-2 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
-                  {isLiked ? 'Liked' : 'Like'} ({formatNumber(likesCount)})
-                </Button>
-                <Button variant="outline" onClick={handleToggleFavorite}>
-                  <Heart className={`h-4 w-4 mr-2 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
-                  {isFavorite ? 'Saved' : 'Save'}
-                </Button>
-                <Button variant="outline">
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
-                <Link to={`/compare?tools=${tool.id}`}>
-                  <Button variant="outline">
-                    <TrendingUp className="h-4 w-4 mr-2" />
-                    Compare
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div>
-              <Card className="border-0 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-lg">Pricing Details</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {tool.pricing_details && typeof tool.pricing_details === 'object' && Object.keys(tool.pricing_details).length > 0 ? (
-                    <div className="space-y-3">
-                      {Object.entries(tool.pricing_details).map(([tier, price]) => (
-                        <div key={tier} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 py-2 border-b border-gray-100 last:border-0">
-                          <span className="font-medium capitalize text-gray-700 text-sm">{tier}</span>
-                          <span className="text-gray-900 font-semibold text-sm break-words">{price}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-600 text-sm">Pricing information not available</p>
-                  )}
-                </CardContent>
-              </Card>
+              <aside>
+                <Card className="border-0 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Pricing Details</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {tool.pricing_details && typeof tool.pricing_details === 'object' && Object.keys(tool.pricing_details).length > 0 ? (
+                      <div className="space-y-3">
+                        {Object.entries(tool.pricing_details).map(([tier, price]) => (
+                          <div key={tier} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 py-2 border-b border-gray-100 last:border-0">
+                            <span className="font-medium capitalize text-gray-700 text-sm">{tier}</span>
+                            <span className="text-gray-900 font-semibold text-sm break-words">{price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 text-sm">Pricing information not available</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </aside>
             </div>
           </div>
-        </div>
-      </div>
+        </header>
 
       <article className="container mx-auto px-4 py-8" data-testid="tool-detail-content">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
