@@ -359,7 +359,7 @@ const BlogsPage = () => {
         {/* Featured Blog */}
         {!searchTerm && !selectedCategory && filteredBlogs.length > 0 && (
           <section className="mb-12" aria-labelledby="featured-article-heading">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Featured Article</h3>
+            <h3 id="featured-article-heading" className="text-xl font-bold text-gray-900 mb-6">Featured Article</h3>
             <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="md:flex">
                 <div className="md:w-1/2 p-8">
