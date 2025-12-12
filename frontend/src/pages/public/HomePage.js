@@ -112,7 +112,7 @@ const HomePage = () => {
     );
   }
 
-  // Enhanced structured data for homepage
+  // Enhanced structured data for homepage with comprehensive schemas
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -120,8 +120,10 @@ const HomePage = () => {
         "@type": "WebSite",
         "@id": `${process.env.REACT_APP_BACKEND_URL || ''}/#website`,
         "url": process.env.REACT_APP_BACKEND_URL || '',
-        "name": "MarketMindAI",
-        "description": "Discover, compare, and choose the best business tools with AI-powered insights",
+        "name": "MarketMindAI - Business Tools Comparison Platform",
+        "alternateName": "MarketMind AI",
+        "description": "Discover, compare, and choose the best business tools with AI-powered insights. Compare software, read reviews, and find the perfect tools for your business needs.",
+        "inLanguage": "en-US",
         "publisher": {
           "@id": `${process.env.REACT_APP_BACKEND_URL || ''}/#organization`
         },
@@ -141,14 +143,44 @@ const HomePage = () => {
         "url": process.env.REACT_APP_BACKEND_URL || '',
         "logo": {
           "@type": "ImageObject",
-          "url": `${process.env.REACT_APP_BACKEND_URL || ''}/logo.png`
+          "url": `${process.env.REACT_APP_BACKEND_URL || ''}/logo.png`,
+          "width": 250,
+          "height": 60
         },
-        "description": "Leading B2B software comparison and discovery platform",
+        "description": "Leading B2B software comparison and discovery platform helping businesses find the best tools and software solutions",
+        "foundingDate": "2024",
         "sameAs": [
           "https://twitter.com/marketmindai",
           "https://linkedin.com/company/marketmind",
           "https://github.com/marketmind"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Customer Service",
+          "availableLanguage": "English"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": process.env.REACT_APP_BACKEND_URL || ''
+          }
         ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
       }
     ]
   };
