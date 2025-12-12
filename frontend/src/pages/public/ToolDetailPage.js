@@ -382,14 +382,15 @@ const ToolDetailPage = () => {
       />
       <main className="min-h-screen bg-gray-50" role="main">
         {/* Hero Section */}
-        <div className="bg-white border-b">
+        <header className="bg-white border-b" data-testid="tool-header">
         <div className="container mx-auto px-4 py-8">
-          <div className="mb-6">
-            <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+          <nav className="mb-6" aria-label="Navigation">
+            <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4" data-testid="back-button" aria-label="Go back">
+              <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
               Back
             </Button>
-          </div>
+            {tool && <Breadcrumb items={breadcrumbItems} />}
+          </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
