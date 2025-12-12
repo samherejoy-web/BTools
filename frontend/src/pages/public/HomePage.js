@@ -202,27 +202,27 @@ const HomePage = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto">
+            <aside className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto" aria-label="Platform statistics">
               <div className="text-center">
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalTools)} tools listed`}>
                   {formatNumber(stats.totalTools)}+
                 </div>
                 <p className="text-gray-600">Tools Listed</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalBlogs)} expert reviews`}>
                   {formatNumber(stats.totalBlogs)}+
                 </div>
                 <p className="text-gray-600">Expert Reviews</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalUsers)} happy users`}>
                   {formatNumber(stats.totalUsers)}+
                 </div>
                 <p className="text-gray-600">Happy Users</p>
               </div>
-            </div>
-          </div>
+            </aside>
+          </header>
         </div>
       </section>
 
