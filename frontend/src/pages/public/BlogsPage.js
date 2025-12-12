@@ -341,10 +341,10 @@ const BlogsPage = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Results Header */}
-        <div className="flex items-center justify-between mb-6">
+        <section className="flex items-center justify-between mb-6" aria-labelledby="results-heading">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
               {filteredBlogs.length} Articles Found
