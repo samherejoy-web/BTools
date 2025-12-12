@@ -236,25 +236,23 @@ const HomePage = () => {
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               We make it easy to find, compare, and choose the right tools for your business needs.
             </p>
-          </div>
+          </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" role="list">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="text-center border-0 shadow-sm hover:shadow-md transition-shadow duration-300">
-                  <CardContent className="pt-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </CardContent>
-                </Card>
+                <article key={index} className="text-center border-0 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white rounded-xl p-6" role="listitem">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Icon className="h-6 w-6 text-white" aria-hidden="true" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </article>
               );
             })}
           </div>
