@@ -974,7 +974,7 @@ const ToolDetailPage = () => {
             </div>
           </section>
         )}
-      </div>
+      </article>
       </main>
     </>
   );
