@@ -393,24 +393,24 @@ const HomePage = () => {
       </section>
 
       {/* Recent Blogs Section */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section className="py-16 sm:py-20 bg-white" aria-labelledby="blogs-heading" data-testid="blogs-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
+          <header className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              <h2 id="blogs-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-testid="blogs-title">
                 Latest Insights
               </h2>
-              <p className="text-xl text-gray-600">
-                Expert guides and comparisons to help you choose better tools
+              <p className="text-xl text-gray-600" data-testid="blogs-description">
+                Expert guides, tool reviews, and comparisons to help you choose better business software
               </p>
             </div>
             <Link to="/blogs">
-              <Button variant="outline" className="hidden sm:flex">
+              <Button variant="outline" className="hidden sm:flex" data-testid="view-all-blogs-btn" aria-label="View all blog posts">
                 View All Posts
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
             </Link>
-          </div>
+          </header>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {recentBlogs.map((blog) => (
