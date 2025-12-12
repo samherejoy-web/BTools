@@ -283,7 +283,7 @@ const BlogsPage = () => {
 
         <div className="container mx-auto px-4 py-8">
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <section className="bg-white rounded-xl shadow-sm p-6 mb-8" aria-labelledby="filters-heading">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="flex flex-wrap gap-4 items-center">
               <select
