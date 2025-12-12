@@ -125,7 +125,7 @@ def analyze_page_seo(url, expected_schema_type=None):
 
 def main():
     """Main validation function"""
-    base_url = "https://blank-screen-solver.preview.emergentagent.com"
+    base_url = "https://seo-responsive-hub.preview.emergentagent.com"
     
     print("🚀 MarketMind JSON-LD Validation Report")
     print("=" * 50)

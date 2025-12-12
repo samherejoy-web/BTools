@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 class FocusedCommentTester:
-    def __init__(self, base_url="https://blank-screen-solver.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://seo-responsive-hub.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
@@ -326,8 +326,8 @@ class FocusedCommentTester:
         
         # Test with Origin header (simulating frontend request)
         headers = {
-            'Origin': 'https://blank-screen-solver.preview.emergentagent.com',
-            'Referer': 'https://blank-screen-solver.preview.emergentagent.com/blogs'
+            'Origin': 'https://seo-responsive-hub.preview.emergentagent.com',
+            'Referer': 'https://seo-responsive-hub.preview.emergentagent.com/blogs'
         }
         
         response = self.make_request('GET', 'blogs?limit=1', headers=headers)
