@@ -72,6 +72,11 @@ const UserReviews = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUserReviews();
+    fetchAvailableTools();
+  }, [fetchUserReviews]);
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (!selectedTool) {
