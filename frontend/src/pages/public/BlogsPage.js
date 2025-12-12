@@ -432,7 +432,7 @@ const BlogsPage = () => {
                 </div>
               </div>
             </Card>
-          </div>
+          </section>
         )}
 
         {/* Blogs Grid/List */}
