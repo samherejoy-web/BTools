@@ -640,7 +640,7 @@ const BlogsPage = () => {
           </Card>
         </div>
       </div>
-      </div>
+      </main>
     </>
   );
 };
