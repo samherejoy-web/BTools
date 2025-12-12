@@ -9,14 +9,23 @@ const ImmersiveReader = ({ children, isActive, onToggle }) => {
   const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
-    // Load user preferences from localStorage
+    // Load user preferences from localStorage on mount
     const savedFontSize = localStorage.getItem('reader-font-size');
     const savedDarkMode = localStorage.getItem('reader-dark-mode');
     const savedFontFamily = localStorage.getItem('reader-font-family');
 
-    if (savedFontSize) setFontSize(parseInt(savedFontSize));
-    if (savedDarkMode) setIsDarkMode(JSON.parse(savedDarkMode));
-    if (savedFontFamily) setFontFamily(savedFontFamily);
+    // Initialize state from saved values without cascading renders
+    if (savedFontSize) {
+      const parsedSize = parseInt(savedFontSize);
+      setFontSize(parsedSize);
+    }
+    if (savedDarkMode) {
+      const parsedMode = JSON.parse(savedDarkMode);
+      setIsDarkMode(parsedMode);
+    }
+    if (savedFontFamily) {
+      setFontFamily(savedFontFamily);
+    }
   }, []);
 
   useEffect(() => {
