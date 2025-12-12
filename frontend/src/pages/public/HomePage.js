@@ -169,12 +169,12 @@ const HomePage = () => {
           <header className="text-center">
             <div className="flex justify-center mb-6">
               <Badge className="px-4 py-2 bg-blue-100 text-blue-800 border-0">
-                <Sparkles className="w-4 h-4 mr-2" />
+                <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
                 Powered by AI
               </Badge>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Discover the{' '}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Perfect Tools
