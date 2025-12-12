@@ -80,27 +80,39 @@ const HomePage = () => {
     }
   ];
 
-  // FAQ data for AEO optimization
+  // Enhanced FAQ data for AEO optimization with competitor keywords
   const faqs = [
     {
       question: "What is MarketMindAI?",
-      answer: "MarketMindAI is a comprehensive business tools discovery platform that helps you find, compare, and choose the best software tools for your business needs. We provide AI-powered insights, community reviews, and detailed comparisons across thousands of business tools."
+      answer: "MarketMindAI is a comprehensive business tools discovery and comparison platform that helps you find, compare, and choose the best software tools for your business needs. We provide AI-powered insights, verified community reviews, and detailed side-by-side comparisons across thousands of business tools, SaaS solutions, and productivity software. Whether you're a startup, SMB, or enterprise, we help you make informed software decisions."
     },
     {
-      question: "How does MarketMindAI compare to other tool directories?",
-      answer: "Unlike traditional directories like Crozdesk or ProductHunt, MarketMindAI combines AI-powered recommendations with community reviews, offering personalized tool suggestions based on your specific business requirements. Our platform features advanced comparison tools, real-time user feedback, and comprehensive feature breakdowns."
+      question: "How does MarketMindAI compare to other tool directories like G2, Capterra, or ProductHunt?",
+      answer: "Unlike traditional directories like G2, Capterra, Crozdesk, or ProductHunt, MarketMindAI combines AI-powered recommendations with verified community reviews, offering personalized tool suggestions based on your specific business requirements, industry, and budget. Our platform features advanced comparison tools (compare up to 5 tools side-by-side), real-time user feedback, comprehensive pricing comparisons, feature breakdowns, and alternative suggestions."
     },
     {
       question: "Is MarketMindAI free to use?",
-      answer: "Yes! MarketMindAI is completely free for users to browse tools, read reviews, and compare options. We offer both free and premium features, with advanced analytics and personalized recommendations available for registered users."
+      answer: "Yes! MarketMindAI is completely free for users to browse tools, read reviews, compare software options, and access our tool directory. We offer both free and premium features, with advanced analytics, AI-powered recommendations, and personalized tool suggestions available for registered users. No credit card required to start exploring."
     },
     {
-      question: "How are tools reviewed on MarketMindAI?",
-      answer: "Tools are reviewed through a combination of verified user reviews, expert analysis, and AI-powered evaluation. We ensure authenticity by verifying reviewers and providing both pros and cons for each tool, helping you make informed decisions."
+      question: "What types of business tools can I find on MarketMindAI?",
+      answer: "You can find a wide variety of business tools including project management software, CRM tools, marketing automation platforms, keyword research tools, productivity apps, collaboration software, accounting tools, HR management systems, design tools, development tools, and more. We cover tools for startups, small businesses, and enterprise organizations across all industries and budgets (free, freemium, and paid options)."
+    },
+    {
+      question: "How are tools reviewed and rated on MarketMindAI?",
+      answer: "Tools are reviewed through a combination of verified user reviews, expert analysis, and AI-powered evaluation. We ensure authenticity by verifying reviewers, moderating spam, and providing both pros and cons for each tool. Our rating system includes overall ratings, feature scores, ease of use, customer support, value for money, and likelihood to recommend - helping you make informed, data-driven decisions."
+    },
+    {
+      question: "Can I compare multiple tools side-by-side?",
+      answer: "Yes! MarketMindAI offers a powerful comparison feature that allows you to compare up to 5 business tools side-by-side. You can compare features, pricing plans, user ratings, pros and cons, integration capabilities, and more. This makes it easy to evaluate alternatives and find the best software solution for your specific business needs."
+    },
+    {
+      question: "How do I find the best tools for my small business or startup?",
+      answer: "Use our advanced search and filtering options to find tools based on your specific needs. Filter by category (e.g., CRM, project management), pricing type (free, freemium, paid), business size (startup, SMB, enterprise), features, ratings, and more. Our AI-powered recommendation engine also suggests tools based on your industry, team size, and budget constraints."
     },
     {
       question: "Can I submit my own tool to MarketMindAI?",
-      answer: "Yes! Tool vendors and developers can submit their products for listing on MarketMindAI. We review each submission to ensure quality and relevance for our community. Contact us through our submission form to get started."
+      answer: "Yes! Tool vendors, developers, and SaaS companies can submit their products for listing on MarketMindAI. We review each submission to ensure quality and relevance for our community. Submit your tool through our vendor submission form, and our team will review it within 3-5 business days. Listing on MarketMindAI helps you reach thousands of potential customers actively searching for software solutions."
     }
   ];
 
