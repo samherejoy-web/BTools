@@ -514,6 +514,7 @@ const BlogsPage = () => {
                   </Link>
                 </CardContent>
               </Card>
+              </article>
             ))}
           </div>
         ) : (
