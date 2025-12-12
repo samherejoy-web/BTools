@@ -31,7 +31,8 @@ const FAQ = ({ faqs = [], title = "Frequently Asked Questions", className = "" }
             className="border border-gray-200 rounded-lg overflow-hidden"
             itemScope 
             itemProp="mainEntity" 
-            itemType="https://schema.org/Question"\n          >
+            itemType="https://schema.org/Question"
+          >
             <button
               onClick={() => toggleFAQ(index)}
               className="w-full text-left px-6 py-4 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-between"
