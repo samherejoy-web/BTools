@@ -489,8 +489,16 @@ const HomePage = () => {
       </section>
 
       {/* FAQ Section for AEO */}
-      <section className="py-16 sm:py-20 bg-white" aria-labelledby="faq-section">
+      <section className="py-16 sm:py-20 bg-gray-50" aria-labelledby="faq-section" data-testid="faq-section">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <header className="text-center mb-12">
+            <h2 id="faq-section" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-testid="faq-title">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about MarketMindAI and finding the best business tools
+            </p>
+          </header>
           <FAQ faqs={faqs} />
         </div>
       </section>
