@@ -54,6 +54,43 @@ const ToolDetailPage = () => {
   // Generate SEO data for the tool - only when tool data is loaded
   const seoData = useToolSEO(tool);
 
+  // FAQ data for tool page AEO optimization
+  const toolFaqs = tool ? [
+    {
+      question: `What is ${tool.name}?`,
+      answer: tool.about || tool.description || `${tool.name} is a ${tool.categories?.[0]?.name || 'business'} tool that helps teams and businesses improve productivity and achieve their goals. ${tool.short_description || ''}`
+    },
+    {
+      question: `How much does ${tool.name} cost?`,
+      answer: tool.pricing_type === 'free' 
+        ? `${tool.name} is completely free to use with no hidden costs.`
+        : tool.pricing_type === 'freemium'
+        ? `${tool.name} offers a freemium pricing model with both free and paid plans. ${tool.pricing_details ? 'View pricing details above for specific plan information.' : 'Visit their website for detailed pricing information.'}`
+        : `${tool.name} is a paid tool. ${tool.pricing_details ? 'View pricing details above for specific plan information.' : 'Visit their website for detailed pricing information.'}`
+    },
+    {
+      question: `What are the key features of ${tool.name}?`,
+      answer: tool.features && tool.features.length > 0
+        ? `${tool.name} offers several key features including: ${tool.features.slice(0, 5).join(', ')}${tool.features.length > 5 ? ', and more' : ''}.`
+        : `${tool.name} provides comprehensive features designed for ${tool.categories?.[0]?.name || 'business'} needs. Check the Features tab above for detailed information.`
+    },
+    {
+      question: `Is ${tool.name} good for small businesses and startups?`,
+      answer: tool.pricing_type === 'free' || tool.pricing_type === 'freemium'
+        ? `Yes! ${tool.name} is great for small businesses and startups with its ${tool.pricing_type} pricing model, making it accessible for teams of all sizes. ${tool.review_count > 0 ? `With ${tool.review_count} reviews and a ${tool.rating}-star rating, it's trusted by many businesses.` : ''}`
+        : `${tool.name} offers solutions for businesses of all sizes. ${tool.review_count > 0 ? `With ${tool.review_count} reviews and a ${tool.rating}-star rating, many businesses trust this tool.` : 'Check reviews and pricing to see if it fits your needs.'}`
+    },
+    {
+      question: `What are the pros and cons of ${tool.name}?`,
+      answer: `${tool.pros && tool.pros.length > 0 ? `Pros: ${tool.pros.slice(0, 3).join(', ')}.` : ''} ${tool.cons && tool.cons.length > 0 ? ` Cons: ${tool.cons.slice(0, 3).join(', ')}.` : ''} Read detailed reviews above for more insights from actual users.`
+    },
+    {
+      question: `What are the best alternatives to ${tool.name}?`,
+      answer: `Looking for ${tool.name} alternatives? Check our related tools section for similar ${tool.categories?.[0]?.name || 'business'} solutions. You can also use our comparison feature to compare ${tool.name} side-by-side with other tools to find the best fit for your needs.`
+    }
+  ] : [];
+
+
   useEffect(() => {
     if (toolSlug) {
       fetchToolDetails();
