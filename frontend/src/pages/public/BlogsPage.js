@@ -346,7 +346,7 @@ const BlogsPage = () => {
         {/* Results Header */}
         <section className="flex items-center justify-between mb-6" aria-labelledby="results-heading">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 id="results-heading" className="text-2xl font-bold text-gray-900">
               {filteredBlogs.length} Articles Found
             </h2>
             <p className="text-gray-600">
@@ -354,7 +354,7 @@ const BlogsPage = () => {
               {selectedCategory && ` in ${categories.find(c => c.slug === selectedCategory)?.name || selectedCategory}`}
             </p>
           </div>
-        </div>
+        </section>
 
         {/* Featured Blog */}
         {!searchTerm && !selectedCategory && filteredBlogs.length > 0 && (
