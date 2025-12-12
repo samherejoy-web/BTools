@@ -516,7 +516,7 @@ const BlogsPage = () => {
               </Card>
               </article>
             ))}
-          </div>
+          </section>
         ) : (
           <div className="space-y-4">
             {filteredBlogs.slice(searchTerm || selectedCategory ? 0 : 1).map((blog) => (
