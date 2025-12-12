@@ -260,23 +260,23 @@ const HomePage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-20 bg-white" aria-labelledby="features-heading">
+      <section className="py-16 sm:py-20 bg-white" aria-labelledby="features-heading" data-testid="features-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="text-center mb-16">
-            <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" data-testid="features-title">
               Why Choose MarketMindAI?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We make it easy to find, compare, and choose the right tools for your business needs.
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto" data-testid="features-description">
+              We make it easy to find, compare, and choose the right business tools and software solutions for your needs.
             </p>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" role="list">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" role="list" aria-label="Platform features">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <article key={index} className="text-center border-0 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white rounded-xl p-6" role="listitem">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <article key={index} className="text-center border-0 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white rounded-xl p-6" role="listitem" data-testid={`feature-card-${index}`}>
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                     <Icon className="h-6 w-6 text-white" aria-hidden="true" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">
