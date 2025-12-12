@@ -195,19 +195,19 @@ const HomePage = () => {
         ogType="website"
         canonical={process.env.REACT_APP_BACKEND_URL || ''}
       />
-      <main className="min-h-screen">
+      <main className="min-h-screen" role="main">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-24 lg:py-32" aria-labelledby="hero-heading">
+        <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-24 lg:py-32" aria-labelledby="hero-heading" data-testid="hero-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="text-center">
             <div className="flex justify-center mb-6">
-              <Badge className="px-4 py-2 bg-blue-100 text-blue-800 border-0">
+              <Badge className="px-4 py-2 bg-blue-100 text-blue-800 border-0" data-testid="ai-badge">
                 <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
                 Powered by AI
               </Badge>
             </div>
             
-            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6" data-testid="hero-title">
               Discover the{' '}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Perfect Tools
@@ -215,9 +215,9 @@ const HomePage = () => {
               {' '}for Your Business
             </h1>
             
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Compare, review, and choose from thousands of business tools. 
-              Make informed decisions with AI-powered insights and community reviews.
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed" data-testid="hero-description">
+              Compare, review, and choose from thousands of business tools and software solutions. 
+              Make informed decisions with AI-powered insights, verified reviews, and comprehensive feature comparisons.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
