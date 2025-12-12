@@ -20,8 +20,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
-import SEOHead from '../../components/SEO/SEOHead';
-import StructuredData, { generateBreadcrumbSchema } from '../../components/SEO/StructuredData';
+import EnhancedSEOHead from '../../components/SEO/EnhancedSEOHead';
+import Breadcrumb from '../../components/ui/Breadcrumb';
+import FAQ from '../../components/ui/FAQ';
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
