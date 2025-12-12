@@ -531,7 +531,7 @@ const ToolDetailPage = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <article className="container mx-auto px-4 py-8" data-testid="tool-detail-content">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <Tabs defaultValue="overview" className="space-y-6">
