@@ -6,20 +6,22 @@ const JSONLDScript = React.memo(({ data }) => {
     return null;
   }
 
+  // Serialize JSON outside of JSX to avoid try/catch around JSX
+  let jsonString;
   try {
-    const jsonString = JSON.stringify(data);
-    
-    return (
-      <Helmet>
-        <script type="application/ld+json">
-          {jsonString}
-        </script>
-      </Helmet>
-    );
+    jsonString = JSON.stringify(data);
   } catch (error) {
     console.error('Error serializing JSON-LD data:', error);
     return null;
   }
+  
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {jsonString}
+      </script>
+    </Helmet>
+  );
 });
 
 JSONLDScript.displayName = 'JSONLDScript';
