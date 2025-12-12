@@ -235,25 +235,25 @@ const HomePage = () => {
             </nav>
 
             {/* Stats */}
-            <aside className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto" aria-label="Platform statistics">
-              <div className="text-center">
+            <aside className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto" aria-label="Platform statistics" data-testid="platform-stats">
+              <article className="text-center" data-testid="stat-tools">
                 <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalTools)} tools listed`}>
                   {formatNumber(stats.totalTools)}+
                 </div>
                 <p className="text-gray-600">Tools Listed</p>
-              </div>
-              <div className="text-center">
+              </article>
+              <article className="text-center" data-testid="stat-reviews">
                 <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalBlogs)} expert reviews`}>
                   {formatNumber(stats.totalBlogs)}+
                 </div>
                 <p className="text-gray-600">Expert Reviews</p>
-              </div>
-              <div className="text-center">
+              </article>
+              <article className="text-center" data-testid="stat-users">
                 <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" aria-label={`${formatNumber(stats.totalUsers)} happy users`}>
                   {formatNumber(stats.totalUsers)}+
                 </div>
                 <p className="text-gray-600">Happy Users</p>
-              </div>
+              </article>
             </aside>
           </header>
         </div>
