@@ -96,7 +96,7 @@ const UserDashboard = () => {
           Welcome back, {user?.full_name || user?.username}!
         </h1>
         <p className="text-gray-600">
-          Here's what's happening with your content and activity.
+          Here&apos;s what&apos;s happening with your content and activity.
         </p>
       </div>
 
