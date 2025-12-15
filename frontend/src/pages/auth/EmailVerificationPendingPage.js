@@ -55,7 +55,7 @@ const EmailVerificationPendingPage = () => {
             Check Your Email
           </h2>
           <p className="text-gray-600">
-            We've sent you a verification link
+            We&apos;ve sent you a verification link
           </p>
         </div>
 
