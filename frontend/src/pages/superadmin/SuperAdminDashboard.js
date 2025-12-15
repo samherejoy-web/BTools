@@ -536,7 +536,7 @@ const SuperAdminDashboard = () => {
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <Activity className="h-5 w-5" />
-              Today's Activity
+              Today&apos;s Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
