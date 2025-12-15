@@ -55,6 +55,7 @@ const SuperAdminSEO = () => {
     fetchSeoOverview();
     fetchSeoIssues();
     fetchGenerationStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIssueType, selectedSeverity]);
 
   // Cleanup EventSource on unmount
