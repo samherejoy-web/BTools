@@ -323,7 +323,7 @@ const TermsPage = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">7.1 Service Availability</h3>
                 <p className="text-gray-600 mb-4">
                   We strive to maintain Service availability but cannot guarantee uninterrupted access. 
-                  The Service is provided "as is" without warranties of any kind, express or implied.
+                  The Service is provided &quot;as is&quot; without warranties of any kind, express or implied.
                 </p>
 
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">7.2 Content Accuracy</h3>
