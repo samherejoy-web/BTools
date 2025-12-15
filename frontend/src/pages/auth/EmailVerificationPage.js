@@ -22,6 +22,7 @@ const EmailVerificationPage = () => {
       setStatus('error');
       setMessage('Invalid verification link. No token provided.');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const handleVerification = async () => {
