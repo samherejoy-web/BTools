@@ -48,9 +48,10 @@ const Footer = () => {
   };
 
   useEffect(() => {
-    fetchSocialUrls();
-    fetchFreeTools();
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchSocialUrls();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchFreeTools();
   }, []);
 
   const footerLinks = {
