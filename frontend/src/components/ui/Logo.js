@@ -36,10 +36,6 @@ const Logo = ({
 
   const config = sizeConfig[size] || sizeConfig.default;
 
-  useEffect(() => {
-    fetchLogoData();
-  }, []);
-
   const fetchLogoData = async () => {
     try {
       const response = await apiClient.get('/public/site-settings');
@@ -72,6 +68,10 @@ const Logo = ({
       });
     }
   };
+
+  useEffect(() => {
+    fetchLogoData();
+  }, []);
 
   // Loading state
   if (logoData.loading) {
