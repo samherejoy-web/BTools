@@ -240,8 +240,8 @@ const ContactPage = () => {
               <article aria-labelledby="contact-info-heading">
                 <h2 id="contact-info-heading" className="text-3xl font-bold text-gray-900 mb-8" data-testid="contact-info-title">Get in Touch</h2>
                 <p className="text-lg text-gray-600 mb-8">
-                  Whether you're looking for support, exploring partnership opportunities, or have questions about our platform, 
-                  we'd love to hear from you. Our team is dedicated to providing exceptional service and support.
+                  Whether you&apos;re looking for support, exploring partnership opportunities, or have questions about our platform, 
+                  we&apos;d love to hear from you. Our team is dedicated to providing exceptional service and support.
                 </p>
 
                 <div className="space-y-6 mb-8" role="list" aria-label="Contact methods">
