@@ -169,637 +169,641 @@ const SuperAdminTools = () => {
     return variants[pricingType] || variants.free;
   };
 
-  const ToolForm = ({ tool, onSubmit, onClose, isEdit = false }) => {
-    const [formData, setFormData] = useState({
-      name: tool?.name || '',
-      description: tool?.description || '',
-      short_description: tool?.short_description || '',
-      url: tool?.url || '',
-      logo_url: tool?.logo_url || '',
-      screenshot_url: tool?.screenshot_url || '',
-      pricing_type: tool?.pricing_type || 'free',
-      pricing_details: tool?.pricing_details ? JSON.stringify(tool.pricing_details, null, 2) : '',
-      features: tool?.features?.join(', ') || '',
-      pros: tool?.pros?.join(', ') || '',
-      cons: tool?.cons?.join(', ') || '',
-      category_ids: tool?.categories?.map(c => c.id) || [],
-      is_featured: tool?.is_featured || false,
-      is_active: tool?.is_active !== false,
-      seo_title: tool?.seo_title || '',
-      seo_description: tool?.seo_description || '',
-      seo_keywords: tool?.seo_keywords || '',
-      // New company-related fields
-      linkedin_url: tool?.linkedin_url || '',
-      company_funding: tool?.company_funding ? JSON.stringify(tool.company_funding, null, 2) : '',
-      company_news: tool?.company_news || '',
-      company_location: tool?.company_location || '',
-      company_founders: tool?.company_founders ? JSON.stringify(tool.company_founders, null, 2) : '',
-      about: tool?.about || '',
-      started_on: tool?.started_on || '',
-      logo_thumbnail_url: tool?.logo_thumbnail_url || ''
-    });
 
-    const [validationErrors, setValidationErrors] = useState({});
-    const [jsonValidation, setJsonValidation] = useState({
-      pricing_details: null,
-      company_funding: null,
-      company_founders: null
-    });
+// Extract ToolForm component to prevent recreation on each render
+const ToolForm = ({ tool, onSubmit, onClose, isEdit = false }) => {
+  const [formData, setFormData] = useState({
+    name: tool?.name || '',
+    description: tool?.description || '',
+    short_description: tool?.short_description || '',
+    url: tool?.url || '',
+    logo_url: tool?.logo_url || '',
+    screenshot_url: tool?.screenshot_url || '',
+    pricing_type: tool?.pricing_type || 'free',
+    pricing_details: tool?.pricing_details ? JSON.stringify(tool.pricing_details, null, 2) : '',
+    features: tool?.features?.join(', ') || '',
+    pros: tool?.pros?.join(', ') || '',
+    cons: tool?.cons?.join(', ') || '',
+    category_ids: tool?.categories?.map(c => c.id) || [],
+    is_featured: tool?.is_featured || false,
+    is_active: tool?.is_active !== false,
+    seo_title: tool?.seo_title || '',
+    seo_description: tool?.seo_description || '',
+    seo_keywords: tool?.seo_keywords || '',
+    // New company-related fields
+    linkedin_url: tool?.linkedin_url || '',
+    company_funding: tool?.company_funding ? JSON.stringify(tool.company_funding, null, 2) : '',
+    company_news: tool?.company_news || '',
+    company_location: tool?.company_location || '',
+    company_founders: tool?.company_founders ? JSON.stringify(tool.company_founders, null, 2) : '',
+    about: tool?.about || '',
+    started_on: tool?.started_on || '',
+    logo_thumbnail_url: tool?.logo_thumbnail_url || ''
+  });
 
-    // Validate JSON field in real-time
-    const validateJsonField = (fieldName, value) => {
-      if (!value || value.trim() === '') {
-        setJsonValidation(prev => ({ ...prev, [fieldName]: 'valid' }));
-        return true;
-      }
+  const [validationErrors, setValidationErrors] = useState({});
+  const [jsonValidation, setJsonValidation] = useState({
+    pricing_details: null,
+    company_funding: null,
+    company_founders: null
+  });
+
+  // Validate JSON field in real-time
+  const validateJsonField = (fieldName, value) => {
+    if (!value || value.trim() === '') {
+      setJsonValidation(prev => ({ ...prev, [fieldName]: 'valid' }));
+      return true;
+    }
+    try {
+      JSON.parse(value);
+      setJsonValidation(prev => ({ ...prev, [fieldName]: 'valid' }));
+      return true;
+    } catch (e) {
+      setJsonValidation(prev => ({ ...prev, [fieldName]: e.message }));
+      return false;
+    }
+  };
+
+  // Validate URL format
+  const validateUrl = (url) => {
+    if (!url || url.trim() === '') return true;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // Validate date format (YYYY-MM-DD or YYYY)
+  const validateDate = (date) => {
+    if (!date || date.trim() === '') return true;
+    const yearPattern = /^\d{4}$/;
+    const fullDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+    return yearPattern.test(date) || fullDatePattern.test(date);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const errors = {};
+
+    // Validate required fields
+    if (!formData.name || formData.name.trim() === '') {
+      errors.name = 'Tool name is required';
+    }
+
+    // Validate URLs
+    if (formData.url && !validateUrl(formData.url)) {
+      errors.url = 'Invalid URL format. Must start with http:// or https://';
+    }
+    if (formData.logo_url && !validateUrl(formData.logo_url)) {
+      errors.logo_url = 'Invalid URL format';
+    }
+    if (formData.screenshot_url && !validateUrl(formData.screenshot_url)) {
+      errors.screenshot_url = 'Invalid URL format';
+    }
+    if (formData.linkedin_url && !validateUrl(formData.linkedin_url)) {
+      errors.linkedin_url = 'Invalid URL format';
+    }
+    if (formData.logo_thumbnail_url && !validateUrl(formData.logo_thumbnail_url)) {
+      errors.logo_thumbnail_url = 'Invalid URL format';
+    }
+
+    // Validate date
+    if (formData.started_on && !validateDate(formData.started_on)) {
+      errors.started_on = 'Invalid date format. Use YYYY or YYYY-MM-DD (e.g., 2020 or 2020-01-15)';
+    }
+
+    // Helper function to parse JSON fields safely
+    const parseJsonField = (field, fieldName) => {
+      if (!field || field.trim() === '') return null;
       try {
-        JSON.parse(value);
-        setJsonValidation(prev => ({ ...prev, [fieldName]: 'valid' }));
-        return true;
+        const parsed = JSON.parse(field);
+        return parsed;
       } catch (e) {
-        setJsonValidation(prev => ({ ...prev, [fieldName]: e.message }));
-        return false;
+        errors[fieldName] = `Invalid JSON format: ${e.message}`;
+        return null;
       }
     };
+    
+    // Parse and validate JSON fields
+    const pricingDetails = parseJsonField(formData.pricing_details, 'pricing_details');
+    const companyFunding = parseJsonField(formData.company_funding, 'company_funding');
+    const companyFounders = parseJsonField(formData.company_founders, 'company_founders');
 
-    // Validate URL format
-    const validateUrl = (url) => {
-      if (!url || url.trim() === '') return true;
-      try {
-        new URL(url);
-        return true;
-      } catch {
-        return false;
-      }
+    // Validate company_funding structure if provided
+    if (companyFunding && typeof companyFunding !== 'object') {
+      errors.company_funding = 'Must be a valid JSON object with keys like "amount", "round", "date"';
+    }
+
+    // Validate company_founders structure if provided
+    if (companyFounders && !Array.isArray(companyFounders)) {
+      errors.company_founders = 'Must be a valid JSON array of objects with "name" and "role" keys';
+    }
+
+    // If there are validation errors, show them and prevent submission
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      toast.error('Please fix validation errors before submitting');
+      return;
+    }
+
+    setValidationErrors({});
+    
+    const submitData = {
+      ...formData,
+      features: formData.features ? formData.features.split(',').map(f => f.trim()).filter(f => f) : [],
+      pros: formData.pros ? formData.pros.split(',').map(p => p.trim()).filter(p => p) : [],
+      cons: formData.cons ? formData.cons.split(',').map(c => c.trim()).filter(c => c) : [],
+      // Parse JSON fields
+      pricing_details: pricingDetails,
+      company_funding: companyFunding,
+      company_founders: companyFounders
     };
+    onSubmit(submitData);
+  };
 
-    // Validate date format (YYYY-MM-DD or YYYY)
-    const validateDate = (date) => {
-      if (!date || date.trim() === '') return true;
-      const yearPattern = /^\d{4}$/;
-      const fullDatePattern = /^\d{4}-\d{2}-\d{2}$/;
-      return yearPattern.test(date) || fullDatePattern.test(date);
-    };
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      
-      const errors = {};
-
-      // Validate required fields
-      if (!formData.name || formData.name.trim() === '') {
-        errors.name = 'Tool name is required';
-      }
-
-      // Validate URLs
-      if (formData.url && !validateUrl(formData.url)) {
-        errors.url = 'Invalid URL format. Must start with http:// or https://';
-      }
-      if (formData.logo_url && !validateUrl(formData.logo_url)) {
-        errors.logo_url = 'Invalid URL format';
-      }
-      if (formData.screenshot_url && !validateUrl(formData.screenshot_url)) {
-        errors.screenshot_url = 'Invalid URL format';
-      }
-      if (formData.linkedin_url && !validateUrl(formData.linkedin_url)) {
-        errors.linkedin_url = 'Invalid URL format';
-      }
-      if (formData.logo_thumbnail_url && !validateUrl(formData.logo_thumbnail_url)) {
-        errors.logo_thumbnail_url = 'Invalid URL format';
-      }
-
-      // Validate date
-      if (formData.started_on && !validateDate(formData.started_on)) {
-        errors.started_on = 'Invalid date format. Use YYYY or YYYY-MM-DD (e.g., 2020 or 2020-01-15)';
-      }
-
-      // Helper function to parse JSON fields safely
-      const parseJsonField = (field, fieldName) => {
-        if (!field || field.trim() === '') return null;
-        try {
-          const parsed = JSON.parse(field);
-          return parsed;
-        } catch (e) {
-          errors[fieldName] = `Invalid JSON format: ${e.message}`;
-          return null;
-        }
-      };
-      
-      // Parse and validate JSON fields
-      const pricingDetails = parseJsonField(formData.pricing_details, 'pricing_details');
-      const companyFunding = parseJsonField(formData.company_funding, 'company_funding');
-      const companyFounders = parseJsonField(formData.company_founders, 'company_founders');
-
-      // Validate company_funding structure if provided
-      if (companyFunding && typeof companyFunding !== 'object') {
-        errors.company_funding = 'Must be a valid JSON object with keys like "amount", "round", "date"';
-      }
-
-      // Validate company_founders structure if provided
-      if (companyFounders && !Array.isArray(companyFounders)) {
-        errors.company_founders = 'Must be a valid JSON array of objects with "name" and "role" keys';
-      }
-
-      // If there are validation errors, show them and prevent submission
-      if (Object.keys(errors).length > 0) {
-        setValidationErrors(errors);
-        toast.error('Please fix validation errors before submitting');
-        return;
-      }
-
-      setValidationErrors({});
-      
-      const submitData = {
-        ...formData,
-        features: formData.features ? formData.features.split(',').map(f => f.trim()).filter(f => f) : [],
-        pros: formData.pros ? formData.pros.split(',').map(p => p.trim()).filter(p => p) : [],
-        cons: formData.cons ? formData.cons.split(',').map(c => c.trim()).filter(c => c) : [],
-        // Parse JSON fields
-        pricing_details: pricingDetails,
-        company_funding: companyFunding,
-        company_founders: companyFounders
-      };
-      onSubmit(submitData);
-    };
-
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-        <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-          <h2 className="text-xl font-bold mb-6">
-            {isEdit ? 'Edit Tool' : 'Create New Tool'}
-          </h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Tool Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
-                  required
-                />
-                {validationErrors.name && (
-                  <p className="text-red-600 text-xs mt-1">{validationErrors.name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Short Description</label>
-                <input
-                  type="text"
-                  value={formData.short_description}
-                  onChange={(e) => setFormData({...formData, short_description: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Website URL</label>
-                <input
-                  type="url"
-                  value={formData.url}
-                  onChange={(e) => setFormData({...formData, url: e.target.value})}
-                  placeholder="https://example.com"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    validationErrors.url ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
-                />
-                {validationErrors.url && (
-                  <p className="text-red-600 text-xs mt-1">{validationErrors.url}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Logo URL</label>
-                <input
-                  type="url"
-                  value={formData.logo_url}
-                  onChange={(e) => setFormData({...formData, logo_url: e.target.value})}
-                  placeholder="https://example.com/logo.png"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    validationErrors.logo_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
-                />
-                {validationErrors.logo_url && (
-                  <p className="text-red-600 text-xs mt-1">{validationErrors.logo_url}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Screenshot URL</label>
-                <input
-                  type="url"
-                  value={formData.screenshot_url}
-                  onChange={(e) => setFormData({...formData, screenshot_url: e.target.value})}
-                  placeholder="https://example.com/screenshot.png"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    validationErrors.screenshot_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
-                />
-                {validationErrors.screenshot_url && (
-                  <p className="text-red-600 text-xs mt-1">{validationErrors.screenshot_url}</p>
-                )}
-              </div>
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-bold mb-6">
+          {isEdit ? 'Edit Tool' : 'Create New Tool'}
+        </h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Tool Name *</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  validationErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+                required
+              />
+              {validationErrors.name && (
+                <p className="text-red-600 text-xs mt-1">{validationErrors.name}</p>
+              )}
             </div>
 
-            {/* Right Column */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Pricing Type</label>
-                <select
-                  value={formData.pricing_type}
-                  onChange={(e) => setFormData({...formData, pricing_type: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="free">Free</option>
-                  <option value="freemium">Freemium</option>
-                  <option value="paid">Paid</option>
-                </select>
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Short Description</label>
+              <input
+                type="text"
+                value={formData.short_description}
+                onChange={(e) => setFormData({...formData, short_description: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
 
+            <div>
+              <label className="block text-sm font-medium mb-1">Description</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Website URL</label>
+              <input
+                type="url"
+                value={formData.url}
+                onChange={(e) => setFormData({...formData, url: e.target.value})}
+                placeholder="https://example.com"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  validationErrors.url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+              />
+              {validationErrors.url && (
+                <p className="text-red-600 text-xs mt-1">{validationErrors.url}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Logo URL</label>
+              <input
+                type="url"
+                value={formData.logo_url}
+                onChange={(e) => setFormData({...formData, logo_url: e.target.value})}
+                placeholder="https://example.com/logo.png"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  validationErrors.logo_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+              />
+              {validationErrors.logo_url && (
+                <p className="text-red-600 text-xs mt-1">{validationErrors.logo_url}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Screenshot URL</label>
+              <input
+                type="url"
+                value={formData.screenshot_url}
+                onChange={(e) => setFormData({...formData, screenshot_url: e.target.value})}
+                placeholder="https://example.com/screenshot.png"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  validationErrors.screenshot_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+              />
+              {validationErrors.screenshot_url && (
+                <p className="text-red-600 text-xs mt-1">{validationErrors.screenshot_url}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Pricing Type</label>
+              <select
+                value={formData.pricing_type}
+                onChange={(e) => setFormData({...formData, pricing_type: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="free">Free</option>
+                <option value="freemium">Freemium</option>
+                <option value="paid">Paid</option>
+              </select>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium">Pricing Details (JSON)</label>
+                <button
+                  type="button"
+                  onClick={() => validateJsonField('pricing_details', formData.pricing_details)}
+                  className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Validate JSON
+                </button>
+              </div>
+              <textarea
+                value={formData.pricing_details}
+                onChange={(e) => {
+                  setFormData({...formData, pricing_details: e.target.value});
+                  validateJsonField('pricing_details', e.target.value);
+                }}
+                rows={4}
+                placeholder='{"free": "Free tier", "basic": "$9/month", "pro": "$29/month"}'
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
+                  validationErrors.pricing_details ? 'border-red-500 bg-red-50' : 
+                  jsonValidation.pricing_details === 'valid' ? 'border-green-500 bg-green-50' :
+                  jsonValidation.pricing_details ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+              />
+              {validationErrors.pricing_details && (
+                <p className="text-red-600 text-xs mt-1">{validationErrors.pricing_details}</p>
+              )}
+              {jsonValidation.pricing_details && jsonValidation.pricing_details !== 'valid' && (
+                <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.pricing_details}</p>
+              )}
+              {jsonValidation.pricing_details === 'valid' && formData.pricing_details && (
+                <p className="text-green-600 text-xs mt-1">✓ Valid JSON format</p>
+              )}
+              <p className="text-xs text-gray-500 mt-1">
+                Example: {`{"free": "Free tier", "basic": "$9/month", "pro": "$29/month"}`}
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Categories</label>
+              <select
+                multiple
+                value={formData.category_ids}
+                onChange={(e) => setFormData({
+                  ...formData, 
+                  category_ids: Array.from(e.target.selectedOptions, option => option.value)
+                })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
+              >
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Features (comma-separated)</label>
+              <textarea
+                value={formData.features}
+                onChange={(e) => setFormData({...formData, features: e.target.value})}
+                rows={3}
+                placeholder="Feature 1, Feature 2, Feature 3"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">Separate features with commas</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Pros (comma-separated)</label>
+              <textarea
+                value={formData.pros}
+                onChange={(e) => setFormData({...formData, pros: e.target.value})}
+                rows={2}
+                placeholder="Easy to use, Great UI, Fast performance"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">Separate pros with commas</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Cons (comma-separated)</label>
+              <textarea
+                value={formData.cons}
+                onChange={(e) => setFormData({...formData, cons: e.target.value})}
+                rows={2}
+                placeholder="Expensive, Limited features, Learning curve"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">Separate cons with commas</p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
+                  className="rounded"
+                />
+                <label htmlFor="is_featured" className="text-sm font-medium">Featured Tool</label>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is_active"
+                  checked={formData.is_active}
+                  onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                  className="rounded"
+                />
+                <label htmlFor="is_active" className="text-sm font-medium">Active Tool</label>
+              </div>
+            </div>
+          </div>
+
+          {/* SEO Section */}
+          <div className="lg:col-span-2 pt-4 border-t">
+            <h3 className="text-lg font-semibold mb-4">SEO Settings</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div>
+                <label className="block text-sm font-medium mb-1">SEO Title</label>
+                <input
+                  type="text"
+                  value={formData.seo_title}
+                  onChange={(e) => setFormData({...formData, seo_title: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">SEO Keywords</label>
+                <input
+                  type="text"
+                  value={formData.seo_keywords}
+                  onChange={(e) => setFormData({...formData, seo_keywords: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <label className="block text-sm font-medium mb-1">SEO Description</label>
+                <textarea
+                  value={formData.seo_description}
+                  onChange={(e) => setFormData({...formData, seo_description: e.target.value})}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Company Information Section */}
+          <div className="lg:col-span-2 pt-4 border-t">
+            <h3 className="text-lg font-semibold mb-4">Company Information</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Company Location</label>
+                <input
+                  type="text"
+                  value={formData.company_location}
+                  onChange={(e) => setFormData({...formData, company_location: e.target.value})}
+                  placeholder="e.g., San Francisco, CA"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Founded Date</label>
+                <input
+                  type="text"
+                  value={formData.started_on}
+                  onChange={(e) => setFormData({...formData, started_on: e.target.value})}
+                  placeholder="2020 or 2020-01-15"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    validationErrors.started_on ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {validationErrors.started_on && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.started_on}</p>
+                )}
+                <p className="text-xs text-gray-500 mt-1">Format: YYYY or YYYY-MM-DD</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">LinkedIn URL</label>
+                <input
+                  type="url"
+                  value={formData.linkedin_url}
+                  onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
+                  placeholder="https://linkedin.com/company/..."
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    validationErrors.linkedin_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {validationErrors.linkedin_url && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.linkedin_url}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Logo Thumbnail URL</label>
+                <input
+                  type="url"
+                  value={formData.logo_thumbnail_url}
+                  onChange={(e) => setFormData({...formData, logo_thumbnail_url: e.target.value})}
+                  placeholder="https://example.com/thumbnail.png"
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    validationErrors.logo_thumbnail_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                />
+                {validationErrors.logo_thumbnail_url && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.logo_thumbnail_url}</p>
+                )}
+              </div>
+              <div className="lg:col-span-2">
+                <label className="block text-sm font-medium mb-1">About Company</label>
+                <textarea
+                  value={formData.about}
+                  onChange={(e) => setFormData({...formData, about: e.target.value})}
+                  rows={3}
+                  placeholder="Detailed company description..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <label className="block text-sm font-medium mb-1">Company News</label>
+                <textarea
+                  value={formData.company_news}
+                  onChange={(e) => setFormData({...formData, company_news: e.target.value})}
+                  rows={2}
+                  placeholder="Recent news about the company..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-sm font-medium">Pricing Details (JSON)</label>
+                  <label className="block text-sm font-medium">Company Funding (JSON)</label>
                   <button
                     type="button"
-                    onClick={() => validateJsonField('pricing_details', formData.pricing_details)}
+                    onClick={() => validateJsonField('company_funding', formData.company_funding)}
                     className="text-xs text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Validate JSON
                   </button>
                 </div>
                 <textarea
-                  value={formData.pricing_details}
+                  value={formData.company_funding}
                   onChange={(e) => {
-                    setFormData({...formData, pricing_details: e.target.value});
-                    validateJsonField('pricing_details', e.target.value);
+                    setFormData({...formData, company_funding: e.target.value});
+                    validateJsonField('company_funding', e.target.value);
                   }}
-                  rows={4}
-                  placeholder='{"free": "Free tier", "basic": "$9/month", "pro": "$29/month"}'
+                  rows={3}
+                  placeholder='{"amount": "10M", "round": "Series A", "date": "2023-01-01"}'
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
-                    validationErrors.pricing_details ? 'border-red-500 bg-red-50' : 
-                    jsonValidation.pricing_details === 'valid' ? 'border-green-500 bg-green-50' :
-                    jsonValidation.pricing_details ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    validationErrors.company_funding ? 'border-red-500 bg-red-50' : 
+                    jsonValidation.company_funding === 'valid' ? 'border-green-500 bg-green-50' :
+                    jsonValidation.company_funding ? 'border-red-500 bg-red-50' : 'border-gray-300'
                   }`}
                 />
-                {validationErrors.pricing_details && (
-                  <p className="text-red-600 text-xs mt-1">{validationErrors.pricing_details}</p>
+                {validationErrors.company_funding && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.company_funding}</p>
                 )}
-                {jsonValidation.pricing_details && jsonValidation.pricing_details !== 'valid' && (
-                  <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.pricing_details}</p>
+                {jsonValidation.company_funding && jsonValidation.company_funding !== 'valid' && (
+                  <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.company_funding}</p>
                 )}
-                {jsonValidation.pricing_details === 'valid' && formData.pricing_details && (
+                {jsonValidation.company_funding === 'valid' && formData.company_funding && (
                   <p className="text-green-600 text-xs mt-1">✓ Valid JSON format</p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  Example: {`{"free": "Free tier", "basic": "$9/month", "pro": "$29/month"}`}
+                  Example: {`{"amount": "10M", "round": "Series A", "date": "2023-01-01"}`}
                 </p>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Categories</label>
-                <select
-                  multiple
-                  value={formData.category_ids}
-                  onChange={(e) => setFormData({
-                    ...formData, 
-                    category_ids: Array.from(e.target.selectedOptions, option => option.value)
-                  })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
-                >
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Features (comma-separated)</label>
+              <div className="lg:col-span-2">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium">Company Founders (JSON)</label>
+                  <button
+                    type="button"
+                    onClick={() => validateJsonField('company_founders', formData.company_founders)}
+                    className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Validate JSON
+                  </button>
+                </div>
                 <textarea
-                  value={formData.features}
-                  onChange={(e) => setFormData({...formData, features: e.target.value})}
+                  value={formData.company_founders}
+                  onChange={(e) => {
+                    setFormData({...formData, company_founders: e.target.value});
+                    validateJsonField('company_founders', e.target.value);
+                  }}
                   rows={3}
-                  placeholder="Feature 1, Feature 2, Feature 3"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder='[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]'
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
+                    validationErrors.company_founders ? 'border-red-500 bg-red-50' : 
+                    jsonValidation.company_founders === 'valid' ? 'border-green-500 bg-green-50' :
+                    jsonValidation.company_founders ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
                 />
-                <p className="text-xs text-gray-500 mt-1">Separate features with commas</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Pros (comma-separated)</label>
-                <textarea
-                  value={formData.pros}
-                  onChange={(e) => setFormData({...formData, pros: e.target.value})}
-                  rows={2}
-                  placeholder="Easy to use, Great UI, Fast performance"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500 mt-1">Separate pros with commas</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Cons (comma-separated)</label>
-                <textarea
-                  value={formData.cons}
-                  onChange={(e) => setFormData({...formData, cons: e.target.value})}
-                  rows={2}
-                  placeholder="Expensive, Limited features, Learning curve"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500 mt-1">Separate cons with commas</p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="is_featured"
-                    checked={formData.is_featured}
-                    onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
-                    className="rounded"
-                  />
-                  <label htmlFor="is_featured" className="text-sm font-medium">Featured Tool</label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="is_active"
-                    checked={formData.is_active}
-                    onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                    className="rounded"
-                  />
-                  <label htmlFor="is_active" className="text-sm font-medium">Active Tool</label>
-                </div>
+                {validationErrors.company_founders && (
+                  <p className="text-red-600 text-xs mt-1">{validationErrors.company_founders}</p>
+                )}
+                {jsonValidation.company_founders && jsonValidation.company_founders !== 'valid' && (
+                  <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.company_founders}</p>
+                )}
+                {jsonValidation.company_founders === 'valid' && formData.company_founders && (
+                  <p className="text-green-600 text-xs mt-1">✓ Valid JSON array format</p>
+                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Example: {`[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]`}
+                </p>
               </div>
             </div>
+          </div>
 
-            {/* SEO Section */}
-            <div className="lg:col-span-2 pt-4 border-t">
-              <h3 className="text-lg font-semibold mb-4">SEO Settings</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">SEO Title</label>
-                  <input
-                    type="text"
-                    value={formData.seo_title}
-                    onChange={(e) => setFormData({...formData, seo_title: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">SEO Keywords</label>
-                  <input
-                    type="text"
-                    value={formData.seo_keywords}
-                    onChange={(e) => setFormData({...formData, seo_keywords: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">SEO Description</label>
-                  <textarea
-                    value={formData.seo_description}
-                    onChange={(e) => setFormData({...formData, seo_description: e.target.value})}
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Company Information Section */}
-            <div className="lg:col-span-2 pt-4 border-t">
-              <h3 className="text-lg font-semibold mb-4">Company Information</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Company Location</label>
-                  <input
-                    type="text"
-                    value={formData.company_location}
-                    onChange={(e) => setFormData({...formData, company_location: e.target.value})}
-                    placeholder="e.g., San Francisco, CA"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Founded Date</label>
-                  <input
-                    type="text"
-                    value={formData.started_on}
-                    onChange={(e) => setFormData({...formData, started_on: e.target.value})}
-                    placeholder="2020 or 2020-01-15"
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      validationErrors.started_on ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
-                  />
-                  {validationErrors.started_on && (
-                    <p className="text-red-600 text-xs mt-1">{validationErrors.started_on}</p>
-                  )}
-                  <p className="text-xs text-gray-500 mt-1">Format: YYYY or YYYY-MM-DD</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">LinkedIn URL</label>
-                  <input
-                    type="url"
-                    value={formData.linkedin_url}
-                    onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
-                    placeholder="https://linkedin.com/company/..."
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      validationErrors.linkedin_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
-                  />
-                  {validationErrors.linkedin_url && (
-                    <p className="text-red-600 text-xs mt-1">{validationErrors.linkedin_url}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Logo Thumbnail URL</label>
-                  <input
-                    type="url"
-                    value={formData.logo_thumbnail_url}
-                    onChange={(e) => setFormData({...formData, logo_thumbnail_url: e.target.value})}
-                    placeholder="https://example.com/thumbnail.png"
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      validationErrors.logo_thumbnail_url ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
-                  />
-                  {validationErrors.logo_thumbnail_url && (
-                    <p className="text-red-600 text-xs mt-1">{validationErrors.logo_thumbnail_url}</p>
-                  )}
-                </div>
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">About Company</label>
-                  <textarea
-                    value={formData.about}
-                    onChange={(e) => setFormData({...formData, about: e.target.value})}
-                    rows={3}
-                    placeholder="Detailed company description..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Company News</label>
-                  <textarea
-                    value={formData.company_news}
-                    onChange={(e) => setFormData({...formData, company_news: e.target.value})}
-                    rows={2}
-                    placeholder="Recent news about the company..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-sm font-medium">Company Funding (JSON)</label>
-                    <button
-                      type="button"
-                      onClick={() => validateJsonField('company_funding', formData.company_funding)}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Validate JSON
-                    </button>
-                  </div>
-                  <textarea
-                    value={formData.company_funding}
-                    onChange={(e) => {
-                      setFormData({...formData, company_funding: e.target.value});
-                      validateJsonField('company_funding', e.target.value);
-                    }}
-                    rows={3}
-                    placeholder='{"amount": "10M", "round": "Series A", "date": "2023-01-01"}'
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
-                      validationErrors.company_funding ? 'border-red-500 bg-red-50' : 
-                      jsonValidation.company_funding === 'valid' ? 'border-green-500 bg-green-50' :
-                      jsonValidation.company_funding ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
-                  />
-                  {validationErrors.company_funding && (
-                    <p className="text-red-600 text-xs mt-1">{validationErrors.company_funding}</p>
-                  )}
-                  {jsonValidation.company_funding && jsonValidation.company_funding !== 'valid' && (
-                    <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.company_funding}</p>
-                  )}
-                  {jsonValidation.company_funding === 'valid' && formData.company_funding && (
-                    <p className="text-green-600 text-xs mt-1">✓ Valid JSON format</p>
-                  )}
-                  <p className="text-xs text-gray-500 mt-1">
-                    Example: {`{"amount": "10M", "round": "Series A", "date": "2023-01-01"}`}
-                  </p>
-                </div>
-                <div className="lg:col-span-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-sm font-medium">Company Founders (JSON)</label>
-                    <button
-                      type="button"
-                      onClick={() => validateJsonField('company_founders', formData.company_founders)}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Validate JSON
-                    </button>
-                  </div>
-                  <textarea
-                    value={formData.company_founders}
-                    onChange={(e) => {
-                      setFormData({...formData, company_founders: e.target.value});
-                      validateJsonField('company_founders', e.target.value);
-                    }}
-                    rows={3}
-                    placeholder='[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]'
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm ${
-                      validationErrors.company_founders ? 'border-red-500 bg-red-50' : 
-                      jsonValidation.company_founders === 'valid' ? 'border-green-500 bg-green-50' :
-                      jsonValidation.company_founders ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                    }`}
-                  />
-                  {validationErrors.company_founders && (
-                    <p className="text-red-600 text-xs mt-1">{validationErrors.company_founders}</p>
-                  )}
-                  {jsonValidation.company_founders && jsonValidation.company_founders !== 'valid' && (
-                    <p className="text-red-600 text-xs mt-1">JSON Error: {jsonValidation.company_founders}</p>
-                  )}
-                  {jsonValidation.company_founders === 'valid' && formData.company_founders && (
-                    <p className="text-green-600 text-xs mt-1">✓ Valid JSON array format</p>
-                  )}
-                  <p className="text-xs text-gray-500 mt-1">
-                    Example: {`[{"name": "John Doe", "role": "CEO"}, {"name": "Jane Smith", "role": "CTO"}]`}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Form Actions */}
-            <div className="lg:col-span-2 flex gap-3 pt-6 border-t">
-              <Button type="submit" className="flex-1">
-                {isEdit ? 'Update Tool' : 'Create Tool'}
-              </Button>
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
-
-  const BulkUploadModal = ({ onClose, onUpload }) => {
-    const [file, setFile] = useState(null);
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if (file) {
-        onUpload(file);
-      }
-    };
-
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl p-6 w-full max-w-md">
-          <h2 className="text-xl font-bold mb-4">Bulk Upload Tools</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">CSV File</label>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">Upload a CSV file with tool data</p>
-            </div>
-            <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={downloadTemplate} className="flex-1">
-                Download Template
-              </Button>
-              <Button type="submit" className="flex-1">
-                Upload Tools
-              </Button>
-            </div>
-            <Button type="button" variant="outline" onClick={onClose} className="w-full">
+          {/* Form Actions */}
+          <div className="lg:col-span-2 flex gap-3 pt-6 border-t">
+            <Button type="submit" className="flex-1">
+              {isEdit ? 'Update Tool' : 'Create Tool'}
+            </Button>
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
-    );
+    </div>
+  );
+};
+
+// Extract BulkUploadModal component to prevent recreation on each render
+const BulkUploadModal = ({ onClose, onUpload }) => {
+  const [file, setFile] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (file) {
+      onUpload(file);
+    }
   };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Bulk Upload Tools</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">CSV File</label>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">Upload a CSV file with tool data</p>
+          </div>
+          <div className="flex gap-3">
+            <Button type="button" variant="outline" onClick={downloadTemplate} className="flex-1">
+              Download Template
+            </Button>
+            <Button type="submit" className="flex-1">
+              Upload Tools
+            </Button>
+          </div>
+          <Button type="button" variant="outline" onClick={onClose} className="w-full">
+            Cancel
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 
   if (loading) {
     return (
@@ -1054,4 +1058,3 @@ const SuperAdminTools = () => {
   );
 };
 
-export default SuperAdminTools;
