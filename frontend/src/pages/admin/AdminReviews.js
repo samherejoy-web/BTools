@@ -31,6 +31,7 @@ const AdminReviews = () => {
 
   useEffect(() => {
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStatus, selectedRating]);
 
   const fetchReviews = async () => {
