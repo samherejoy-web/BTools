@@ -404,7 +404,15 @@ const SuperAdminCategories = () => {
       <div className="space-y-6">
         {organizedCategories.length > 0 ? (
           organizedCategories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <CategoryCard 
+              key={category.id} 
+              category={category}
+              expandedCategories={expandedCategories}
+              toggleExpanded={toggleExpanded}
+              setSelectedCategory={setSelectedCategory}
+              setShowEditModal={setShowEditModal}
+              handleDeleteCategory={handleDeleteCategory}
+            />
           ))
         ) : (
           <Card className="border-0 shadow-sm">
