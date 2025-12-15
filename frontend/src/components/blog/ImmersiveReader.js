@@ -8,24 +8,21 @@ const ImmersiveReader = ({ children, isActive, onToggle }) => {
   const [fontFamily, setFontFamily] = useState('Charter');
   const [showSettings, setShowSettings] = useState(false);
 
+  // Load user preferences from localStorage on mount
   useEffect(() => {
-    // Load user preferences from localStorage on mount
     const savedFontSize = localStorage.getItem('reader-font-size');
     const savedDarkMode = localStorage.getItem('reader-dark-mode');
     const savedFontFamily = localStorage.getItem('reader-font-family');
 
-    // Initialize state from saved values without cascading renders
-    if (savedFontSize) {
-      const parsedSize = parseInt(savedFontSize);
-      setFontSize(parsedSize);
-    }
-    if (savedDarkMode) {
-      const parsedMode = JSON.parse(savedDarkMode);
-      setIsDarkMode(parsedMode);
-    }
-    if (savedFontFamily) {
-      setFontFamily(savedFontFamily);
-    }
+    // Initialize state from saved values on mount
+    const parsedSize = savedFontSize ? parseInt(savedFontSize) : 21;
+    const parsedMode = savedDarkMode ? JSON.parse(savedDarkMode) : false;
+    const parsedFamily = savedFontFamily || 'Charter';
+
+    setFontSize(parsedSize);
+    setIsDarkMode(parsedMode);
+    setFontFamily(parsedFamily);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
