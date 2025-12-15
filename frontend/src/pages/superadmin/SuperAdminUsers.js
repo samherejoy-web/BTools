@@ -146,6 +146,7 @@ const SuperAdminUsers = () => {
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.skip, selectedRole, searchTerm]);
 
   const fetchUsers = async () => {
