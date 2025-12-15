@@ -324,7 +324,7 @@ const PrivacyPage = () => {
 
               {/* Children's Privacy */}
               <section className="mb-12" aria-labelledby="childrens-privacy-heading">
-                <h2 id="childrens-privacy-heading" className="text-2xl font-bold text-gray-900 mb-4">10. Children's Privacy</h2>
+                <h2 id="childrens-privacy-heading" className="text-2xl font-bold text-gray-900 mb-4">10. Children&apos;s Privacy</h2>
                 <p className="text-gray-600">
                   MarketMindAI is not intended for use by individuals under the age of 16. We do not knowingly collect 
                   personal information from children under 16. If we become aware that we have collected such information, 
