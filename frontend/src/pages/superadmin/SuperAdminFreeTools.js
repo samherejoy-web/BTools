@@ -402,7 +402,7 @@ const SuperAdminFreeTools = () => {
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Delete Free Tool</h2>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete "{deleteConfirm.name}"? This action cannot be undone.
+              Are you sure you want to delete &quot;{deleteConfirm.name}&quot;? This action cannot be undone.
             </p>
             <div className="flex gap-3">
               <Button
