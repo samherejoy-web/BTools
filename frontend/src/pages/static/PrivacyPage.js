@@ -342,7 +342,7 @@ const PrivacyPage = () => {
                 <ul className="text-gray-600 mb-6 space-y-2" role="list">
                   <li role="listitem">• Email notification to registered users</li>
                   <li role="listitem">• Prominent notice on our platform</li>
-                  <li role="listitem">• Updates to the "Last updated" date at the top of this policy</li>
+                  <li role="listitem">• Updates to the &quot;Last updated&quot; date at the top of this policy</li>
                 </ul>
                 <p className="text-gray-600">
                   Your continued use of MarketMindAI after changes become effective constitutes acceptance of the updated policy.
