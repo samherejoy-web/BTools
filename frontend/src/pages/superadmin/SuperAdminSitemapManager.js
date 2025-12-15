@@ -25,6 +25,8 @@ import { Badge } from '../../components/ui/badge';
 import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber } from '../../utils/formatters';
+import LocationForm from './components/LocationForm';
+import BulkLocationsModal from './components/BulkLocationsModal';
 
 const SuperAdminSitemapManager = () => {
   const [locations, setLocations] = useState([]);
