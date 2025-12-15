@@ -341,8 +341,8 @@ const EnhancedBlogEditor = ({
     }
   }, [title, content, excerpt, tags, seoTitle, seoDescription, seoKeywords, jsonLd, onSave, onPublish]);
 
-  // Toolbar component - memoized to prevent recreation on every render
-  const Toolbar = useMemo(() => () => (
+  // Toolbar JSX - memoized to prevent recreation on every render
+  const toolbarContent = useMemo(() => (
     <div className="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap items-center gap-1">
       <div className="flex items-center gap-1">
         <Button
@@ -487,7 +487,7 @@ const EnhancedBlogEditor = ({
         </Button>
       </div>
     </div>
-  ), [editor, uploading, handleImageUpload]);
+  ), [editor, uploading, handleImageUpload, showPreview, isFullscreen]);
 
   return (
     <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white' : ''}`}>
