@@ -523,7 +523,7 @@ const SuperAdminSettings = () => {
           <ul className="text-sm text-blue-800 space-y-1">
             <li>• URLs should include the full protocol (https://)</li>
             <li>• Changes will be reflected immediately in the footer and other site components</li>
-            <li>• Use the "Test" button to verify URLs open correctly</li>
+            <li>• Use the &quot;Test&quot; button to verify URLs open correctly</li>
             <li>• Leave fields empty to hide those social links from the site</li>
           </ul>
         </CardContent>
