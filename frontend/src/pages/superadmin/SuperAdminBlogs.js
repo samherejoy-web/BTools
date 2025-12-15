@@ -36,6 +36,7 @@ const SuperAdminBlogs = () => {
   useEffect(() => {
     fetchBlogs();
     fetchAuthors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedStatus, selectedAuthor]);
 
   const fetchBlogs = async () => {
