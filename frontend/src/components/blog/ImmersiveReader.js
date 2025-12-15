@@ -22,7 +22,6 @@ const ImmersiveReader = ({ children, isActive, onToggle }) => {
     setFontSize(parsedSize);
     setIsDarkMode(parsedMode);
     setFontFamily(parsedFamily);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
