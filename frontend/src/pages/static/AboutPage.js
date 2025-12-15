@@ -146,7 +146,7 @@ const AboutPage = () => {
                   Our Mission
                 </h2>
                 <p className="text-lg text-gray-600 mb-6">
-                  At MarketMindAI, we believe that choosing the right business tools shouldn't be overwhelming or time-consuming. 
+                  At MarketMindAI, we believe that choosing the right business tools shouldn&apos;t be overwhelming or time-consuming. 
                   Our mission is to simplify the tool discovery process by providing comprehensive, AI-enhanced comparisons and 
                   authentic user reviews in one centralized platform.
                 </p>
