@@ -184,108 +184,111 @@ const SuperAdminUsers = () => {
     return variants[role] || variants.user;
   };
 
-  const UserForm = ({ user, onSubmit, onClose, isEdit = false }) => {
-    const [formData, setFormData] = useState({
-      email: user?.email || '',
-      username: user?.username || '',
-      full_name: user?.full_name || '',
-      role: user?.role || 'user',
-      password: '',
-      is_active: user?.is_active ?? true
-    });
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const submitData = { ...formData };
-      if (isEdit && !submitData.password) {
-        delete submitData.password;
-      }
-      onSubmit(submitData);
-    };
+// Extract UserForm component to prevent recreation on each render
+const UserForm = ({ user, onSubmit, onClose, isEdit = false }) => {
+  const [formData, setFormData] = useState({
+    email: user?.email || '',
+    username: user?.username || '',
+    full_name: user?.full_name || '',
+    role: user?.role || 'user',
+    password: '',
+    is_active: user?.is_active ?? true
+  });
 
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl p-6 w-full max-w-md">
-          <h2 className="text-xl font-bold mb-4">
-            {isEdit ? 'Edit User' : 'Create New User'}
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Username</label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({...formData, username: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Full Name</label>
-              <input
-                type="text"
-                value={formData.full_name}
-                onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Role</label>
-              <select
-                value={formData.role}
-                onChange={(e) => setFormData({...formData, role: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-                <option value="superadmin">Super Admin</option>
-              </select>
-            </div>
-            {!isEdit && (
-              <div>
-                <label className="block text-sm font-medium mb-1">Password</label>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
-            )}
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="is_active"
-                checked={formData.is_active}
-                onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                className="rounded"
-              />
-              <label htmlFor="is_active" className="text-sm font-medium">Active User</label>
-            </div>
-            <div className="flex gap-3 pt-4">
-              <Button type="submit" className="flex-1">
-                {isEdit ? 'Update User' : 'Create User'}
-              </Button>
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const submitData = { ...formData };
+    if (isEdit && !submitData.password) {
+      delete submitData.password;
+    }
+    onSubmit(submitData);
   };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">
+          {isEdit ? 'Edit User' : 'Create New User'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Username</label>
+            <input
+              type="text"
+              value={formData.username}
+              onChange={(e) => setFormData({...formData, username: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Full Name</label>
+            <input
+              type="text"
+              value={formData.full_name}
+              onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Role</label>
+            <select
+              value={formData.role}
+              onChange={(e) => setFormData({...formData, role: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+          </div>
+          {!isEdit && (
+            <div>
+              <label className="block text-sm font-medium mb-1">Password</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="is_active"
+              checked={formData.is_active}
+              onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+              className="rounded"
+            />
+            <label htmlFor="is_active" className="text-sm font-medium">Active User</label>
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button type="submit" className="flex-1">
+              {isEdit ? 'Update User' : 'Create User'}
+            </Button>
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 
   if (loading) {
     return (
@@ -489,4 +492,3 @@ const SuperAdminUsers = () => {
   );
 };
 
-export default SuperAdminUsers;
