@@ -130,7 +130,7 @@ const AboutPage = () => {
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">MarketMindAI</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-testid="about-description">
-                We're revolutionizing how businesses discover, evaluate, and choose the right tools 
+                We&apos;re revolutionizing how businesses discover, evaluate, and choose the right tools 
                 for their operations through AI-powered insights and community-driven intelligence.
               </p>
             </div>
