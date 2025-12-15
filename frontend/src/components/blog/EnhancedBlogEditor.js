@@ -598,7 +598,7 @@ const EnhancedBlogEditor = ({
         <div className={`${isFocusMode ? 'flex justify-center' : `grid ${showPreview ? 'grid-cols-2' : 'grid-cols-1'} gap-6`} ${isFullscreen ? 'h-[calc(100vh-200px)]' : 'min-h-[600px]'}`}>
           {/* Editor Panel */}
           <Card className={`border-0 shadow-sm flex flex-col ${isFocusMode ? 'max-w-4xl w-full' : ''}`}>
-            {!isFocusMode && <Toolbar />}
+            {!isFocusMode && toolbarContent}
             <div 
               className="flex-1 overflow-auto"
               onDrop={handleDrop}
