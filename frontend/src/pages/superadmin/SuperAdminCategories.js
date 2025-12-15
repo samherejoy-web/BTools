@@ -22,6 +22,242 @@ import { toast } from 'sonner';
 import apiClient from '../../utils/apiClient';
 import { formatDate } from '../../utils/formatters';
 
+// CategoryForm component - moved outside to avoid recreation on each render
+const CategoryForm = ({ category, onSubmit, onClose, isEdit = false, categories }) => {
+  const [formData, setFormData] = useState({
+    name: category?.name || '',
+    description: category?.description || '',
+    parent_id: category?.parent_id || '',
+    seo_title: category?.seo_title || '',
+    seo_description: category?.seo_description || '',
+    seo_keywords: category?.seo_keywords || ''
+  });
+
+  const parentCategories = categories.filter(cat => 
+    !cat.parent_id && (!isEdit || cat.id !== category?.id)
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const submitData = {
+      ...formData,
+      parent_id: formData.parent_id || null
+    };
+    onSubmit(submitData);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-bold mb-6">
+          {isEdit ? 'Edit Category' : 'Create New Category'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Info */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Category Name *</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Parent Category</label>
+              <select
+                value={formData.parent_id}
+                onChange={(e) => setFormData({...formData, parent_id: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">None (Root Category)</option>
+                {parentCategories.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Description</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* SEO Section */}
+          <div className="pt-4 border-t">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Globe className="h-5 w-5" />
+              SEO Settings
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">SEO Title</label>
+                <input
+                  type="text"
+                  value={formData.seo_title}
+                  onChange={(e) => setFormData({...formData, seo_title: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Leave empty to use category name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">SEO Description</label>
+                <textarea
+                  value={formData.seo_description}
+                  onChange={(e) => setFormData({...formData, seo_description: e.target.value})}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Meta description for search engines"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">SEO Keywords</label>
+                <input
+                  type="text"
+                  value={formData.seo_keywords}
+                  onChange={(e) => setFormData({...formData, seo_keywords: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Comma-separated keywords"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Form Actions */}
+          <div className="flex gap-3 pt-6 border-t">
+            <Button type="submit" className="flex-1">
+              {isEdit ? 'Update Category' : 'Create Category'}
+            </Button>
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// CategoryCard component - moved outside to avoid recreation on each render
+const CategoryCard = ({ category, level = 0, expandedCategories, toggleExpanded, setSelectedCategory, setShowEditModal, handleDeleteCategory }) => {
+  const hasChildren = category.children && category.children.length > 0;
+  const isExpanded = expandedCategories.has(category.id);
+
+  return (
+    <div className={`${level > 0 ? 'ml-8 border-l-2 border-gray-200 pl-4' : ''}`}>
+      <Card className="border-0 shadow-sm hover:shadow-md transition-all duration-300 mb-4">
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-3 flex-1">
+              {hasChildren && (
+                <button
+                  onClick={() => toggleExpanded(category.id)}
+                  className="mt-1 p-1 hover:bg-gray-100 rounded"
+                >
+                  {isExpanded ? (
+                    <ChevronDown className="h-4 w-4 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-gray-600" />
+                  )}
+                </button>
+              )}
+              
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+                    {hasChildren ? (
+                      <FolderOpen className="h-5 w-5 text-white" />
+                    ) : (
+                      <Folder className="h-5 w-5 text-white" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                    <p className="text-sm text-gray-500">/{category.slug}</p>
+                  </div>
+                  {level === 0 && hasChildren && (
+                    <Badge className="bg-blue-100 text-blue-800">
+                      {category.children.length} subcategories
+                    </Badge>
+                  )}
+                </div>
+
+                {category.description && (
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    {category.description}
+                  </p>
+                )}
+
+                <div className="flex items-center gap-4 text-xs text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    Created {formatDate(category.created_at)}
+                  </div>
+                  {category.seo_title && (
+                    <div className="flex items-center gap-1">
+                      <Globe className="h-3 w-3" />
+                      SEO Optimized
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setSelectedCategory(category);
+                  setShowEditModal(true);
+                }}
+                className="h-8 w-8 p-0"
+              >
+                <Edit3 className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleDeleteCategory(category.id)}
+                className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Child Categories */}
+      {hasChildren && isExpanded && (
+        <div className="space-y-2">
+          {category.children.map((child) => (
+            <CategoryCard 
+              key={child.id} 
+              category={child} 
+              level={level + 1}
+              expandedCategories={expandedCategories}
+              toggleExpanded={toggleExpanded}
+              setSelectedCategory={setSelectedCategory}
+              setShowEditModal={setShowEditModal}
+              handleDeleteCategory={handleDeleteCategory}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const SuperAdminCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
