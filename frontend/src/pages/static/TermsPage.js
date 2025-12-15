@@ -171,7 +171,7 @@ const TermsPage = () => {
                     <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <div>
                       <h3 className="font-semibold text-gray-900">Content Responsibility</h3>
-                      <p className="text-sm text-gray-600">You're responsible for the accuracy and legality of your submissions</p>
+                      <p className="text-sm text-gray-600">You&apos;re responsible for the accuracy and legality of your submissions</p>
                     </div>
                   </article>
                   <article className="flex items-start space-x-3" role="listitem" data-testid="terms-point-privacy">
