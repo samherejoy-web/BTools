@@ -258,7 +258,7 @@ const AboutPage = () => {
               </p>
               
               <p>
-                We're just getting started. As we continue to expand our database, refine our AI algorithms, and grow our 
+                We&apos;re just getting started. As we continue to expand our database, refine our AI algorithms, and grow our 
                 community, we remain committed to our original vision: making business tool discovery simple, 
                 intelligent, and accessible for everyone.
               </p>
