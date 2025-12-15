@@ -135,7 +135,7 @@ const EmailVerificationPendingPage = () => {
             {/* Resend Verification */}
             <div className="pt-4 border-t border-gray-100">
               <p className="text-sm text-gray-600 mb-3">
-                Didn't receive the email? Check your spam folder or
+                Didn&apos;t receive the email? Check your spam folder or
               </p>
               <Button
                 onClick={handleResendVerification}
