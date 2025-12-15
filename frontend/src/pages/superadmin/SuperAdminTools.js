@@ -619,7 +619,7 @@ return (
 };
 
 
-const BulkUploadModal = ({ onClose, onUpload }) => {
+const BulkUploadModal = ({ onClose, onUpload, downloadTemplate }) => {
 const [file, setFile] = useState(null);
 
 const handleSubmit = (e) => {
