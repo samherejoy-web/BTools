@@ -19,10 +19,12 @@ const ImmersiveReader = ({ children, isActive, onToggle }) => {
     const parsedMode = savedDarkMode ? JSON.parse(savedDarkMode) : false;
     const parsedFamily = savedFontFamily || 'Charter';
 
-    setFontSize(parsedSize);
-    setIsDarkMode(parsedMode);
-    setFontFamily(parsedFamily);
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFontSize(parsedSize);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsDarkMode(parsedMode);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFontFamily(parsedFamily);
   }, []);
 
   useEffect(() => {
