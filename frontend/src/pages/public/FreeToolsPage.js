@@ -177,7 +177,7 @@ const FreeToolsPage = () => {
                   <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No tools found</h3>
                   <p className="text-gray-600 mb-6">
-                    No tools match your search for "{searchTerm}". Try different keywords.
+                    No tools match your search for &quot;{searchTerm}&quot;. Try different keywords.
                   </p>
                   <Button onClick={() => setSearchTerm('')} variant="outline">
                     Clear Search
