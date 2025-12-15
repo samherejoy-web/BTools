@@ -53,7 +53,7 @@ I have successfully tested the production build by serving it locally and taking
 {
   "@type": "WebSite",
   "name": "MarketMind - Discover the Best Business Tools",
-  "url": "https://code-sync-21.preview.emergentagent.com"
+  "url": "https://bugbash-ready.preview.emergentagent.com"
 }
 ```
 ✅ **Valid WebSite schema**

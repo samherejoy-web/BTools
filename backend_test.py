@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 class LogoManagementTester:
-    def __init__(self, base_url="https://code-sync-21.preview.emergentagent.com"):
+    def __init__(self, base_url="https://bugbash-ready.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
