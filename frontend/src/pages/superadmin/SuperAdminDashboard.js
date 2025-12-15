@@ -36,6 +36,7 @@ const SuperAdminDashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeframe]);
 
   const fetchDashboardData = async () => {
