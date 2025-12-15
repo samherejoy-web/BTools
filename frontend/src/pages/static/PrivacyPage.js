@@ -167,7 +167,7 @@ const PrivacyPage = () => {
               <section className="mb-12" aria-labelledby="introduction-heading">
                 <h2 id="introduction-heading" className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
                 <p className="text-gray-600 mb-4">
-                  MarketMindAI ("we," "our," or "us") is committed to protecting your privacy and ensuring the security of your personal information. 
+                  MarketMindAI (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy and ensuring the security of your personal information. 
                   This Privacy Policy explains how we collect, use, share, and protect your information when you use our platform, website, and services.
                 </p>
                 <p className="text-gray-600">
