@@ -478,7 +478,7 @@ const ToolsPage = () => {
               <SlidersHorizontal className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">No tools found</h3>
               <p className="text-gray-600 mb-6">
-                Try adjusting your search criteria or filters to find what you're looking for.
+                Try adjusting your search criteria or filters to find what you&apos;re looking for.
               </p>
               <Button
                 onClick={() => {
