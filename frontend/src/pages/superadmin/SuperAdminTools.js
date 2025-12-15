@@ -1055,6 +1055,7 @@ const SuperAdminTools = () => {
         <BulkUploadModal
           onClose={() => setShowBulkUpload(false)}
           onUpload={handleBulkUpload}
+          downloadTemplate={downloadTemplate}
         />
       )}
     </div>
