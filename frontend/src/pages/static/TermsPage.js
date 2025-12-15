@@ -190,9 +190,9 @@ const TermsPage = () => {
               <section className="mb-12" aria-labelledby="acceptance-heading">
                 <h2 id="acceptance-heading" className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
                 <p className="text-gray-600 mb-4">
-                  Welcome to MarketMindAI. These Terms of Service ("Terms") constitute a legally binding agreement between you 
-                  and MarketMindAI ("Company," "we," "our," or "us") regarding your use of our platform, website, and services 
-                  (collectively, the "Service").
+                  Welcome to MarketMindAI. These Terms of Service (&quot;Terms&quot;) constitute a legally binding agreement between you 
+                  and MarketMindAI (&quot;Company,&quot; &quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) regarding your use of our platform, website, and services 
+                  (collectively, the &quot;Service&quot;).
                 </p>
                 <p className="text-gray-600">
                   By accessing or using MarketMindAI, you agree to be bound by these Terms and our Privacy Policy. 
