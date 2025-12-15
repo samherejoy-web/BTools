@@ -97,6 +97,7 @@ const ToolDetailPage = () => {
       fetchToolReviews();
       fetchComments();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolSlug]);
 
   const fetchToolDetails = async () => {
