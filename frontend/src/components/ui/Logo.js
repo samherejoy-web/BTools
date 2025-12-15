@@ -71,7 +71,6 @@ const Logo = ({
 
   useEffect(() => {
     fetchLogoData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Loading state
