@@ -226,7 +226,7 @@ const ContactPage = () => {
                 Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">MarketMindAI</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-testid="contact-description">
-                We're here to help you succeed. Reach out for support, partnerships, 
+                We&apos;re here to help you succeed. Reach out for support, partnerships, 
                 or to learn more about how MarketMindAI can transform your business tool discovery process.
               </p>
             </div>
