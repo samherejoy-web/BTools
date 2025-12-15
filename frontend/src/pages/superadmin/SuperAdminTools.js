@@ -29,7 +29,7 @@ import apiClient from '../../utils/apiClient';
 import { formatDate, formatNumber, formatRating } from '../../utils/formatters';
 
 // Extract ToolForm component to prevent recreation on each render
-const ToolForm = ({ tool, onSubmit, onClose, isEdit = false }) => {
+const ToolForm = ({ tool, onSubmit, onClose, isEdit = false, categories = [] }) => {
 const [formData, setFormData] = useState({
   name: tool?.name || '',
   description: tool?.description || '',
