@@ -1229,7 +1229,7 @@ async def generate_json_ld_data(
         db.commit()
         
         return {
-            "message": f"JSON-LD generation completed successfully",
+            "message": "JSON-LD generation completed successfully",
             "results": {
                 "tools_updated": updated_count["tools"],
                 "blogs_updated": updated_count["blogs"],
@@ -1828,7 +1828,7 @@ async def get_public_site_settings(db: Session = Depends(get_db)):
     
     # Convert relative logo URL to API endpoint URL for better external access
     if settings_dict.get('site_logo_url') and settings_dict['site_logo_url'].startswith('/uploads/'):
-        settings_dict['site_logo_url'] = f"/api/public/logo"
+        settings_dict['site_logo_url'] = "/api/public/logo"
     
     return settings_dict
 
@@ -1870,7 +1870,7 @@ async def get_public_logo(db: Session = Depends(get_db)):
             }
         )
         
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=404, detail="Logo not available")
 
 

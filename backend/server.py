@@ -31,7 +31,6 @@ from sitemap_management_routes import router as sitemap_management_router
 from free_tools_routes import router as free_tools_router
 
 # Configure logging
-import os
 os.makedirs('/tmp/logs', exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,

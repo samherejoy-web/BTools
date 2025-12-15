@@ -78,7 +78,7 @@ def generate_sitemap():
                 continue
         
         if not response or response.status_code != 200:
-            logger.error(f"Failed to generate sitemap from all sources")
+            logger.error("Failed to generate sitemap from all sources")
             return False
         
         # Detect build path

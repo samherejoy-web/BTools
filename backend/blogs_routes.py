@@ -444,7 +444,6 @@ async def upload_blog_image(
 async def serve_blog_image(filename: str):
     """Serve blog images through API to ensure proper routing"""
     from fastapi import HTTPException
-    from fastapi.responses import FileResponse
     
     file_path = f"uploads/blog-images/{filename}"
     if os.path.exists(file_path):

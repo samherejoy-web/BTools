@@ -268,7 +268,7 @@ def auto_generate_json_ld_for_existing_content(db, limit: int = 100):
     # Commit changes
     try:
         db.commit()
-        print(f"✅ JSON-LD auto-generation completed:")
+        print("✅ JSON-LD auto-generation completed:")
         print(f"   - Tools updated: {updated_count['tools']}")
         print(f"   - Blogs updated: {updated_count['blogs']}")
         return updated_count
