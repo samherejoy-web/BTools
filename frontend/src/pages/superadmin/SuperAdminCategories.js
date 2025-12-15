@@ -436,6 +436,7 @@ const SuperAdminCategories = () => {
       {/* Modals */}
       {showCreateModal && (
         <CategoryForm
+          categories={categories}
           onSubmit={handleCreateCategory}
           onClose={() => setShowCreateModal(false)}
         />
@@ -443,6 +444,7 @@ const SuperAdminCategories = () => {
 
       {showEditModal && selectedCategory && (
         <CategoryForm
+          categories={categories}
           category={selectedCategory}
           onSubmit={(categoryData) => handleUpdateCategory(selectedCategory.id, categoryData)}
           onClose={() => {
