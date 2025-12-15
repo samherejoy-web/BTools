@@ -188,7 +188,7 @@ const FreeToolsPage = () => {
                   <Zap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No free tools available</h3>
                   <p className="text-gray-600 mb-6">
-                    We're working on curating free tools for you. Check back soon!
+                    We&apos;re working on curating free tools for you. Check back soon!
                   </p>
                   <Button onClick={fetchFreeTools} variant="outline">
                     <RefreshCw className="h-4 w-4 mr-2" />
