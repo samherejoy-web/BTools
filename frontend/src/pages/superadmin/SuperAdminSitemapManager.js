@@ -42,6 +42,7 @@ const SuperAdminSitemapManager = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedType]);
 
   const fetchData = async () => {
