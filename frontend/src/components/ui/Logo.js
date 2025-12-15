@@ -71,6 +71,7 @@ const Logo = ({
 
   useEffect(() => {
     fetchLogoData();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, []);
 
   // Loading state
