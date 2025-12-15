@@ -230,7 +230,7 @@ const SEOToolsPage = () => {
                 SEO Implementation Status
               </CardTitle>
               <CardDescription>
-                Current state of MarketMindAI's SEO features
+                Current state of MarketMindAI&apos;s SEO features
               </CardDescription>
             </CardHeader>
             <CardContent>
