@@ -50,7 +50,6 @@ const Footer = () => {
   useEffect(() => {
     fetchSocialUrls();
     fetchFreeTools();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const footerLinks = {
