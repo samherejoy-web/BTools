@@ -39,6 +39,7 @@ const ToolsPage = () => {
   useEffect(() => {
     fetchTools();
     fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedPricing, sortBy, featuredOnly]);
 
   const fetchTools = async () => {
