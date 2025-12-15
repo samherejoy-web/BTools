@@ -47,6 +47,7 @@ const CompareToolsPage = () => {
       const toolIds = toolsParam.split(',');
       loadToolsFromIds(toolIds);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAvailableTools = async () => {
