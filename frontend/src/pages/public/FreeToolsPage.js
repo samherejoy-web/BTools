@@ -114,7 +114,7 @@ const FreeToolsPage = () => {
               <div className="mb-8">
                 <p className="text-gray-600">
                   {searchTerm ? (
-                    <>Showing {filteredTools.length} tools matching "{searchTerm}"</>
+                    <>Showing {filteredTools.length} tools matching &quot;{searchTerm}&quot;</>
                   ) : (
                     <>Showing all {filteredTools.length} free tools</>
                   )}
