@@ -1034,6 +1034,7 @@ const SuperAdminTools = () => {
         <ToolForm
           onSubmit={handleCreateTool}
           onClose={() => setShowCreateModal(false)}
+          categories={categories}
         />
       )}
 
@@ -1046,6 +1047,7 @@ const SuperAdminTools = () => {
             setSelectedTool(null);
           }}
           isEdit={true}
+          categories={categories}
         />
       )}
 
