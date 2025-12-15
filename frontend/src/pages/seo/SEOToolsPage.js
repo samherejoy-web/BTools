@@ -204,7 +204,7 @@ const SEOToolsPage = () => {
                 SEO Best Practices
               </CardTitle>
               <CardDescription>
-                Quick tips to improve your content's search engine performance
+                Quick tips to improve your content&apos;s search engine performance
               </CardDescription>
             </CardHeader>
             <CardContent>
