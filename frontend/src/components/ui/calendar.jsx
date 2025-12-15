@@ -5,6 +5,15 @@ import { DayPicker } from "react-day-picker"
 import { cn } from "../../lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
+// Extract icon components outside of Calendar to prevent recreation on each render
+const IconLeftComponent = ({ className, ...props }) => (
+  <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
+);
+
+const IconRightComponent = ({ className, ...props }) => (
+  <ChevronRight className={cn("h-4 w-4", className)} {...props} />
+);
+
 function Calendar({
   className,
   classNames,
