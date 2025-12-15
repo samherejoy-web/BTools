@@ -677,6 +677,7 @@ const SuperAdminTools = () => {
   useEffect(() => {
     fetchTools();
     fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedCategory, selectedStatus]);
 
   const fetchTools = async () => {
