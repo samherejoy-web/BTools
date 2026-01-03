@@ -6,7 +6,7 @@ from datetime import datetime
 
 class SimpleBlogTester:
     def __init__(self):
-        self.base_url = "https://code-cleanup-79.preview.emergentagent.com/api"
+        self.base_url = "https://codebase-cleanup-23.preview.emergentagent.com/api"
         self.token = None
         
     def test_health(self):

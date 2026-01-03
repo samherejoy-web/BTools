@@ -27,7 +27,7 @@ This guide provides step-by-step instructions to deploy your MarketMind applicat
 ### ✅ **Current Configuration Analysis**
 Your current setup:
 ```
-Frontend URL: https://code-cleanup-79.preview.emergentagent.com
+Frontend URL: https://codebase-cleanup-23.preview.emergentagent.com
 Database: SQLite (needs upgrade for production)
 Secret Key: Placeholder (needs secure generation)
 CORS: Wildcard (*) - needs restriction
