@@ -11,9 +11,9 @@ from typing import Optional
 # Email configuration
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USERNAME = "rohushanshinde@gmail.com"
-SMTP_PASSWORD = "pajbdmcpcegppguz"
-FROM_EMAIL = "rohushanshinde@gmail.com"
+SMTP_USERNAME = "gajananzx@gmail.com"
+SMTP_PASSWORD = "wbhnyrwyvhidajfe"
+FROM_EMAIL = "gajananzx@gmail.com"
 FROM_NAME = "MarketMind"
 
 # Base URL for frontend - get from environment or use default
