@@ -1063,3 +1063,5 @@ const SuperAdminTools = () => {
   );
 };
 
+export default SuperAdminTools;
+
