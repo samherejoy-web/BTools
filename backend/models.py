@@ -32,6 +32,8 @@ class User(Base):
     email_verification_expires = Column(DateTime, nullable=True)
     email_otp_code = Column(String, nullable=True)
     email_otp_expires = Column(DateTime, nullable=True)
+    password_reset_token = Column(String, nullable=True)
+    password_reset_expires = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     profile_image = Column(String)
