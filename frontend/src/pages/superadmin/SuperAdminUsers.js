@@ -496,3 +496,5 @@ const SuperAdminUsers = () => {
   );
 };
 
+export default SuperAdminUsers;
+
