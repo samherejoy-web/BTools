@@ -160,3 +160,56 @@ The MarketMind Team
     """
     
     return send_email(to_email, subject, body)
+
+def generate_password_reset_token() -> str:
+    """Generate a secure password reset token"""
+    return secrets.token_urlsafe(32)
+
+def get_password_reset_expiry() -> datetime:
+    """Get password reset expiry time (1 hour from now)"""
+    return datetime.utcnow() + timedelta(hours=1)
+
+def send_password_reset_email(to_email: str, username: str, reset_token: str) -> bool:
+    """Send password reset email"""
+    reset_url = f"{FRONTEND_URL}/reset-password?token={reset_token}"
+    
+    subject = "Reset your MarketMind password"
+    
+    body = f"""
+Hello {username},
+
+We received a request to reset your password for your MarketMind account.
+
+Click the link below to reset your password:
+{reset_url}
+
+This link will expire in 1 hour.
+
+If you didn't request a password reset, please ignore this email. Your password will remain unchanged.
+
+Best regards,
+The MarketMind Team
+    """
+    
+    return send_email(to_email, subject, body)
+
+def send_password_reset_success_email(to_email: str, username: str) -> bool:
+    """Send password reset success confirmation"""
+    subject = "Password reset successful - MarketMind"
+    
+    body = f"""
+Hello {username},
+
+Your password has been successfully reset.
+
+You can now log in to your MarketMind account with your new password.
+
+Login here: {FRONTEND_URL}/login
+
+If you didn't reset your password, please contact us immediately.
+
+Best regards,
+The MarketMind Team
+    """
+    
+    return send_email(to_email, subject, body)
