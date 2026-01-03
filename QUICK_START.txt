@@ -1,0 +1,117 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                   MARKETMINDAI - QUICK REFERENCE                 ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  🔐 SUPERADMIN LOGIN CREDENTIALS                                ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Email:      amits.joys@gmail.com                               ║
+║  Username:   amitsjoys                                          ║
+║  Password:   admin@123                                          ║
+║  Role:       superadmin                                         ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  🌐 APPLICATION URLS                                            ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Frontend:   http://localhost:3000                              ║
+║  Backend:    http://localhost:8001                              ║
+║  API Docs:   http://localhost:8001/docs                         ║
+║  Health:     http://localhost:8001/api/health                   ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  💾 DATABASE (PostgreSQL)                                       ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Database:   marketmindai                                       ║
+║  User:       marketmind                                         ║
+║  Password:   marketmind123                                      ║
+║  Host:       localhost                                          ║
+║  Port:       5432                                               ║
+║  Tables:     19                                                 ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  ⚙️  SERVICE MANAGEMENT                                         ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Status:         sudo supervisorctl status                      ║
+║  Restart All:    sudo supervisorctl restart all                 ║
+║  Restart Backend: sudo supervisorctl restart backend            ║
+║  Restart Frontend: sudo supervisorctl restart frontend          ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  📊 CURRENT STATUS                                              ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Backend:    ✅ RUNNING (Port 8001)                            ║
+║  Frontend:   ✅ RUNNING (Port 3000)                            ║
+║  PostgreSQL: ✅ RUNNING (Port 5432)                            ║
+║  Database:   ✅ CONNECTED                                      ║
+║                                                                  ║
+║  Status:     🎉 PRODUCTION READY                               ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  🗂️  CODEBASE CLEANUP                                           ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  ✅ Moved 18 test files to /app/oldfiles/                      ║
+║  ✅ Moved 24 documentation files to /app/oldfiles/             ║
+║  ✅ Moved build scripts to /app/oldfiles/                      ║
+║  ✅ Cleaned root directory                                     ║
+║  ✅ Fixed frontend build errors                                ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  🚀 QUICK START                                                 ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  1. Open browser: http://localhost:3000                         ║
+║  2. Click "Login" or "Sign In"                                  ║
+║  3. Enter credentials:                                          ║
+║     - Email: amits.joys@gmail.com                               ║
+║     - Password: admin@123                                       ║
+║  4. Access SuperAdmin Dashboard                                 ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  🔍 LOGS & DEBUGGING                                            ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Backend:    tail -f /var/log/supervisor/backend.*.log         ║
+║  Frontend:   tail -f /var/log/supervisor/frontend.*.log        ║
+║  PostgreSQL: tail -f /var/log/postgresql/postgresql-*.log      ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  📦 TECH STACK                                                  ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  Backend:    FastAPI + Python 3.11                              ║
+║  Frontend:   React 19.0.0                                       ║
+║  Database:   PostgreSQL 15                                      ║
+║  ORM:        SQLAlchemy                                         ║
+║  Auth:       JWT                                                ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  ✨ FEATURES                                                    ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+║                                                                  ║
+║  • User Management & Authentication                             ║
+║  • AI Tools Directory                                           ║
+║  • Blogging Platform                                            ║
+║  • Reviews & Ratings                                            ║
+║  • Comments & Likes                                             ║
+║  • SEO Optimization                                             ║
+║  • SuperAdmin Dashboard                                         ║
+║  • Analytics & Reporting                                        ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Last Updated: January 3, 2026
+Status: Production Ready ✅
