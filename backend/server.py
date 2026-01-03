@@ -29,6 +29,7 @@ from newsletter_routes import router as newsletter_router
 from auto_seo_routes import router as auto_seo_router
 from sitemap_management_routes import router as sitemap_management_router
 from free_tools_routes import router as free_tools_router
+from password_reset_routes import router as password_reset_router
 
 # Configure logging
 os.makedirs('/tmp/logs', exist_ok=True)
