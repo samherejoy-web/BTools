@@ -23,6 +23,8 @@ import RegisterPage from './pages/auth/RegisterPage';
 import EmailVerificationPage from './pages/auth/EmailVerificationPage';
 import EmailVerificationPendingPage from './pages/auth/EmailVerificationPendingPage';
 import OTPVerificationPage from './pages/auth/OTPVerificationPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 
 // User Dashboard
 import UserDashboard from './pages/user/UserDashboard';
